@@ -1,3 +1,7 @@
+# contains all functions needed to build an euler circuit 
+# takes in euler graph constructor function from graph constructor.py
+
+
 import numpy as np
 import osmnx as ox
 import networkx as nx
@@ -5,12 +9,18 @@ import itertools
 from random import choice
 import math
 
+from graph_constructor import print_hi
+
+
+
 
 # BUILD GRAPH & GET STATS
 def build_graph(north,south, east, west):
 
     """
     From boox constraints, construct graph
+
+    Return graph
 
     Print summary stats about graph.
     """
@@ -44,10 +54,12 @@ if __name__ == '__main__':
     WEST = -122.4023 # min lng 
 
         
-    G = build_graph(NORTH,SOUTH, EAST, WEST) ## FLAG
+    # G = build_graph(NORTH,SOUTH, EAST, WEST) ## FLAG
 
-    start_node = choice(list(G.nodes))
+    # start_node = choice(list(G.nodes))
 
-    make_euler_circuit(start_node, G)
+    # make_euler_circuit(start_node, G)
+
+    print_hi()
 
 
