@@ -9,7 +9,7 @@ import itertools
 from random import choice
 import math
 
-from graph_constructor import print_hi
+# from graph_constructor import print_hi
 
 
 
@@ -60,6 +60,6 @@ if __name__ == '__main__':
 
     # make_euler_circuit(start_node, G)
 
-    print_hi()
+    # print_hi()
 
 
