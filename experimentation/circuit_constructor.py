@@ -2,8 +2,8 @@
 # takes in euler graph constructor function from graph constructor.py
 
 
-import numpy as np
-import osmnx as ox
+import numpy as np # seems to slow down a bit
+import osmnx as ox # really slows down file run?
 import networkx as nx
 import itertools
 from random import choice
