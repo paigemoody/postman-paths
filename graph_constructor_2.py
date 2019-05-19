@@ -1,14 +1,16 @@
 # import numpy as np # seems to slow down a bit
-import osmnx as ox # really slows down file run?
-import networkx as nx
+# import osmnx as ox # really slows down file run?
+# import networkx as nx
+
+from networkx import shortest_path
 # import itertools
 # from random import choice
 # import math
 
 from class_experimentation import OSMGraph
 from class_experimentation import DIYGraph
-from class_experimentation import make_edges_dict
-from class_experimentation import make_nodes_dict
+# from class_experimentation import make_edges_dict
+# from class_experimentation import make_nodes_dict
 
 
 # save these for testing 
@@ -25,7 +27,10 @@ def get_odd_nodes(graph_instance):
     list of odd nodes.
     """
     odd_nodes_dict = []
-    nodes_dict = make_nodes_dict(graph_instance)
+
+    # nodes_dict = make_nodes_dict(graph_instance)
+
+    nodes_dict = graph_instance.nodes_dict
 
     for node in nodes_dict:
         if nodes_dict[node]['is_odd'] == True:
@@ -101,8 +106,8 @@ def get_shortest_route_two_nodes(start_node, end_node, graph_instance):
     return sequenced list of nodes included in shortest route
     between the nodes.
     """
-
-    route = nx.shortest_path(graph_instance.ox_graph, start_node, end_node, weight='length')
+    route = shortest_path(graph_instance.ox_graph, start_node, end_node, weight='length')
+    # route = nx.shortest_path(graph_instance.ox_graph, start_node, end_node, weight='length')
     return route
 
 def get_route_edges_from_route(route):
@@ -134,7 +139,8 @@ def get_route_length(route_edges_list, graph_instance):
     228.606
     """
 
-    edges_dict = make_edges_dict(graph_instance)
+    edges_dict = graph_instance.edges_dict
+    # edges_dict = make_edges_dict(graph_instance)
 
     total_edges_length = 0
 
@@ -205,34 +211,45 @@ def get_twice_traversals_edges(pairings_lengths_dict):
     return list(optimal_pairing)
 
 def update_twice_traversal_edges(list_twice_trav_edges, graph_instance):
-    """ Update num_traversals attribute in edges_dict for 
+    """ 
+    Update num_traversals attribute in edges_dict for 
     for edges that will be traversed twice.
 
-    # NEEDS UPDATING
-    # MAYBE NEED TO HAVE THE EDGES IN SHORTEST ROUTE 
-    # FOLLOW THE ROUTE UNTIL HERE??
-
+    Return edges dict for graph instance 
     """
     
-    edges_dict = make_edges_dict(graph_instance)
+    edges_dict = graph_instance.edges_dict
+    # edges_dict = make_edges_dict(graph_instance)
 
-    for edge in list_twice_trav_edges:
-            
-        if edge in edges_dict:
+    for node_pair in list_twice_trav_edges:
 
-            edges_dict[edge]['num_traversals'] += 1 
+        # get all edges that are needed for shortest path between nodes
+
+        route = get_shortest_route_two_nodes(node_pair[0], node_pair[1], graph_instance)
+        route_edges = get_route_edges_from_route(route)
+
+        for edge in route_edges:
+
+            if edge in edges_dict:
+
+                edges_dict[edge]['num_traversals'] += 1 
 
 
-        elif edge[::-1] in edges_dict: 
+            elif edge[::-1] in edges_dict: 
 
-            edge = edge[::-1]
+                edge = edge[::-1]
 
-            edges_dict[edge]['num_traversals'] += 1 
+                edges_dict[edge]['num_traversals'] += 1 
 
-    return edges_dict
+            else: 
 
-twice_traversals_edges = [(65294615, 65320188), (65320193, 65313455)]
-print(update_twice_traversal_edges(list_twice_trav_edges, ORIG_GRAPH))
+                print(f"{edge} not in {edges_dict}.")
+
+    graph_instance.edges_dict = edges_dict 
+
+    # return updated graph_instance?
+    return  graph_instance
+
 
 
 ## over-arching function that takes a bounding box and returns 
@@ -270,11 +287,11 @@ def get_eulerian_graph_edges(bbox):
 
 
 bbox = [37.7599,37.7569 ,-122.3997,-122.4023] # min lng 
+updated_graph_inst = get_eulerian_graph_edges(bbox)
 
-output_dict = get_eulerian_graph_edges(bbox)
-for edge in output_dict:
+for edge in updated_graph_inst.edges_dict:
     print()
-    print(edge, "\n",output_dict[edge])
+    print(edge, "\n", updated_graph_inst.edges_dict[edge])
 
 
 
@@ -284,6 +301,8 @@ for edge in output_dict:
 #     doctest.testmod()
 
 
+# twice_traversals_edges = [(65294615, 65320188), (65320193, 65313455)]
+# print(update_twice_traversal_edges(twice_traversals_edges, ORIG_GRAPH))
 
 
 
