@@ -7,8 +7,8 @@ from networkx import shortest_path
 # from random import choice
 # import math
 
-from class_experimentation import OSMGraph
-from class_experimentation import DIYGraph
+from classes import OSMGraph
+from classes import DIYGraph
 # from class_experimentation import make_edges_dict
 # from class_experimentation import make_nodes_dict
 
