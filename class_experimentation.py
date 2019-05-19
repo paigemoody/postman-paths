@@ -105,7 +105,7 @@ def make_edges_dict(graph_instance):
             # useful for testing
             edge_attrs['length'] = 1
 
-        edge_attrs['num_traversals'] = None
+        edge_attrs['num_traversals'] = 1
 
         edges_dict[edge] = edge_attrs
 
