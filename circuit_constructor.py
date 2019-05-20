@@ -169,9 +169,7 @@ def make_euler_circuit(start_node, updated_graph_instance):
     attributes in edges_dict, return a list contain the sequence in which
     the graph's nodes should be visited.
     """
-
-    print("Start node:", start_node)
-
+    
     current_edges_on_graph_list = make_edges_list(updated_graph_instance.edges_dict)
 
     current_node = start_node 
@@ -247,13 +245,13 @@ if __name__ == '__main__':
     updated_graph_inst = get_eulerian_graph_edges(bbox, SOURCE)
 
     # # 3. calculate euler circuit 
-    print("\n\nEuler circuit node order:")
-    print("node_visit_order:", make_euler_circuit(start_node, updated_graph_inst)["node_visit_order"])
-    print("edge_visit_order:", make_euler_circuit(start_node, updated_graph_inst)["edge_visit_order"])
+    # print("\n\nEuler circuit node order:")
+    # print("node_visit_order:", make_euler_circuit(start_node, updated_graph_inst)["node_visit_order"])
+    # print("edge_visit_order:", make_euler_circuit(start_node, updated_graph_inst)["edge_visit_order"])
 
 
 
-    print("\n\nProcess time:", time.time() - start, "seconds")
+    # print("\n\nProcess time:", time.time() - start, "seconds")
 
 
 

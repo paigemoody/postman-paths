@@ -13,8 +13,7 @@ TEST_GRAPH = OSMGraph(NORTH, SOUTH, EAST, WEST, SOURCE)
 class TestGetOddNodes(unittest.TestCase):
 
   def test_get_odd_nodes(self):
-    """Given nodes dictionary, return a list of all
-    nodes where is_odd = True""" 
+    """Return correct odd nodes""" 
     
     input_nodes_dict = { 
         'A': {'is_odd': False},
@@ -62,7 +61,7 @@ class TestGetShortestRouteTwoNodes(unittest.TestCase):
 class TestGetRouteEdgesFromRoute(unittest.TestCase):
 
   def test_get_route_edges_from_route(self):
-    """Correct edges returned from list of edges""" 
+    """Return correct edges from list of nodes""" 
 
     input_route = ['A', 'B', 'C', 'D','E']
     
@@ -96,9 +95,8 @@ class TestGetRouteLength(unittest.TestCase):
 class TestGetDictPairingsListsLengths(unittest.TestCase):
 
   def test_get_dict_pairings_lists_lengths(self):
-    """Return a dictionary of the length 
-    of each pairing.
-    """
+    """Return correct dictionary of pairing lengths"""
+
     input_list_of_possible_pairs_lists = [[(65294615, 65320193), (65313455, 65320188)], [(65294615, 65313455), (65320193, 65320188)], [(65294615, 65320188), (65320193, 65313455)]]
     
     input_graph_instance = TEST_GRAPH
