@@ -1,8 +1,8 @@
 import unittest
 
-import numpy as np # seems to slow down a bit
-import osmnx as ox # really slows down file run?
-import networkx as nx
+# import numpy as np # seems to slow down a bit
+# import osmnx as ox # really slows down file run?
+# import networkx as nx
 
 # from graph_constructor import make_nodes_dict
 # from graph_constructor import get_odd_nodes
@@ -21,6 +21,8 @@ from graph_constructor_2 import get_odd_nodes
 from graph_constructor_2 import get_list_of_all_pairs_lists
 from graph_constructor_2 import get_shortest_route_two_nodes
 from graph_constructor_2 import get_route_edges_from_route
+from graph_constructor_2 import get_route_length
+
 
 NORTH = 37.7599 # max lat 
 SOUTH = 37.7569 # min lat
@@ -33,14 +35,20 @@ TEST_GRAPH = OSMGraph(NORTH, SOUTH, EAST, WEST, SOURCE)
 class TestGetOddNodes(unittest.TestCase):
 
   def test_get_odd_nodes(self):
-    """Given graph instance, return a list of all
+    """Given nodes dictionary, return a list of all
     nodes where is_odd = True""" 
     
-    input_graph_instance = TEST_GRAPH
+    input_nodes_dict = { 
+        'A': {'is_odd': False},
+        'B': {'is_odd': True},
+        'C': {'is_odd': True},
+        'D': {'is_odd': False},
+        'E': {'is_odd': False}
+      }
 
-    expected_output = [65294615, 65320193, 65313455, 65320188]
+    expected_output = ['B', 'C']
 
-    self.assertEqual(get_odd_nodes(TEST_GRAPH), expected_output)
+    self.assertEqual(get_odd_nodes(input_nodes_dict), expected_output)
 
 class TestGetLIstOfAllPairs(unittest.TestCase):
 
@@ -79,6 +87,21 @@ class TestGetRouteEdgesFromRoute(unittest.TestCase):
     input_route = ['A', 'B', 'C', 'D','E']
     expected_output = [('A', 'B'), ('B', 'C'), ('C', 'D'), ('D', 'E')]
     self.assertEqual(get_route_edges_from_route(input_route), expected_output)
+
+
+class Test (unittest.TestCase):
+
+  def test_get_route_length(self):
+    """Correct route length returned"""
+
+    input_route_edges = [(65294615, 65294613), (65294613, 65320188)]
+    input_graph_instance = TEST_GRAPH
+    expected_output = 228.606
+
+    self.assertEqual(get_route_length(input_route_edges, input_graph_instance), expected_output)
+
+
+
 
 # # make a real graph for tests that need that 
 # CONSTRUCTED_GRAPH = ox.graph_from_bbox(NORTH, SOUTH, EAST, WEST, network_type='walk')

@@ -23,15 +23,11 @@ SOURCE = "OSM"
 ORIG_GRAPH = OSMGraph(NORTH, SOUTH, EAST, WEST, SOURCE)
 # ABCD_graph = DIYGraph([('A','B'), ('B', 'C'), ('C', 'D'), ('D','A'), ('A', 'C'), ('B', 'D')])
 
-def get_odd_nodes(graph_instance):
-    """ Given graph instance return 
-    list of odd nodes.
+def get_odd_nodes(nodes_dict):
+    """ Given a nodes dictionary return 
+    list of odd nodes -- nodes that have 'is_odd = True'.
     """
     odd_nodes_list = []
-
-    # nodes_dict = make_nodes_dict(graph_instance)
-
-    nodes_dict = graph_instance.nodes_dict
 
     for node in nodes_dict:
         if nodes_dict[node]['is_odd'] == True:
@@ -266,7 +262,7 @@ def get_eulerian_graph_edges(bbox, source):
 
     osm_graph = OSMGraph(north,south,east,west, source)
 
-    odd_nodes = get_odd_nodes(osm_graph)
+    odd_nodes = get_odd_nodes(osm_graph.nodes_dict)
 
     print("\nodd_nodes",odd_nodes)
 
@@ -287,12 +283,12 @@ def get_eulerian_graph_edges(bbox, source):
     return updated_dict
 
 
-# bbox = [37.7599,37.7569 ,-122.3997,-122.4023] # min lng 
-# updated_graph_inst = get_eulerian_graph_edges(bbox, "OSM")
+bbox = [37.7599,37.7569 ,-122.3997,-122.4023] # min lng 
+updated_graph_inst = get_eulerian_graph_edges(bbox, "OSM")
 
-# for edge in updated_graph_inst.edges_dict:
-#     print()
-#     print(edge, "\n", updated_graph_inst.edges_dict[edge])
+for edge in updated_graph_inst.edges_dict:
+    print()
+    print(edge, "\n", updated_graph_inst.edges_dict[edge])
 
 
 # print(get_odd_nodes(ORIG_GRAPH))
