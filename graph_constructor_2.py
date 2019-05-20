@@ -1,27 +1,5 @@
-# import numpy as np # seems to slow down a bit
-# import osmnx as ox # really slows down file run?
-# import networkx as nx
-
 from networkx import shortest_path
-# import itertools
-# from random import choice
-# import math
-
 from classes import OSMGraph
-# from classes import DIYGraph
-# from class_experimentation import make_edges_dict
-# from class_experimentation import make_nodes_dict
-
-
-# save these for testing 
-NORTH = 37.7599 # max lat 
-SOUTH = 37.7569 # min lat
-EAST = -122.3997 # max lng
-WEST = -122.4023 # min lng 
-SOURCE = "OSM"
-
-ORIG_GRAPH = OSMGraph(NORTH, SOUTH, EAST, WEST, SOURCE)
-# ABCD_graph = DIYGraph([('A','B'), ('B', 'C'), ('C', 'D'), ('D','A'), ('A', 'C'), ('B', 'D')])
 
 def get_odd_nodes(nodes_dict):
     """ Given a nodes dictionary return 
@@ -256,35 +234,34 @@ def get_eulerian_graph_edges(bbox, source):
     """
     north, south, east, west = bbox
 
-    print(north,south,east,west)
+    # print(north,south,east,west)
 
     osm_graph = OSMGraph(north,south,east,west, source)
 
     odd_nodes = get_odd_nodes(osm_graph.nodes_dict)
 
-    print("\nodd_nodes",odd_nodes)
+    # print("\nodd_nodes",odd_nodes)
 
     all_pairs_list = get_list_of_all_pairs_lists(odd_nodes)
 
-    print("\nall_pairs_list",all_pairs_list)
+    # print("\nall_pairs_list",all_pairs_list)
 
     dict_pairings_lists_lengths = get_dict_pairings_lists_lengths(all_pairs_list, osm_graph)
 
-    print("\ndict_pairings_lists_lengths", dict_pairings_lists_lengths)
+    # print("\ndict_pairings_lists_lengths", dict_pairings_lists_lengths)
 
     twice_traversals_edges = get_twice_traversals_edges(dict_pairings_lists_lengths)
 
-    print("\n\n\n\ntwice_traversals_edges",twice_traversals_edges)
+    # print("\n\n\n\ntwice_traversals_edges",twice_traversals_edges)
 
     updated_graph_instance = update_twice_traversal_edges(twice_traversals_edges, osm_graph)
 
     return updated_graph_instance
 
 
-
 if __name__ == "__main__":
-    import doctest
-    doctest.testmod()
+    # import doctest
+    # doctest.testmod()
 
     NORTH = 37.7599 # max lat 
     SOUTH = 37.7569 # min lat

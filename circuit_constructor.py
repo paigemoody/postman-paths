@@ -9,16 +9,6 @@ import itertools
 from random import choice
 import math
 
-# from graph_constructor import make_nodes_dict
-# from graph_constructor import get_odd_nodes
-# from graph_constructor import get_list_of_all_pairs_lists
-# from graph_constructor import get_shortest_path_route_two_nodes
-# from graph_constructor import get_route_edges_from_shortest_path
-# from graph_constructor import get_total_length_shortest_path
-# from graph_constructor import get_dict_length_pairings_lists
-# from graph_constructor import get_optimal_pairing_list_dict
-# from graph_constructor import get_all_double_back_edges
-# from graph_constructor import make_traversal_dict_with_added_edges
 
 from graph_constructor_2 import get_eulerian_graph_edges
 
@@ -320,12 +310,21 @@ if __name__ == '__main__':
     NORTH = 37.7599 # max lat 
     SOUTH = 37.7569 # min lat
     EAST = -122.3997 # max lng
-    WEST = -122.4023 # min lng 
+    WEST = -122.4023 # min lng  
+    SOURCE = "OSM"
 
-        
-    G = ox.graph_from_bbox(NORTH,SOUTH, EAST, WEST, network_type='walk') ## FLAG
+    bbox = [NORTH, SOUTH , EAST, WEST] # min lng 
+    updated_graph_inst = get_eulerian_graph_edges(bbox, "OSM")
 
-    start_node = choice(list(G.nodes))
+    # 1. get start node 
+    # 2. get graph with updated traversals count 
+    # 3. calculate euler circuit 
+
+
+
+    # G = ox.graph_from_bbox(NORTH,SOUTH, EAST, WEST, network_type='walk') ## FLAG
+
+    # start_node = choice(list(G.nodes))
 
     print(make_euler_circuit(start_node, G))
 
