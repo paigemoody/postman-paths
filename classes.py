@@ -10,14 +10,17 @@ SOUTH = 37.7569 # min lat
 EAST = -122.3997 # max lng
 WEST = -122.4023 # min lng 
 
+
 class OSMGraph:
     """Unidirected graph created from OSM"""
 
     graph_type = "undirected"
-    source = "OSM"
+    # source = "OSM"
 
-    def __init__(self, north, south, east, west):
+    def __init__(self, north, south, east, west, source):
         """Create a Graph."""
+
+        self.source = source
 
         self.ox_graph = graph_from_bbox(north, south, east, west, network_type='walk')
 
@@ -147,40 +150,38 @@ class OSMGraph:
             node_attrs['connected_edges'] = connected_edges
             node_attrs['is_odd'] = is_odd
 
-
-
             nodes_dict[node] = node_attrs
 
         self.nodes_dict = nodes_dict
 
-class DIYGraph:
-    """Graph made from list of edges"""
+# class DIYGraph:
+#     """Graph made from list of edges"""
 
-    graph_type = "undirected"
-    source = "DIY"
+#     graph_type = "undirected"
+#     source = "DIY"
 
-    def __init__(self, list_of_edges):
+#     def __init__(self, list_of_edges):
 
-        self.nodes_df = None
+#         self.nodes_df = None
 
-        all_nodes = set()
+#         all_nodes = set()
 
-        # make a list of nodes based on nodes 
-        # contained within all edge
-        for edge in list_of_edges:
+#         # make a list of nodes based on nodes 
+#         # contained within all edge
+#         for edge in list_of_edges:
 
-            first_node, second_node = edge
+#             first_node, second_node = edge
 
-            all_nodes.add(first_node)
-            all_nodes.add(second_node)
+#             all_nodes.add(first_node)
+#             all_nodes.add(second_node)
 
-        self.nodes = list(all_nodes)
+#         self.nodes = list(all_nodes)
 
-        self.edges = list_of_edges
+#         self.edges = list_of_edges
 
-OG_graph = OSMGraph(NORTH, SOUTH, EAST, WEST)
+# OG_graph = OSMGraph(NORTH, SOUTH, EAST, WEST, "OSM")
 
-print(OG_graph.edges_dict)
+# print(OG_graph.edges_dict)
 
 # ABCD_graph = DIYGraph([('A','B'), ('B', 'C'), ('C', 'D'), ('D','A'), ('A', 'C')])
 

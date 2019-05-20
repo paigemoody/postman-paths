@@ -9,17 +9,18 @@ import itertools
 from random import choice
 import math
 
-from graph_constructor import make_nodes_dict
-from graph_constructor import get_odd_nodes
-from graph_constructor import get_list_of_all_pairs_lists
-from graph_constructor import get_shortest_path_route_two_nodes
-from graph_constructor import get_route_edges_from_shortest_path
-from graph_constructor import get_total_length_shortest_path
-from graph_constructor import get_dict_length_pairings_lists
-from graph_constructor import get_optimal_pairing_list_dict
-from graph_constructor import get_all_double_back_edges
-from graph_constructor import make_traversal_dict_with_added_edges
+# from graph_constructor import make_nodes_dict
+# from graph_constructor import get_odd_nodes
+# from graph_constructor import get_list_of_all_pairs_lists
+# from graph_constructor import get_shortest_path_route_two_nodes
+# from graph_constructor import get_route_edges_from_shortest_path
+# from graph_constructor import get_total_length_shortest_path
+# from graph_constructor import get_dict_length_pairings_lists
+# from graph_constructor import get_optimal_pairing_list_dict
+# from graph_constructor import get_all_double_back_edges
+# from graph_constructor import make_traversal_dict_with_added_edges
 
+from graph_constructor_2 import get_eulerian_graph_edges
 
 
 def get_bridges(edges_list):

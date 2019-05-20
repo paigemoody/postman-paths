@@ -8,7 +8,7 @@ from networkx import shortest_path
 # import math
 
 from classes import OSMGraph
-from classes import DIYGraph
+# from classes import DIYGraph
 # from class_experimentation import make_edges_dict
 # from class_experimentation import make_nodes_dict
 
@@ -18,15 +18,16 @@ NORTH = 37.7599 # max lat
 SOUTH = 37.7569 # min lat
 EAST = -122.3997 # max lng
 WEST = -122.4023 # min lng 
+SOURCE = "OSM"
 
-ORIG_GRAPH = OSMGraph(NORTH, SOUTH, EAST, WEST)
-ABCD_graph = DIYGraph([('A','B'), ('B', 'C'), ('C', 'D'), ('D','A'), ('A', 'C'), ('B', 'D')])
+ORIG_GRAPH = OSMGraph(NORTH, SOUTH, EAST, WEST, SOURCE)
+# ABCD_graph = DIYGraph([('A','B'), ('B', 'C'), ('C', 'D'), ('D','A'), ('A', 'C'), ('B', 'D')])
 
 def get_odd_nodes(graph_instance):
     """ Given graph instance return 
     list of odd nodes.
     """
-    odd_nodes_dict = []
+    odd_nodes_list = []
 
     # nodes_dict = make_nodes_dict(graph_instance)
 
@@ -34,9 +35,9 @@ def get_odd_nodes(graph_instance):
 
     for node in nodes_dict:
         if nodes_dict[node]['is_odd'] == True:
-            odd_nodes_dict.append(node)
+            odd_nodes_list.append(node)
 
-    return odd_nodes_dict
+    return odd_nodes_list
 
 def get_all_pairing_options(lst):
     """ Given list of items
@@ -255,7 +256,7 @@ def update_twice_traversal_edges(list_twice_trav_edges, graph_instance):
 ## over-arching function that takes a bounding box and returns 
 ## a dict with twice traversal edges marked 
 
-def get_eulerian_graph_edges(bbox):
+def get_eulerian_graph_edges(bbox, source):
     """Given a bounding box list [north,south,east,west],
     return a dictionary of edges with metadata and traversal count.
     """
@@ -263,7 +264,7 @@ def get_eulerian_graph_edges(bbox):
 
     print(north,south,east,west)
 
-    osm_graph = OSMGraph(north,south,east,west)
+    osm_graph = OSMGraph(north,south,east,west, source)
 
     odd_nodes = get_odd_nodes(osm_graph)
 
@@ -286,15 +287,15 @@ def get_eulerian_graph_edges(bbox):
     return updated_dict
 
 
-bbox = [37.7599,37.7569 ,-122.3997,-122.4023] # min lng 
-updated_graph_inst = get_eulerian_graph_edges(bbox)
+# bbox = [37.7599,37.7569 ,-122.3997,-122.4023] # min lng 
+# updated_graph_inst = get_eulerian_graph_edges(bbox, "OSM")
 
-for edge in updated_graph_inst.edges_dict:
-    print()
-    print(edge, "\n", updated_graph_inst.edges_dict[edge])
+# for edge in updated_graph_inst.edges_dict:
+#     print()
+#     print(edge, "\n", updated_graph_inst.edges_dict[edge])
 
 
-
+# print(get_odd_nodes(ORIG_GRAPH))
 
 # if __name__ == "__main__":
 #     import doctest
@@ -304,7 +305,13 @@ for edge in updated_graph_inst.edges_dict:
 # twice_traversals_edges = [(65294615, 65320188), (65320193, 65313455)]
 # print(update_twice_traversal_edges(twice_traversals_edges, ORIG_GRAPH))
 
+# NORTH = 37.7599 # max lat 
+# SOUTH = 37.7569 # min lat
+# EAST = -122.3997 # max lng
+# WEST = -122.4023 # min lng 
+# SOURCE = "OSM"
 
+# TEST_GRAPH = OSMGraph(NORTH, SOUTH, EAST, WEST, SOURCE)
 
 
 

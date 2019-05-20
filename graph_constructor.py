@@ -13,7 +13,7 @@ import math
 def make_nodes_dict(graph):
     """ 
     Given a graph, make dict where:
-    key is each node,  
+     #key is each node,  
     value is set of all edges that contain node.
     """
     nodes_dict = {}
