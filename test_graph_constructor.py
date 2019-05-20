@@ -1,16 +1,6 @@
 import unittest
-
 from classes import OSMGraph
-
-from graph_constructor_2 import get_odd_nodes
-from graph_constructor_2 import get_list_of_all_pairs_lists
-from graph_constructor_2 import get_shortest_route_two_nodes
-from graph_constructor_2 import get_route_edges_from_route
-from graph_constructor_2 import get_route_length
-from graph_constructor_2 import get_dict_pairings_lists_lengths
-from graph_constructor_2 import get_twice_traversals_edges
-from graph_constructor_2 import update_twice_traversal_edges
-
+from graph_constructor_2 import *
 
 NORTH = 37.7599 # max lat 
 SOUTH = 37.7569 # min lat
