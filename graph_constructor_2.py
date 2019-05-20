@@ -79,7 +79,7 @@ def get_all_pairing_options(lst):
             for rest in get_all_pairing_options(items_to_left_of_pair + items_to_right_of_pair):
                 yield [pair] + rest
 
-def get_list_of_all_pairs_lists(lst):
+def get_list_of_all_pairs_lists(input_list):
     """
     Takes in a list of items and returns a list of 
     lists, each containing tuples that represent 
@@ -91,7 +91,7 @@ def get_list_of_all_pairs_lists(lst):
     list_of_possible_pairs_lists = []
     
     # get the all pairs  generator
-    all_pairs_object = get_all_pairing_options(lst)
+    all_pairs_object = get_all_pairing_options(input_list)
     
     for pairs_list in all_pairs_object: 
         list_of_possible_pairs_lists.append(pairs_list)
@@ -126,18 +126,14 @@ def get_route_edges_from_route(route):
 
     return edges_in_route
 
-def get_route_length(route_edges_list, graph_instance):
+# def get_route_length(route_edges_list, graph_instance):
+def get_route_length(route_edges_list, edges_dict):
     """
-    Given a list of edges in a route, 
+    Given a list of edges in a route, and a dictionary
+    which includes those edges 
     return the total length of the route 
     (sum of the lengths of all edges in list).
-
-    >>> get_route_length([(65294615, 65294613), (65294613, 65320188)], ORIG_GRAPH)
-    228.606
     """
-
-    edges_dict = graph_instance.edges_dict
-    # edges_dict = make_edges_dict(graph_instance)
 
     total_edges_length = 0
 
@@ -153,6 +149,7 @@ def get_route_length(route_edges_list, graph_instance):
             total_edges_length += edges_dict[edge]['length']
 
     return total_edges_length
+
 
 def get_dict_pairings_lists_lengths(list_of_possible_pairs_lists, graph_instance):
     """Given list of list of possible 
@@ -181,7 +178,7 @@ def get_dict_pairings_lists_lengths(list_of_possible_pairs_lists, graph_instance
 
             shortest_route_edges = get_route_edges_from_route(shortest_route_nodes_list)
 
-            total_route_length = get_route_length(shortest_route_edges, graph_instance)
+            total_route_length = get_route_length(shortest_route_edges, graph_instance.edges_dict)
 
             pairings_list_length += total_route_length
 
@@ -206,6 +203,7 @@ def get_twice_traversals_edges(pairings_lengths_dict):
             shortest_length = pairings_lengths_dict[pairing]
 
     return list(optimal_pairing)
+
 
 def update_twice_traversal_edges(list_twice_trav_edges, graph_instance):
     """ 
@@ -276,38 +274,30 @@ def get_eulerian_graph_edges(bbox, source):
 
     twice_traversals_edges = get_twice_traversals_edges(dict_pairings_lists_lengths)
 
-    print("\ntwice_traversals_edges",twice_traversals_edges)
+    print("\n\n\n\ntwice_traversals_edges",twice_traversals_edges)
 
-    updated_dict = update_twice_traversal_edges(twice_traversals_edges, osm_graph)
-    
-    return updated_dict
+    updated_graph_instance = update_twice_traversal_edges(twice_traversals_edges, osm_graph)
 
-
-bbox = [37.7599,37.7569 ,-122.3997,-122.4023] # min lng 
-updated_graph_inst = get_eulerian_graph_edges(bbox, "OSM")
-
-for edge in updated_graph_inst.edges_dict:
-    print()
-    print(edge, "\n", updated_graph_inst.edges_dict[edge])
+    return updated_graph_instance
 
 
-# print(get_odd_nodes(ORIG_GRAPH))
 
-# if __name__ == "__main__":
-#     import doctest
-#     doctest.testmod()
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod()
 
+    NORTH = 37.7599 # max lat 
+    SOUTH = 37.7569 # min lat
+    EAST = -122.3997 # max lng
+    WEST = -122.4023 # min lng 
+    SOURCE = "OSM"
 
-# twice_traversals_edges = [(65294615, 65320188), (65320193, 65313455)]
-# print(update_twice_traversal_edges(twice_traversals_edges, ORIG_GRAPH))
+    bbox = [NORTH, SOUTH , EAST, WEST] # min lng 
+    updated_graph_inst = get_eulerian_graph_edges(bbox, "OSM")
 
-# NORTH = 37.7599 # max lat 
-# SOUTH = 37.7569 # min lat
-# EAST = -122.3997 # max lng
-# WEST = -122.4023 # min lng 
-# SOURCE = "OSM"
-
-# TEST_GRAPH = OSMGraph(NORTH, SOUTH, EAST, WEST, SOURCE)
+    for edge in updated_graph_inst.edges_dict:
+        print()
+        print(edge, "\n", updated_graph_inst.edges_dict[edge])
 
 
 
