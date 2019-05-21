@@ -1,15 +1,10 @@
-# import osmnx as ox # really slows down file run?
-# import networkx as nx
-# import numpy as np # seems to slow down a bit
-from osmnx import graph_from_bbox
-from osmnx import graph_to_gdfs
-
+from osmnx import graph_from_bbox, graph_to_gdfs
 
 # sample bbox constraints
-NORTH = 37.7599 # max lat 
-SOUTH = 37.7569 # min lat
-EAST = -122.3997 # max lng
-WEST = -122.4023 # min lng 
+# NORTH = 37.7599 # max lat 
+# SOUTH = 37.7569 # min lat
+# EAST = -122.3997 # max lng
+# WEST = -122.4023 # min lng 
 
 
 class OSMGraph:
