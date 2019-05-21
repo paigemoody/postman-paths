@@ -97,15 +97,20 @@ class TestMakeEulerCircuit(unittest.TestCase):
     def test_make_euler_circuit_edges(self):
         """Confirm that start and end node are the same"""
 
-        NORTH = 37.7599 # max lat 
-        SOUTH = 37.7569 # min lat
-        EAST = -122.3997 # max lng
-        WEST = -122.4023 # min lng  
-        SOURCE = "OSM"
+        # NORTH = 37.7599 # max lat 
+        # SOUTH = 37.7569 # min lat
+        # EAST = -122.3997 # max lng
+        # WEST = -122.4023 # min lng  
+        
 
         start_node = 65294616
 
-        bbox = [NORTH, SOUTH , EAST, WEST] # min lng 
+        # bbox = [NORTH, SOUTH , EAST, WEST] # min lng 
+
+        bbox = get_bbox_from_geojson('test_bbox_input.geojson')
+
+        SOURCE = "OSM"
+        
         updated_graph_inst = get_eulerian_graph_edges(bbox, SOURCE)
 
         actual_output_dict = make_euler_circuit(start_node, updated_graph_inst)
@@ -117,3 +122,4 @@ class TestMakeEulerCircuit(unittest.TestCase):
 if __name__ == '__main__':
     # Run all tests when called like a script 
     unittest.main()
+

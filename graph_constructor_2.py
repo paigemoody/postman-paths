@@ -1,10 +1,58 @@
 from networkx import shortest_path
 from classes import OSMGraph
+import json
+import time
+
+def get_bbox_from_geojson(geojson_file):
+    """From feature collection geojson of a bounding box
+    return bbox list --> [north, south, east, west]"""
+
+    print("\nbbox")
+
+    all_lats = []
+    all_lngs = []
+    
+    with open(geojson_file) as g_file: 
+
+        data = json.load(g_file)
+
+        feature = data['features'][0]
+
+        coordinates = feature['geometry']['coordinates'][0]
+
+        # print("geometry:", coordinates)
+
+        for coord in coordinates:
+
+            # [lng, lat]
+
+            lng = coord[0]
+            lat = coord[1]
+
+            all_lats.append(lat)
+            all_lngs.append(lng)
+
+    max_lat = max(all_lats)  # north
+    min_lat = min(all_lats) # south
+
+    max_lng = max(all_lngs) # east 
+    min_lng = min(all_lngs) # west
+
+    # print("North:", max_lat)
+    # print("South:", min_lat)
+    # print("East:", max_lng)
+    # print("West:", min_lng) 
+
+    bbox = [max_lat, min_lat, max_lng, min_lng]
+
+    return bbox
 
 def get_odd_nodes(nodes_dict):
     """ Given a nodes dictionary return 
     list of odd nodes -- nodes that have 'is_odd = True'.
     """
+
+    print("\n\nodd nodes")
     odd_nodes_list = []
 
     for node in nodes_dict:
@@ -55,6 +103,8 @@ def get_all_pairing_options(lst):
             items_to_right_of_pair = lst[i+1:]
             
             for rest in get_all_pairing_options(items_to_left_of_pair + items_to_right_of_pair):
+                
+                print("\n\n [pair] + rest", [pair] + rest )
                 yield [pair] + rest
 
 def get_list_of_all_pairs_lists(input_list):
@@ -65,7 +115,13 @@ def get_list_of_all_pairs_lists(input_list):
 
     (Calls the function I didn't write, returns a list)
     """
+
+    print("\n\n\n\nget_list_of_all_pairs_lists -- input_list", input_list)
+
+    time.sleep(5)
     
+    print("\n\nget_list_of_all_pairs_lists")
+
     list_of_possible_pairs_lists = []
     
     # get the all pairs  generator
@@ -81,6 +137,9 @@ def get_shortest_route_two_nodes(start_node, end_node, graph_instance):
     return sequenced list of nodes included in shortest route
     between the nodes.
     """
+
+    print("\n\nget_shortest_route_two_nodes")
+
     route = shortest_path(graph_instance.ox_graph, start_node, end_node, weight='length')
     # route = nx.shortest_path(graph_instance.ox_graph, start_node, end_node, weight='length')
     return route
@@ -93,6 +152,8 @@ def get_route_edges_from_route(route):
     [('A', 'B'), ('B', 'C'), ('C', 'D'), ('D', 'E')]
 
     """
+
+    print("\n\nget_route_edges_from_route")
 
     edges_in_route = []
     
@@ -112,6 +173,8 @@ def get_route_length(route_edges_list, edges_dict):
     return the total length of the route 
     (sum of the lengths of all edges in list).
     """
+
+    print("\n\nget_route_length")
 
     total_edges_length = 0
 
@@ -138,6 +201,9 @@ def get_dict_pairings_lists_lengths(list_of_possible_pairs_lists, graph_instance
     {((65294615, 65320193), (65313455, 65320188)): 506.546, ((65294615, 65313455), (65320193, 65320188)): 506.546, ((65294615, 65320188), (65320193, 65313455)): 330.56899999999996}
 
     """
+
+    print("\n\nget_dict_pairings_lists_lengths")
+
     pairings_lengths_dict = {}
 
 
@@ -172,6 +238,8 @@ def get_twice_traversals_edges(pairings_lengths_dict):
     [('A', 'B'), ('B', 'C')]
     """
     
+    print("\n\nget_twice_traversals_edges")
+
     optimal_pairing = None
     shortest_length = float('inf') 
 
@@ -191,6 +259,8 @@ def update_twice_traversal_edges(list_twice_trav_edges, graph_instance):
     Return edges dict for graph instance 
     """
     
+    print("\n\nupdate_twice_traversal_edges")
+
     edges_dict = graph_instance.edges_dict
     # edges_dict = make_edges_dict(graph_instance)
 
@@ -232,11 +302,18 @@ def get_eulerian_graph_edges(bbox, source):
     """Given a bounding box list [north,south,east,west],
     return a dictionary of edges with metadata and traversal count.
     """
-    north, south, east, west = bbox
+
+    print("\n\nget_eulerian_graph_edges")
+
+    # north, south, east, west = bbox
 
     # print(north,south,east,west)
 
-    osm_graph = OSMGraph(north,south,east,west, source)
+    # osm_graph = OSMGraph(north, south, east, west, source)
+
+    osm_graph = OSMGraph(bbox, source)
+
+    print("osm_graph.nodes_dict:",osm_graph.nodes_dict)
 
     odd_nodes = get_odd_nodes(osm_graph.nodes_dict)
 
@@ -263,13 +340,18 @@ if __name__ == "__main__":
     # import doctest
     # doctest.testmod()
 
-    NORTH = 37.7599 # max lat 
-    SOUTH = 37.7569 # min lat
-    EAST = -122.3997 # max lng
-    WEST = -122.4023 # min lng 
-    SOURCE = "OSM"
+    # NORTH = 37.7599 # max lat 
+    # SOUTH = 37.7569 # min lat
+    # EAST = -122.3997 # max lng
+    # WEST = -122.4023 # min lng 
+    # SOURCE = "OSM"
 
-    bbox = [NORTH, SOUTH , EAST, WEST] # min lng 
+    # bbox = [NORTH, SOUTH , EAST, WEST] # min lng 
+
+    bbox = get_bbox_from_geojson('test_bbox_input.geojson')
+
+    print("bbox")
+
     updated_graph_inst = get_eulerian_graph_edges(bbox, "OSM")
 
     for edge in updated_graph_inst.edges_dict:

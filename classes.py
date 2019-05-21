@@ -17,10 +17,12 @@ class OSMGraph:
     graph_type = "undirected"
     # source = "OSM"
 
-    def __init__(self, north, south, east, west, source):
+    def __init__(self, bbox, source):
         """Create a Graph."""
 
         self.source = source
+
+        north, south, east, west = bbox
 
         self.ox_graph = graph_from_bbox(north, south, east, west, network_type='walk')
 
