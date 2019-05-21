@@ -4,6 +4,7 @@
 from osmnx import graph_from_bbox
 from osmnx import graph_to_gdfs
 
+
 # sample bbox constraints
 NORTH = 37.7599 # max lat 
 SOUTH = 37.7569 # min lat
@@ -22,11 +23,11 @@ class OSMGraph:
 
         self.source = source
 
+        self.bbox = bbox
+
         north, south, east, west = bbox
 
         self.ox_graph = graph_from_bbox(north, south, east, west, network_type='walk')
-
-        # self.nodes_df, self.edges_df = graph_to_gdfs(ox_graph)
 
         # set self.nodes_df and self.edges_df
         self.get_dataframes()
@@ -156,44 +157,23 @@ class OSMGraph:
 
         self.nodes_dict = nodes_dict
 
-# class DIYGraph:
-#     """Graph made from list of edges"""
+    def __repr__(self):
+        """Provide helpful representation of graph when printed."""
 
-#     graph_type = "undirected"
-#     source = "DIY"
+        return f"<bbox={self.bbox}\nsource={self.source}\ntotal nodes={len(self.nodes)}\ntotal edges={len(self.edges)}>"
 
-#     def __init__(self, list_of_edges):
+if __name__ == '__main__':
 
-#         self.nodes_df = None
+    from graph_constructor_2 import get_bbox_from_geojson
 
-#         all_nodes = set()
+    bbox = get_bbox_from_geojson('test_bbox_input.geojson')
 
-#         # make a list of nodes based on nodes 
-#         # contained within all edge
-#         for edge in list_of_edges:
+    source = "OSM"
 
-#             first_node, second_node = edge
+    example_graph_instance = OSMGraph(bbox, source)
 
-#             all_nodes.add(first_node)
-#             all_nodes.add(second_node)
+    print("example_graph_instance:\n", example_graph_instance)
 
-#         self.nodes = list(all_nodes)
 
-#         self.edges = list_of_edges
 
-# OG_graph = OSMGraph(NORTH, SOUTH, EAST, WEST, "OSM")
-
-# print(OG_graph.edges_dict)
-
-# ABCD_graph = DIYGraph([('A','B'), ('B', 'C'), ('C', 'D'), ('D','A'), ('A', 'C')])
-
-# for node in make_nodes_dict(OG_graph):
-#     print()
-#     print("node:", node)
-#     print(make_nodes_dict(OG_graph)[node])
-
-# for node in make_nodes_dict(ABCD_graph):
-#     print()
-#     print("node:", node)
-#     print(make_nodes_dict(ABCD_graph)[node])
 

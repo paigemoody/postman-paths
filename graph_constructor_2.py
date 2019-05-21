@@ -350,6 +350,8 @@ if __name__ == "__main__":
 
     bbox = get_bbox_from_geojson('test_bbox_input.geojson')
 
+    # osm_graph = OSMGraph(bbox, source)
+
     print("bbox")
 
     updated_graph_inst = get_eulerian_graph_edges(bbox, "OSM")
