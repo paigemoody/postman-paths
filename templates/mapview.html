@@ -30,10 +30,11 @@
     }
      
     p {
-    font-family: 'Open Sans';
-    margin: 0;
-    font-size: 13px;
+        font-family: 'Open Sans';
+        margin: 0;
+        font-size: 13px;
     }
+
     </style>
 
     <!--  end of stuff to remove later -->
@@ -82,22 +83,11 @@
       
         if (data.features.length > 0) {
 
-            console.log(data)
+            drawnFeatureCollection = (JSON.stringify(data))
 
-            console.log(data.features)
+            console.log(drawnFeatureCollection)
 
-            console.log(data.features[0])
-            // console.log(data.features[0][properties])
-
-
-
-            // var area = turf.area(data);
-            // restrict to area to 2 decimal points
-            // var rounded_area = Math.round(area*100)/100;
-
-            // answer.innerHTML = '<p><strong>' + rounded_area + '</strong></p><p>square meters</p>';
-
-            answer.innerHTML = '<p>' + data + '</p>' ;
+            answer.innerHTML = '<p>' + drawnFeatureCollection + '</p>' ;
         } 
 
         else {
