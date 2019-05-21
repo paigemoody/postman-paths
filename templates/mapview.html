@@ -55,12 +55,33 @@
     mapboxgl.accessToken = 'pk.eyJ1IjoicGFpZ2VlbW9vZHkiLCJhIjoiY2owbDcyejhvMDJwNzJ5cDR0YXE1aG10MCJ9.a-JLnrmMPSJNwOGQdloTDA';
 
     var map = new mapboxgl.Map({
-    container: 'map', // container id
-    style: 'mapbox://styles/mapbox/satellite-v9', //hosted style id
-    center: [-122.400932, 37.758250], // starting position is balloonicorn example route centr
-    zoom: 16 // starting zoom
+        container: 'map', // container id
+        style: 'mapbox://styles/mapbox/satellite-v9', //hosted style id
+        center: [-122.400932, 37.758250], // starting position is balloonicorn example route centr
+        zoom: 16 // starting zoom
     });
-     
+
+
+    //  add geojson of route 
+
+    map.on("load", function() {
+
+        var url = 'http://0.0.0.0:5000/route_geometry.geojson';
+
+        map.addSource('route', { type: 'geojson', data: url});
+
+        map.addLayer({
+            "id": "route", // rename?
+            "type": "line",
+            "source": "route", 
+            "paint": {
+                "line-color": "#FF0000",
+                "line-width": 8
+            }
+        });
+
+    });
+ 
     var draw = new MapboxDraw({
         displayControlsDefault: false,
         controls: {
