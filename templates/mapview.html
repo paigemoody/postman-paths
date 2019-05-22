@@ -5,6 +5,8 @@
 
   <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.54.0/mapbox-gl.js'></script>
 
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+
   <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.54.0/mapbox-gl.css' rel='stylesheet' />
 
   <style>
@@ -16,28 +18,22 @@
 
 <body>
 
-    <!-- remove later! just for demo purposes -->
+    <!-- remove later! just for playing around purposes -->
     <style>
-    .calculation-box {
-    height: 75px;
-    width: 150px;
-    position: absolute;
-    bottom: 40px;
-    left: 10px;
-    background-color: rgba(255, 255, 255, .9);
-    padding: 15px;
-    text-align: center;
-    }
-     
-    p {
-        font-family: 'Open Sans';
-        margin: 0;
-        font-size: 13px;
-    }
+
+        .calc_route_btn {
+            background-color: rgba(255, 255, 255, .9);
+            position: absolute;
+            height: 75px;
+            width: 150px;   
+        } 
+
+        .calc_route_btn:hover {
+            background-color: #4CAF50; /* Green */
+            color: white;
+        }
 
     </style>
-
-    <!--  end of stuff to remove later -->
 
     <script src='https://api.tiles.mapbox.com/mapbox.js/plugins/turf/v3.0.11/turf.min.js'></script>
     <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.9/mapbox-gl-draw.js'></script>
@@ -45,15 +41,19 @@
 
     <div id='map'></div>
 
-    <div class='calculation-box'>
-        <p>Draw a polygon using the draw tools.</p>
-        <div id='calculated-area'></div>
+    <div id = 'calc_route'> 
+        
+        <!-- add button when bbox has been drawn -->
+
     </div>
 
-    <script>
+</body>
 
+    <script>
     mapboxgl.accessToken = 'pk.eyJ1IjoicGFpZ2VlbW9vZHkiLCJhIjoiY2owbDcyejhvMDJwNzJ5cDR0YXE1aG10MCJ9.a-JLnrmMPSJNwOGQdloTDA';
 
+
+    // LOAD MAP 
     var map = new mapboxgl.Map({
         container: 'map', // container id
         style: 'mapbox://styles/mapbox/satellite-v9', //hosted style id
@@ -62,60 +62,110 @@
     });
 
 
-    //  add geojson of route 
+    // DRAW BBOX 
 
-    map.on("load", function() {
+    let bboxGeometry = {}
 
-        var url = 'http://0.0.0.0:5000/route_geometry.geojson';
-
-        map.addSource('route', { type: 'geojson', data: url});
-
-        map.addLayer({
-            "id": "route", // rename?
-            "type": "line",
-            "source": "route", 
-            "paint": {
-                "line-color": "#FF0000",
-                "line-width": 8
-            }
-        });
-
-    });
- 
     var draw = new MapboxDraw({
+
         displayControlsDefault: false,
+
         controls: {
             polygon: true,
             trash: true
         }
-    });
+
+    }); 
 
     map.addControl(draw);
      
-    map.on('draw.create', updateArea);
-    map.on('draw.delete', updateArea);
-    map.on('draw.update', updateArea);
+    map.on('draw.create', updateStatus);
+    map.on('draw.delete', updateStatus);
+    map.on('draw.update', updateStatus);
      
-    function updateArea(e) {
+    function updateStatus(e) {
 
-        var data = draw.getAll();
+        let data = draw.getAll();
 
-        var answer = document.getElementById('calculated-area');
-      
+        // let calcRouteBtn = document.querySelector('#calc_route_btn');
+
+        // let calcRoute = $('#calc_route')
+
+        console.log(calcRouteBtn)
+
         if (data.features.length > 0) {
+
+            bboxGeometry = JSON.stringify(data)
 
             drawnFeatureCollection = (JSON.stringify(data))
 
-            console.log(drawnFeatureCollection)
+            // console.log(drawnFeatureCollection)
 
-            answer.innerHTML = '<p>' + drawnFeatureCollection + '</p>' ;
+            // MAKE AN ELEMENT INSTEAD HERE (TOMORROW)
+            calcRouteHTML= "<button id='calcuate-route-btn' class='calc_route_btn'> Calculate Route  </button>"
+
+            $('#calc_route').html(calcRouteHTML);
+
+            // drawing_status.innerHTML = '<div>' + SOMETHING + '</div>';
+
+            // console.log(bboxGeometry)
+
+            //GET ROUTE CALCULATION
+
+            function getRoute(e){
+
+                // console.log("hi");
+
+                const url = 'http://0.0.0.0:5000/route_geometry.geojson';
+
+                map.addSource('route', { type: 'geojson', data: url});
+
+                map.addLayer({
+                    "id": "route", // rename?
+                    "type": "line",
+                    "source": "route", 
+                    "paint": {
+                        "line-color": "#FF0000",
+                        "line-width": 8
+                    }
+                });
+
+            }
+
+            const calcRouteBtn = $('#calcuate-route-btn');
+
+            calcRouteBtn.on('click', getRoute);
+
         } 
 
         else {
-            answer.innerHTML = '';
+
+            // drawing_status.innerHTML = '';
+
             if (e.type !== 'draw.delete') alert("Use the draw tools to draw a polygon!");
         }
     }
+    
+    
+
+    //  function to add geojson of route 
+
+    // map.on("load", function() {
+    //     var url = 'http://0.0.0.0:5000/route_geometry.geojson';
+    //     map.addSource('route', { type: 'geojson', data: url});
+
+    //     map.addLayer({
+    //         "id": "route", // rename?
+    //         "type": "line",
+    //         "source": "route", 
+    //         "paint": {
+    //             "line-color": "#FF0000",
+    //             "line-width": 8
+    //         }
+    //     });
+
+    // });
+
 
     </script>
 
