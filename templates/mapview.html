@@ -3,6 +3,7 @@
 
 {% block content %}
 
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
   <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.54.0/mapbox-gl.js'></script>
 
   <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
@@ -189,6 +190,13 @@ $('#change-style-s').on('click', function() {
    
         map.setStyle('mapbox://styles/mapbox/satellite-v9')
     });
+
+map.addControl(new mapboxgl.GeolocateControl({
+    positionOptions: {
+        enableHighAccuracy: true
+    },
+    trackUserLocation: true
+}));
 
 </script>
 
