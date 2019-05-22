@@ -109,8 +109,6 @@ var map = new mapboxgl.Map({
 
 // DRAW BBOX 
 
-let bboxGeometry = {}
-
 var draw = new MapboxDraw({
 
     displayControlsDefault: false,
@@ -128,76 +126,157 @@ map.addControl(draw);
 // map.on('draw.delete', updateStatus);
 // map.on('draw.update', updateStatus);
 
-map.on('draw.create', function() {
-    let data = draw.getAll();
 
-    console.log(calcRouteBtn)
+
+
+
+// when bboxx is double-clicked, you have the 
+// bbox data
+
+
+map.on('draw.create', function(evt) {
+
+    let data = draw.getAll();
+    //const bboxGeometryJSON = JSON.stringify(data);??
+
 
     if (data.features.length > 0) {
-
-        bboxGeometry = JSON.stringify(data)
-
-        drawnFeatureCollection = (JSON.stringify(data))
-
+    // if there is a bbox feature, show the calculate button 
         $('#calcuate-route-btn').removeAttr('style');
+
+        // const formInputs = {
+        //     bbox: bboxGeometryJSON
+        // };
+
+        //$.get('/bbox_geometry.geojson', {hi :"hi"}, sendAlert);
     } 
 
     else {
 
-        if (e.type !== 'draw.delete') alert("Use the draw tools to draw a polygon!");
+        if (e.type !== 'draw.delete') alert("Use the draw tools to draw a bbox!");
     }
 
 })
- 
-// function updateStatus(e) {
 
-//     let data = draw.getAll();
+// RENDER BBOX as new source? 
+    // map.addSource('route', { //  route in this case is a variable that is a feature collection
+    //     "type": "geojson",
+    //     "data": route
+    //     });
 
-//     console.log(calcRouteBtn)
-
-//     if (data.features.length > 0) {
-
-//         bboxGeometry = JSON.stringify(data)
-
-//         drawnFeatureCollection = (JSON.stringify(data))
-
-//         $('#calcuate-route-btn').removeAttr('style');
-//     } 
-
-//     else {
-
-//         if (e.type !== 'draw.delete') alert("Use the draw tools to draw a polygon!");
-//     }
-// }
 
 //GET ROUTE CALCULATION
 
-const calcRouteBtn = $('#calcuate-route-btn');
+function addBboxAndRoute(bboxJson) {
+    console.log(bboxJson)
 
-calcRouteBtn.on('click', function() {
+    // show the bbox
 
-    const url = 'http://0.0.0.0:5000/route_geometry.geojson';
+    // show the route 
+}
 
-    map.addSource('route', { type: 'geojson', data: url});
+// when the calculate route button is clicked, send bbox geometry to 
 
-    map.addLayer({
-        "id": "route", // rename?
-        "type": "line",
-        "source": "route", 
-        "paint": {
-            "line-color": "#FF0000",
-            "line-width": 8
-        }
-    });
+function handleBboxSend(evt) {
 
-    // hide claculate button again
-    $('#calcuate-route-btn').attr('style','display:none ;');
+    let bbox = draw.getAll();
+
+    bbox = JSON.stringify(bbox);
+
+    const formInputs = {
+        'bbox_geometry' : bbox
+      };
+
+    // the outout of the get request (what is returned from the url route)
+    // is sent as the parameter to addBboxAndRoute
+    $.get('/route_geometry.geojson', formInputs, addBboxAndRoute);
+
+    // $('#calcuate-route-btn').attr('style','display:none ;');
+}
+
+$('#calcuate-route-btn').on('click', handleBboxSend);
+
+// function handleBboxSend(evt) {
+//     evt.preventDefault();
+
+    // when button is clicked:
+        // send bbox geometry to '/bbox_geometry.geojson' as a post 
+
+        // display bbox as layer on map
+
+    // console.log("bbox geometry", bboxGeometry)
+
+    // const bboxGeometry = JSON.stringify(bboxGeometry)
+        
+//     const formInputs = {
+//         bbox: "SUPPPPPPPP"
+//       };
+
+//     $.get('/bbox_geometry.geojson', formInputs, sendAlert);
+
+// }
+
+// $('#calcuate-route-btn').on('click', handleBboxSend);
+
+//$('#calcuate-route-btn').on('click', function(evt) {
+
+    // evt.preventDefault();
+
+    // // when button is clicked:
+    //     // send bbox geometry to '/bbox_geometry.geojson' as a post 
+
+    //     // display bbox as layer on map
+
+    // const formInputs = {
+    //     'bbox-geometry': bboxGeometry
+    //   };
+
+    // console.log('POST /new-order')
+
+    // $.post('/bbox_geometry.geojson', formInputs, sendAlert);
+
+    // const url = 'http://0.0.0.0:5000/bbox_geometry.geojson'
+
+    // console.log(bboxGeometry);
+
+    // map.addSource('bbox-geometry', {type: 'geojson', data : bboxGeometry});
+
+    // map.addLayer({
+    //     "id": "bbox-geometry", // rename?
+    //     "type": "line",
+    //     "source": "bbox-geometry", 
+    //     "paint": {
+    //         "line-color": "#FF0000",
+    //         "line-width": 8
+    //     }
+    // });
+
+
+
+    // const url = 'http://0.0.0.0:5000/route_geometry.geojson';
+
+    // map.addSource('route', { type: 'geojson', data: url});
+
+    // map.addLayer({
+    //     "id": "route", // rename?
+    //     "type": "line",
+    //     "source": "route", 
+    //     "paint": {
+    //         "line-color": "#FF0000",
+    //         "line-width": 8
+    //     }
+    // });
+
+    
 
     // remove tools for adding new bbox
-    map.removeControl(draw);
+    // map.removeControl(draw);
+
+    // hide claculate button again
+    // $('#calcuate-route-btn').attr('style','display:none ;');
 
 
-});
+// });
 
 
 // $('#change-style-b').on('click', function() {

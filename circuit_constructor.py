@@ -19,7 +19,6 @@ def make_edges_list(edges_dict):
 
         for i in range(num_traversals):
             all_edges_list.append(edge)
-
     return all_edges_list
 
 def get_bridges(edges_list):

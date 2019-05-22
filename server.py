@@ -4,6 +4,8 @@ from flask_debugtoolbar import DebugToolbarExtension
 
 import json
 
+from pprint import pprint
+
 # from classes import 
 
 app = Flask(__name__)
@@ -24,20 +26,58 @@ def mapview():
     return render_template("mapview.html")
 
 
-@app.route('/bbox_geometry.geojson', methods=['POST'])
-def get_bbox_geometry():
-    """Bbox geometry."""
+# possibly don't need this 
+# @app.route('/bbox_geometry.geojson')
+# def get_bbox_geometry():
+#     """Get bbox geometry from DOM, render json at route."""
 
-    return "hi"
+#     bbox_geometry = request.args.get('hi')
+
+#     print(bbox_geometry)
+
+#     return jsonify(bbox_geometry)
 
 @app.route('/route_geometry.geojson')
-def get_route_geometry():
-    """Route geometry."""
+def receive_bbox_geometry():
+    """Get bbox from DOM, render route geometry from path scripts, 
+    output geojson of route."""
 
+
+    bbox_geometry = request.args.get('bbox_geometry')
+
+    print("type:", type(bbox_geometry))
+    pprint(bbox_geometry)
+
+    # TO DO: RUN reoute creation function!
+    # route = my_funct(bbox_geometry)
+
+    # scrap to test
     with open('static/example_complete_route.geojson') as json_file:  
-        data = json.load(json_file)
+        route_geometry = json.load(json_file)
 
-    return jsonify(data)
+    return jsonify(route_geometry)
+
+# @app.route('/route_geometry.geojson', methods = ['GET'])
+# def get_route_geometry():
+#     """Get bbox from DOM, render route geometry from path scripts, 
+#     output geojson of route."""
+
+
+#     # bbox_geometry = request.form.get('bbox_geometry')
+
+#     # print("type:", type(bbox_geometry))
+#     # print(bbox_geometry)
+
+#     # #  run route creation function
+
+#     # route = my_funct(bbox_geometry)
+
+#     # return("SOMETHING")
+
+#     with open('static/example_complete_route.geojson') as json_file:  
+#         data = json.load(json_file)
+
+#     return jsonify(data)
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the
