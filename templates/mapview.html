@@ -62,8 +62,6 @@
 
 <body>
 
- 
-
     <script src='https://api.tiles.mapbox.com/mapbox.js/plugins/turf/v3.0.11/turf.min.js'></script>
     <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.9/mapbox-gl-draw.js'></script>
     <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.9/mapbox-gl-draw.css' type='text/css'/>
@@ -78,7 +76,7 @@
 
     </div>
 
-    <div id='set-map-style-baloon'>
+    <!-- <div id='set-map-style-baloon'>
         
         <button type='button' id='change-style-b' class='change-style-b'> 
            Baloonicornize!
@@ -92,7 +90,7 @@
            Satellite
         </button>" 
 
-    </div>
+    </div> -->
 
 </body>
 
@@ -126,12 +124,11 @@ var draw = new MapboxDraw({
 
 map.addControl(draw);
  
-map.on('draw.create', updateStatus);
+// map.on('draw.create', updateStatus);
 // map.on('draw.delete', updateStatus);
 // map.on('draw.update', updateStatus);
- 
-function updateStatus(e) {
 
+map.on('draw.create', function() {
     let data = draw.getAll();
 
     console.log(calcRouteBtn)
@@ -149,7 +146,29 @@ function updateStatus(e) {
 
         if (e.type !== 'draw.delete') alert("Use the draw tools to draw a polygon!");
     }
-}
+
+})
+ 
+// function updateStatus(e) {
+
+//     let data = draw.getAll();
+
+//     console.log(calcRouteBtn)
+
+//     if (data.features.length > 0) {
+
+//         bboxGeometry = JSON.stringify(data)
+
+//         drawnFeatureCollection = (JSON.stringify(data))
+
+//         $('#calcuate-route-btn').removeAttr('style');
+//     } 
+
+//     else {
+
+//         if (e.type !== 'draw.delete') alert("Use the draw tools to draw a polygon!");
+//     }
+// }
 
 //GET ROUTE CALCULATION
 
@@ -181,22 +200,22 @@ calcRouteBtn.on('click', function() {
 });
 
 
-$('#change-style-b').on('click', function() {
+// $('#change-style-b').on('click', function() {
    
-        map.setStyle('mapbox://styles/paigeemoody/cjve0tvkzhbdf1fpacmnwbc88')
-    });
+//         map.setStyle('mapbox://styles/paigeemoody/cjve0tvkzhbdf1fpacmnwbc88')
+//     });
 
-$('#change-style-s').on('click', function() {
+// $('#change-style-s').on('click', function() {
    
-        map.setStyle('mapbox://styles/mapbox/satellite-v9')
-    });
+//         map.setStyle('mapbox://styles/mapbox/satellite-v9')
+//     });
 
-map.addControl(new mapboxgl.GeolocateControl({
-    positionOptions: {
-        enableHighAccuracy: true
-    },
-    trackUserLocation: true
-}));
+// map.addControl(new mapboxgl.GeolocateControl({
+//     positionOptions: {
+//         enableHighAccuracy: true
+//     },
+//     trackUserLocation: true
+// }));
 
 </script>
 

@@ -1,9 +1,10 @@
 from jinja2 import StrictUndefined
-
 from flask import Flask, render_template, redirect, request, flash, session, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
 
 import json
+
+# from classes import 
 
 app = Flask(__name__)
 
@@ -23,8 +24,14 @@ def mapview():
     return render_template("mapview.html")
 
 
+@app.route('/bbox_geometry.geojson', methods=['POST'])
+def get_bbox_geometry():
+    """Bbox geometry."""
+
+    return "hi"
+
 @app.route('/route_geometry.geojson')
-def route_geometry():
+def get_route_geometry():
     """Route geometry."""
 
     with open('static/example_complete_route.geojson') as json_file:  
