@@ -26,10 +26,10 @@
         } 
 
         .calc-route-btn:hover {
-            background-color: #4CAF50; /* Green */
-            color: white;
+            background-color: #FFE400; 
+            color: black;
         }
-
+/*
         .change-style-b{
             position: fixed;
             bottom: 0;
@@ -54,7 +54,7 @@
         .change-style-s:hover {
             background-color: black;
             color: white;
-        }
+        }*/
 
     </style>
 
@@ -144,6 +144,9 @@ map.on('draw.create', function(evt) {
     // if there is a bbox feature, show the calculate button 
         $('#calcuate-route-btn').removeAttr('style');
 
+        // remove draw tool and add a new one with just a trashcan?
+        // to limit drawing of more than one bbox
+
         // const formInputs = {
         //     bbox: bboxGeometryJSON
         // };
@@ -193,7 +196,15 @@ function addBboxAndRoute(displayGeojsons) {
         "type": "line",
         "source": "route", 
         "paint": {
-            "line-color": '#123c69',
+            // set line color based on number of traversals, to highlight which streets to 
+            // traverse twice
+            "line-color" : [
+                'match',
+                ['get', 'num_traversals'],
+                1, '#e55e5e',
+                2, '#fbb03b',
+                '#123c69'
+            ],
             "line-width": 8,
             "line-opacity": 1
         }
@@ -211,11 +222,9 @@ function addBboxAndRoute(displayGeojsons) {
         "source": "bbox", 
         "paint": {
             'fill-color': '#FFE400',
-            'fill-opacity': 0.2,
+            'fill-opacity': 0.1,
         }
     }, "route-geometry"); // second agument determines which layer should be direcly above the bbox layer
-
-    
 
 }
 
@@ -239,67 +248,6 @@ function handleBboxSend(evt) {
 }
 
 $('#calcuate-route-btn').on('click', handleBboxSend);
-
-//$('#calcuate-route-btn').on('click', function(evt) {
-
-    // evt.preventDefault();
-
-    // // when button is clicked:
-    //     // send bbox geometry to '/bbox_geometry.geojson' as a post 
-
-    //     // display bbox as layer on map
-
-    // const formInputs = {
-    //     'bbox-geometry': bboxGeometry
-    //   };
-
-    // console.log('POST /new-order')
-
-    // $.post('/bbox_geometry.geojson', formInputs, sendAlert);
-
-    // const url = 'http://0.0.0.0:5000/bbox_geometry.geojson'
-
-    // console.log(bboxGeometry);
-
-    // map.addSource('bbox-geometry', {type: 'geojson', data : bboxGeometry});
-
-    // map.addLayer({
-    //     "id": "bbox-geometry", // rename?
-    //     "type": "line",
-    //     "source": "bbox-geometry", 
-    //     "paint": {
-    //         "line-color": "#FF0000",
-    //         "line-width": 8
-    //     }
-    // });
-
-
-
-    // const url = 'http://0.0.0.0:5000/route_geometry.geojson';
-
-    // map.addSource('route', { type: 'geojson', data: url});
-
-    // map.addLayer({
-    //     "id": "route", // rename?
-    //     "type": "line",
-    //     "source": "route", 
-    //     "paint": {
-    //         "line-color": "#FF0000",
-    //         "line-width": 8
-    //     }
-    // });
-
-    
-
-    // remove tools for adding new bbox
-    // map.removeControl(draw);
-
-    // hide claculate button again
-    // $('#calcuate-route-btn').attr('style','display:none ;');
-
-
-// });
-
 
 // $('#change-style-b').on('click', function() {
    

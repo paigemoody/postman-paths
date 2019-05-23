@@ -3,7 +3,11 @@
   "features": [
     {
       "type": "Feature",
-      "properties": {},
+      "properties": {
+
+        "num_traversals": 2
+
+      },
       "geometry": {
         "type": "LineString",
         "coordinates": [
@@ -26,6 +30,27 @@
           [
             -122.40097761154175,
             37.75811119055579
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+
+        "num_traversals": 1
+
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -122.39988327026369,
+            37.75727992549716
+          ],
+          [
+            -122.40187883377075,
+            37.75707634895691
           ]
         ]
       }
