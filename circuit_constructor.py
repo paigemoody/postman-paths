@@ -216,11 +216,20 @@ def make_euler_circuit(start_node, updated_graph_instance):
         
         # add the new current node to the nodes visit order list 
         node_visit_order.append(current_node)
+
+    # add node visit order and edge_visit order to graph instance
+
+    updated_graph_instance.node_visit_order  = node_visit_order
+
+    updated_graph_instance.edge_visit_order = edge_visit_order
         
-    return {
-            "node_visit_order": node_visit_order, 
-            "edge_visit_order": edge_visit_order
-            }
+    # return {
+    #         "node_visit_order": node_visit_order, 
+    #         "edge_visit_order": edge_visit_order,
+    #         "graph_instance" : updated_graph_instance
+    #         }
+
+    return updated_graph_instance
 
 
 if __name__ == '__main__':
@@ -257,20 +266,32 @@ if __name__ == '__main__':
 
     euler_circuit_output = make_euler_circuit(start_node, updated_graph_inst)
 
-    print("\n\nEuler circuit node order:")
-    print("node_visit_order:", euler_circuit_output["node_visit_order"])
-    print("edge_visit_order:", euler_circuit_output["edge_visit_order"])
+    print("\n\nEuler circuit order:")
 
-    print("\n\nroads order:")
+    print("node visit order:", euler_circuit_output.node_visit_order)
+    print("edge visit order:", euler_circuit_output.edge_visit_order)
 
-    for edge in euler_circuit_output["edge_visit_order"]:
-        print("\n\n")
-        print(edge, ": ")
-        if edge in updated_graph_inst.edges_dict:
-            print(updated_graph_inst.edges_dict[edge]['name'])
-        else:
-            edge = edge[::-1]
-            print(updated_graph_inst.edges_dict[edge]['name'])
+    # for edge in euler_circuit_output["edge_visit_order"]:
+    #     # print edge info
+
+    #     print()
+    #     edge_attrs['length'] = edge_length
+    #     edge_attrs['hwy_type'] = edge_hwy_type
+    #     edge_attrs['name'] = edge_name
+    #     edge_attrs['osmid'] = edge_osmid
+    #     edge_attrs['geometry'] = edge_geometry
+
+
+    # print("\n\nroads order:")
+
+    # for edge in euler_circuit_output["edge_visit_order"]:
+    #     print("\n\n")
+    #     print(edge, ": ")
+    #     if edge in updated_graph_inst.edges_dict:
+    #         print(updated_graph_inst.edges_dict[edge]['name'])
+    #     else:
+    #         edge = edge[::-1]
+    #         print(updated_graph_inst.edges_dict[edge]['name'])
 
 
 

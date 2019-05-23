@@ -39,6 +39,12 @@ class OSMGraph:
         # set self.nodes_dict
         self.make_nodes_dict()
 
+        # instantiate an attribute for node visit order and 
+        # edge visit order -- will be updated once calculated 
+        self.node_visit_order = []
+
+        self.edge_visit_order = []
+
     def get_dataframes(self):
 
         self.nodes_df, self.edges_df = graph_to_gdfs(self.ox_graph)
