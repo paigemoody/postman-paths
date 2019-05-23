@@ -46,16 +46,23 @@ def receive_bbox_geometry():
     bbox_geometry = request.args.get('bbox_geometry')
 
     print("type:", type(bbox_geometry))
-    pprint(bbox_geometry)
+    # pprint(bbox_geometry)
 
     # TO DO: RUN reoute creation function!
     # route = my_funct(bbox_geometry)
 
     # scrap to test
     with open('static/example_complete_route.geojson') as json_file:  
-        route_geometry = json.load(json_file)
+        route_geometry = json.dumps(json.load(json_file))
 
-    return jsonify(route_geometry)
+    print("\n\ntype bbox:", type(bbox_geometry))
+    print(bbox_geometry)
+
+    print("\n\ntype route:", type(route_geometry))
+    print(route_geometry)
+
+    return jsonify({ "bbox_geometry" : bbox_geometry,
+        "route_geometry" : route_geometry})
 
 # @app.route('/route_geometry.geojson', methods = ['GET'])
 # def get_route_geometry():

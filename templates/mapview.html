@@ -159,20 +159,64 @@ map.on('draw.create', function(evt) {
 })
 
 // RENDER BBOX as new source? 
-    // map.addSource('route', { //  route in this case is a variable that is a feature collection
-    //     "type": "geojson",
-    //     "data": route
-    //     });
+    
 
 
 //GET ROUTE CALCULATION
 
-function addBboxAndRoute(bboxJson) {
-    console.log(bboxJson)
+function addBboxAndRoute(displayGeojsons) {
 
-    // show the bbox
+    // remove draw function 
+    map.removeControl(draw);
 
-    // show the route 
+    // hide calculate route button
+    $('#calcuate-route-btn').attr('style','display:none ;');
+    
+    // get geometry feature collections back from get request and 
+    // jsonify each
+
+    let bboxGeometry = JSON.parse(displayGeojsons['bbox_geometry']);
+    let routeGeometry = JSON.parse(displayGeojsons['route_geometry']);
+
+    console.log("\n\ntype bbox geom:", typeof bboxGeometry);
+    console.log("\n\ntype route geom:", typeof routeGeometry);
+
+    // add route feature collection to map
+
+    map.addSource('route', { //  bbox in this case is a variable that is a feature collection
+        "type": "geojson",
+        "data": routeGeometry
+        });
+
+    map.addLayer({
+        "id": "route-geometry", // rename?
+        "type": "line",
+        "source": "route", 
+        "paint": {
+            "line-color": '#123c69',
+            "line-width": 8,
+            "line-opacity": 1
+        }
+    });
+
+    // add bbox to map 
+    map.addSource('bbox', { //  bbox in this case is a variable that is a feature collection
+        "type": "geojson",
+        "data": bboxGeometry
+        });
+
+    map.addLayer({
+        "id": "bbox-geometry", // rename?
+        "type": "fill", // bbox is a polygon
+        "source": "bbox", 
+        "paint": {
+            'fill-color': '#FFE400',
+            'fill-opacity': 0.2,
+        }
+    }, "route-geometry"); // second agument determines which layer should be direcly above the bbox layer
+
+    
+
 }
 
 // when the calculate route button is clicked, send bbox geometry to 
@@ -191,32 +235,10 @@ function handleBboxSend(evt) {
     // is sent as the parameter to addBboxAndRoute
     $.get('/route_geometry.geojson', formInputs, addBboxAndRoute);
 
-    // $('#calcuate-route-btn').attr('style','display:none ;');
+    
 }
 
 $('#calcuate-route-btn').on('click', handleBboxSend);
-
-// function handleBboxSend(evt) {
-//     evt.preventDefault();
-
-    // when button is clicked:
-        // send bbox geometry to '/bbox_geometry.geojson' as a post 
-
-        // display bbox as layer on map
-
-    // console.log("bbox geometry", bboxGeometry)
-
-    // const bboxGeometry = JSON.stringify(bboxGeometry)
-        
-//     const formInputs = {
-//         bbox: "SUPPPPPPPP"
-//       };
-
-//     $.get('/bbox_geometry.geojson', formInputs, sendAlert);
-
-// }
-
-// $('#calcuate-route-btn').on('click', handleBboxSend);
 
 //$('#calcuate-route-btn').on('click', function(evt) {
 
