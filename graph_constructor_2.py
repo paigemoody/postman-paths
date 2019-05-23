@@ -317,6 +317,7 @@ def get_eulerian_graph_edges(bbox, source):
 
     print("osm_graph.nodes_dict:",osm_graph.nodes_dict)
 
+    # input all nodes  and get odd nodes, update node attributes
     odd_nodes = get_odd_nodes(osm_graph.nodes_dict)
 
     # print("\nodd_nodes",odd_nodes)

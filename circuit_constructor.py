@@ -1,6 +1,8 @@
 import networkx as nx 
 from graph_constructor_2 import get_eulerian_graph_edges, get_bbox_from_geojson
 from random import choice
+from shapely.geometry import shape
+import json
 
 
 
@@ -166,6 +168,74 @@ def choose_edge_to_traverse(current_node, possible_next_edges, current_bridges):
         return bridge_next_edge_options[0]
 
 
+def make_edge_geojson(graph_instance):
+    """ 
+    Input: updated graph instance - has edge visit order attribute
+
+    Output: geojson feature collection of edge linestrings with 
+    all edge metadata as properties.  
+    """
+
+    edge_features_list = [] 
+
+    visit_order = 1 
+
+    for edge in graph_instance.edge_visit_order:
+
+        # check both original edge order and reversed edge order
+        # order could have been rearranged in earlier computation
+
+        edge = edge 
+        reversed_edge = edge[::-1]
+
+        if edge not in graph_instance.edges_dict: 
+
+            edge = reversed_edge
+
+        
+        edge_attributes = graph_instance.edges_dict[edge]
+
+        # transform the shapely object into a list of coordinate lists 
+        line_shapely = edge_attributes['geometry']
+        # shpely coords comes back as a list of tuples, 
+        # so we transform each tuple into a list to creata list of lists:
+        line_coords_list = [ list(coord_tuple) for coord_tuple in list(shape(line_shapely).coords)]
+
+        # build edge feature dict 
+        edge_feature = {
+                          "type": "Feature",
+                          "properties": {
+                            "num_traversals": edge_attributes['num_traversals'],
+                            "length" : edge_attributes['length'], 
+                            "hwy_type" : edge_attributes['hwy_type'], 
+                            "road_name" : edge_attributes['name'], #road name
+                            # need to transform numpy.int64 into regular int 
+                            "osmid" : int(edge_attributes['osmid']),
+                            "visit_order" : visit_order, # increment each time
+                            "nodes": edge
+                          },
+                          "geometry": {
+                            "type": "LineString",
+                            "coordinates": line_coords_list
+                          }
+                        }
+        # add feature dict to list of features 
+
+        edge_features_list.append(edge_feature)
+
+        visit_order += 1
+
+    # onces all features (edge linestrings) have been added to the features list,
+    # add feature list to edges_feature collection
+
+    edges_feature_collection = {
+                                "type": "FeatureCollection",
+                                "features": edge_features_list
+                                }
+    # transform dict into valid json                            
+    return json.dumps(edges_feature_collection)
+
+
 def make_euler_circuit(start_node, updated_graph_instance): 
     """ Given a start node and graph instance (with updated num traversal) 
     attributes in edges_dict, return a list contain the sequence in which
@@ -271,15 +341,22 @@ if __name__ == '__main__':
     print("node visit order:", euler_circuit_output.node_visit_order)
     print("edge visit order:", euler_circuit_output.edge_visit_order)
 
+    print("edges_dicts:")
+
+    for edge in euler_circuit_output.edges_dict:
+        print()
+        print(euler_circuit_output.edges_dict[edge])
+
+        line = euler_circuit_output.edges_dict[edge]['geometry']
+
+        print("coords:", list(shape(line).coords))
+
+
+    print("edges geojson")
+    print(make_edge_geojson(euler_circuit_output))
+
     # for edge in euler_circuit_output["edge_visit_order"]:
     #     # print edge info
-
-    #     print()
-    #     edge_attrs['length'] = edge_length
-    #     edge_attrs['hwy_type'] = edge_hwy_type
-    #     edge_attrs['name'] = edge_name
-    #     edge_attrs['osmid'] = edge_osmid
-    #     edge_attrs['geometry'] = edge_geometry
 
 
     # print("\n\nroads order:")
