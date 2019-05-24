@@ -335,10 +335,15 @@ def make_edge_geojson(graph_instance):
     return json.dumps(edges_feature_collection)
 
 
-def make_euler_circuit(start_node, updated_graph_instance): 
-    """ Given a start node and graph instance (with updated num traversal) 
+# def make_euler_circuit(start_node, updated_graph_instance): 
+
+def make_euler_circuit(updated_graph_instance): 
+    """ Given a graph instance (with updated num traversal) 
     attributes in edges_dict, return a list contain the sequence in which
     the graph's nodes should be visited.
+
+    Choose the start node randomly.
+
     """
 
     current_edges_on_graph_list = make_edges_list(updated_graph_instance.edges_dict)
@@ -408,15 +413,6 @@ if __name__ == '__main__':
 
     start = time.time()
 
-    # test bbox
-    # NORTH = 37.7599 # max lat 
-    # SOUTH = 37.7569 # min lat
-    # EAST = -122.3997 # max lng
-    # WEST = -122.4023 # min lng  
-    SOURCE = "OSM"
-
-    
-
     # 3. get graph with updated traversals count 
     # bbox = [NORTH, SOUTH , EAST, WEST] # min lng 
 
@@ -424,7 +420,7 @@ if __name__ == '__main__':
 
 
     SOURCE = "OSM"
-    updated_graph_inst = get_eulerian_graph_edges(bbox, SOURCE)
+    updated_graph_inst = get_eulerian_graph_edges(bbox, "osm")
 
     # 2. get start node 
     start_node = choice(list(updated_graph_inst.nodes_dict.keys()))
@@ -438,43 +434,13 @@ if __name__ == '__main__':
     print("node visit order:", euler_circuit_output.node_visit_order)
     print("edge visit order:", euler_circuit_output.edge_visit_order)
 
-    # print("edges_dicts:")
-
-    # for edge in euler_circuit_output.edges_dict:
-    #     print()
-    #     print(euler_circuit_output.edges_dict[edge])
-
-    #     line = euler_circuit_output.edges_dict[edge]['geometry']
-
-    #     print("coords:", list(shape(line).coords))
-
-
     print("edges geojson")
     print("\n\n\n")
     print(euler_circuit_output.edge_geojson)
 
-
-
     print("nodes geojson")
     print("\n\n\n")
     print(euler_circuit_output.node_geojson)
-
-    # for edge in euler_circuit_output["edge_visit_order"]:
-    #     # print edge info
-
-
-    # print("\n\nroads order:")
-
-    # for edge in euler_circuit_output["edge_visit_order"]:
-    #     print("\n\n")
-    #     print(edge, ": ")
-    #     if edge in updated_graph_inst.edges_dict:
-    #         print(updated_graph_inst.edges_dict[edge]['name'])
-    #     else:
-    #         edge = edge[::-1]
-    #         print(updated_graph_inst.edges_dict[edge]['name'])
-
-
 
     print("\n\nProcess time:", time.time() - start, "seconds")
 

@@ -5,34 +5,37 @@ from classes import OSMGraph
 import json
 import time
 
-def get_bbox_from_geojson(geojson_file):
+# def get_bbox_from_geojson(geojson_file):
+
+def get_bbox_from_geojson(geojson_dictionary):
     """From feature collection geojson of a bounding box
-    return bbox list --> [north, south, east, west]"""
+    return bbox list --> [north, south, east, west]
+    """
 
     print("\nbbox")
 
     all_lats = []
     all_lngs = []
     
-    with open(geojson_file) as g_file: 
+    # with open(geojson_file) as g_file: 
 
-        data = json.load(g_file)
+    #     data = json.load(g_file)
 
-        feature = data['features'][0]
+    feature = geojson_dictionary['features'][0]
 
-        coordinates = feature['geometry']['coordinates'][0]
+    coordinates = feature['geometry']['coordinates'][0]
 
         # print("geometry:", coordinates)
 
-        for coord in coordinates:
+    for coord in coordinates:
 
-            # [lng, lat]
+        # [lng, lat]
 
-            lng = coord[0]
-            lat = coord[1]
+        lng = coord[0]
+        lat = coord[1]
 
-            all_lats.append(lat)
-            all_lngs.append(lng)
+        all_lats.append(lat)
+        all_lngs.append(lng)
 
     max_lat = max(all_lats)  # north
     min_lat = min(all_lats) # south

@@ -4,6 +4,8 @@ from flask_debugtoolbar import DebugToolbarExtension
 
 import json
 
+from circuit_constructor import get_bbox_from_geojson, get_eulerian_graph_edges, make_euler_circuit
+
 from pprint import pprint
 
 # from classes import 
@@ -44,25 +46,36 @@ def receive_bbox_geometry():
 
 
     bbox_geometry = request.args.get('bbox_geometry')
+    bbox = get_bbox_from_geojson(bbox_geometry)
 
-    print("type:", type(bbox_geometry))
-    # pprint(bbox_geometry)
+    updated_graph_inst = get_eulerian_graph_edges(bbox, "osm")
+
+    start_node = choice(list(updated_graph_inst.nodes_dict.keys()))
+    
+    euler_circuit_output_graph = make_euler_circuit(start_node, updated_graph_inst)
+
+    nodes_geometry = euler_circuit_output_graph.node_geojson
+
+    route_geometry = euler_circuit_output_graph.edge_geojson
 
     # TO DO: RUN reoute creation function!
     # route = my_funct(bbox_geometry)
 
-    # scrap to test
-    with open('static/example_complete_route.geojson') as json_file:  
-        route_geometry = json.dumps(json.load(json_file))
+    # # scrap to test
+    # with open('static/example_complete_route.geojson') as json_file:  
+    #     route_geometry = json.dumps(json.load(json_file))
 
-    print("\n\ntype bbox:", type(bbox_geometry))
-    print(bbox_geometry)
+    # print("\n\ntype bbox:", type(bbox_geometry))
+    # print(bbox_geometry)
 
-    print("\n\ntype route:", type(route_geometry))
-    print(route_geometry)
+    # print("\n\ntype route:", type(route_geometry))
+    # print(route_geometry)
 
-    return jsonify({ "bbox_geometry" : bbox_geometry,
-        "route_geometry" : route_geometry})
+    return jsonify({ 
+        "bbox_geometry" : bbox_geometry,
+        "route_geometry" : route_geometry,
+        "nodes_geometry" : nodes_geometry
+        })
 
 # @app.route('/route_geometry.geojson', methods = ['GET'])
 # def get_route_geometry():
