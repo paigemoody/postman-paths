@@ -342,7 +342,7 @@ def make_euler_circuit(updated_graph_instance):
     attributes in edges_dict, return a list contain the sequence in which
     the graph's nodes should be visited.
 
-    Choose the start node randomly.
+    Choose the start node randomly in server file.
 
     """
 
