@@ -168,6 +168,74 @@ def choose_edge_to_traverse(current_node, possible_next_edges, current_bridges):
         return bridge_next_edge_options[0]
 
 
+def make_node_geojson(graph_instance):
+    """
+    Input: graph instance with node visit order attribute
+
+    Output: geojson feature collection of node points with 
+    all node metadata as properties.
+    """
+
+    # add visit order to nodes_dict properties, so that each node can
+    # be a single feature in the feature collection 
+
+    node_visit_order =  graph_instance.node_visit_order
+
+    # make a dict of nodes and their visits order as a list 
+    node_visit_dict = {} 
+
+    curr_order_num = 1 
+
+    for node in node_visit_order:
+
+        if node not in node_visit_dict:
+
+            node_visit_dict[node] = [curr_order_num]
+        else: 
+
+            node_visit_dict[node].append(curr_order_num)
+
+        curr_order_num += 1
+
+    print("\n\n\nnode_visit_dict:", node_visit_dict, "\n\n\n")
+
+    node_features_list = [] 
+
+    for node in graph_instance.node_visit_order:
+        # get node attributes from nodes dict 
+
+        node_attributes = graph_instance.nodes_dict[node]
+
+        # make list of point coords from shapely geometry
+        point_shapely = node_attributes['geometry']
+        point_coords_list = [ list(coord_tuple) for coord_tuple in list(shape(point_shapely).coords)]
+
+        # build edge feature dict from graph attributes 
+        node_feature = {
+                          "type": "Feature",
+                          "properties": {
+                            # node identifier is the osmid
+                            "osmid" : int(node),
+                            "connected_edges" : node_attributes['connected_edges'],
+                            "visit_order": node_visit_dict[node],
+                            "was_odd" : node_attributes["is_odd"]
+                          },
+                          "geometry": {
+                            "type": "Point",
+                            "coordinates": point_coords_list[0]
+                          }
+                        }
+
+
+        node_features_list.append(node_feature)
+
+    nodes_feature_collection = {
+                                "type": "FeatureCollection",
+                                "features": node_features_list
+                                }
+    # transform dict into valid json                            
+    return json.dumps(nodes_feature_collection)
+
 def make_edge_geojson(graph_instance):
     """ 
     Input: updated graph instance - has edge visit order attribute
@@ -176,24 +244,48 @@ def make_edge_geojson(graph_instance):
     all edge metadata as properties.  
     """
 
+    edges_dict = graph_instance.edges_dict
+
+    edge_visit_order =  graph_instance.edge_visit_order
+
+
+    # make a dict of nodes and their visits order as a list 
+    # to be added as a visit order property of each edge feature
+    edge_visit_dict = {} 
+
+    curr_order_num = 1 
+
+    for edge in edge_visit_order:
+
+        # align the order of the tuple so it 
+        # matches up with a tuples in edge_visit_order 
+
+        if edge not in edge_visit_dict:
+
+            edge_visit_dict[edge] = [curr_order_num]
+        else: 
+
+            edge_visit_dict[edge].append(curr_order_num)
+
+        curr_order_num += 1
+
+
+    # loop over unique edges, add each as a feature in the feature collection
+
     edge_features_list = [] 
-
-    visit_order = 1 
-
-    for edge in graph_instance.edge_visit_order:
+    for edge in list(edge_visit_dict.keys()):
 
         # check both original edge order and reversed edge order
         # order could have been rearranged in earlier computation
+        edge_attributes = None
 
-        edge = edge 
-        reversed_edge = edge[::-1]
-
-        if edge not in graph_instance.edges_dict: 
-
-            edge = reversed_edge
-
+        if edge not in edges_dict: 
+            edge_attributes = graph_instance.edges_dict[edge[::-1]]
         
-        edge_attributes = graph_instance.edges_dict[edge]
+        else:
+            edge_attributes = graph_instance.edges_dict[edge]
+        
+        # edge_attributes = graph_instance.edges_dict[edge]
 
         # transform the shapely object into a list of coordinate lists 
         line_shapely = edge_attributes['geometry']
@@ -201,7 +293,7 @@ def make_edge_geojson(graph_instance):
         # so we transform each tuple into a list to creata list of lists:
         line_coords_list = [ list(coord_tuple) for coord_tuple in list(shape(line_shapely).coords)]
 
-        # build edge feature dict 
+        # build edge feature dict from graph attributes 
         edge_feature = {
                           "type": "Feature",
                           "properties": {
@@ -210,20 +302,27 @@ def make_edge_geojson(graph_instance):
                             "hwy_type" : edge_attributes['hwy_type'], 
                             "road_name" : edge_attributes['name'], #road name
                             # need to transform numpy.int64 into regular int 
-                            "osmid" : int(edge_attributes['osmid']),
-                            "visit_order" : visit_order, # increment each time
-                            "nodes": edge
+                            "osmid" : int(edge_attributes['osmid']),    
+                            "visit_order" : edge_visit_dict[edge],     
+
+                            # add dict of node information - add coordinates proprety for
+                            # each connected node  
+
+                            "nodes": {
+                                        edge[0] : [list(coord_tuple) for coord_tuple in (list(shape(graph_instance.nodes_dict[edge[0]]['geometry']).coords))], 
+
+                                        edge[1] : [list(coord_tuple) for coord_tuple in (list(shape(graph_instance.nodes_dict[edge[1]]['geometry']).coords))] 
+                            }
+                                    
                           },
                           "geometry": {
                             "type": "LineString",
                             "coordinates": line_coords_list
                           }
                         }
+
         # add feature dict to list of features 
-
         edge_features_list.append(edge_feature)
-
-        visit_order += 1
 
     # onces all features (edge linestrings) have been added to the features list,
     # add feature list to edges_feature collection
@@ -341,19 +440,25 @@ if __name__ == '__main__':
     print("node visit order:", euler_circuit_output.node_visit_order)
     print("edge visit order:", euler_circuit_output.edge_visit_order)
 
-    print("edges_dicts:")
+    # print("edges_dicts:")
 
-    for edge in euler_circuit_output.edges_dict:
-        print()
-        print(euler_circuit_output.edges_dict[edge])
+    # for edge in euler_circuit_output.edges_dict:
+    #     print()
+    #     print(euler_circuit_output.edges_dict[edge])
 
-        line = euler_circuit_output.edges_dict[edge]['geometry']
+    #     line = euler_circuit_output.edges_dict[edge]['geometry']
 
-        print("coords:", list(shape(line).coords))
+    #     print("coords:", list(shape(line).coords))
 
 
     print("edges geojson")
+    print("\n\n\n")
     print(make_edge_geojson(euler_circuit_output))
+
+
+    print("nodes geojson")
+    print("\n\n\n")
+    print(make_node_geojson(euler_circuit_output))
 
     # for edge in euler_circuit_output["edge_visit_order"]:
     #     # print edge info
