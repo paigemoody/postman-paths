@@ -180,9 +180,15 @@ function addBboxAndRoute(displayGeojsons) {
 
     let bboxGeometry = JSON.parse(displayGeojsons['bbox_geometry']);
     let routeGeometry = JSON.parse(displayGeojsons['route_geometry']);
+    let nodesGeometry = JSON.parse(displayGeojsons['nodes_geometry']);
+
+
 
     console.log("\n\ntype bbox geom:", typeof bboxGeometry);
     console.log("\n\ntype route geom:", typeof routeGeometry);
+    
+
+    console.log("\n\n\n nodes geometry", nodesGeometry)
 
     // add route feature collection to map
 

@@ -14,6 +14,14 @@ def get_bbox_from_geojson(geojson_dictionary):
 
     print("\nbbox")
 
+    print("geojson_dictionary", geojson_dictionary)
+
+    print(type(geojson_dictionary))
+
+    print("\n\n\nin get_bbox_from_geojson",geojson_dictionary)
+
+    geojson_dictionary = json.loads(geojson_dictionary)
+
     all_lats = []
     all_lngs = []
     
@@ -49,6 +57,8 @@ def get_bbox_from_geojson(geojson_dictionary):
     # print("West:", min_lng) 
 
     bbox = [max_lat, min_lat, max_lng, min_lng]
+
+    print("\n\n\nCALCULATED bbox:", bbox)
 
     return bbox
 
@@ -183,7 +193,31 @@ def get_route_length(route_edges_list, edges_dict):
 
     total_edges_length = 0
 
+    print("\n\n\nroute_edges_list:", route_edges_list)
+
+    print("\n\n get_route_length -- edges dict:", edges_dict)
+
+
+
     for edge in route_edges_list:
+
+        edge = edge 
+
+        # handle edge keys that are reversed 
+
+        if edge not in edges_dict:
+
+            edge = edge[::-1]
+
+        print("\n\n\n route edges list:", route_edges_list)
+        print("\n\n edges_dict.keys():", list(edges_dict.keys()))
+
+        # print("\n\nedges dict[edge[::-1]]:", edges_dict[edge[::-1]])
+
+        print("\n\nedges dict[edge]:", edges_dict[edge])
+
+        #  BUG HERE - SOME EDGES DICT DON'T HAVE LENGTH
+
         # check for both order of the edge tuple in the dict
         if edge in edges_dict:
 
@@ -227,6 +261,8 @@ def get_dict_pairings_lists_lengths(list_of_possible_pairs_lists, graph_instance
 
             shortest_route_edges = get_route_edges_from_route(shortest_route_nodes_list)
 
+            print("\n\ngraph_instance.edges_dict:", graph_instance.edges_dict)
+
             total_route_length = get_route_length(shortest_route_edges, graph_instance.edges_dict)
 
             pairings_list_length += total_route_length
@@ -267,6 +303,9 @@ def update_twice_traversal_edges(list_twice_trav_edges, graph_instance):
     print("\n\nupdate_twice_traversal_edges")
 
     edges_dict = graph_instance.edges_dict
+
+    print("\n\n update_twice_traversal_edges edges_dict:", edges_dict )
+
     # edges_dict = make_edges_dict(graph_instance)
 
     for node_pair in list_twice_trav_edges:
@@ -318,7 +357,7 @@ def get_eulerian_graph_edges(bbox, source):
 
     osm_graph = OSMGraph(bbox, source)
 
-    print("osm_graph.nodes_dict:",osm_graph.nodes_dict)
+    print("osm_graph.edges_dict:",osm_graph.edges_dict)
 
     # input all nodes  and get odd nodes, update node attributes
     odd_nodes = get_odd_nodes(osm_graph.nodes_dict)

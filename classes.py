@@ -36,8 +36,12 @@ class OSMGraph:
         # set self.edges_dict 
         self.make_edges_dict()
 
+        print("\n\nCLASS -- edges_dict:", self.edges_dict)
+
         # set self.nodes_dict
         self.make_nodes_dict()
+
+        print("\n\nCLASS -- nodes_dict:", self.nodes_dict)
 
         # instantiate an attribute for node visit order and 
         # edge visit order -- will be updated once calculated 
@@ -76,37 +80,40 @@ class OSMGraph:
         edges_dict = {}
 
         # if the graph instance was made from OSM data, set dataframe variable
-        if self.source == "OSM":
+        # if self.source == "OSM":
 
-            edges_df = self.edges_df
+        edges_df = self.edges_df
 
         for edge in self.edges:
 
             edge_attrs = {}
 
-            if self.source == "OSM": 
+            # if self.source == "OSM": 
             
-                start_node, end_node = edge
+            start_node, end_node = edge
 
-                edge_df_row = edges_df.loc[(edges_df['u'] == start_node) & (edges_df['v'] == end_node)]
+            edge_df_row = edges_df.loc[(edges_df['u'] == start_node) & (edges_df['v'] == end_node)]
 
-                edge_length = edge_df_row['length'].values[0]
-                edge_hwy_type = edge_df_row['highway'].values[0]
-                edge_name = edge_df_row['name'].values[0]
-                edge_osmid = edge_df_row['osmid'].values[0]
-                edge_geometry = edge_df_row['geometry'].values[0]
+            edge_length = edge_df_row['length'].values[0]
 
-                # length is in meters 
-                edge_attrs['length'] = edge_length
-                edge_attrs['hwy_type'] = edge_hwy_type
-                edge_attrs['name'] = edge_name
-                edge_attrs['osmid'] = edge_osmid
-                edge_attrs['geometry'] = edge_geometry
+            print("\n\n\nedge_length:", edge_length)
 
-            elif self.source == "DIY": 
-                # default edge length for DIY graphs to 1
-                # useful for testing
-                edge_attrs['length'] = 1
+            edge_hwy_type = edge_df_row['highway'].values[0]
+            edge_name = edge_df_row['name'].values[0]
+            edge_osmid = edge_df_row['osmid'].values[0]
+            edge_geometry = edge_df_row['geometry'].values[0]
+
+            # length is in meters 
+            edge_attrs['length'] = edge_length
+            edge_attrs['hwy_type'] = edge_hwy_type
+            edge_attrs['name'] = edge_name
+            edge_attrs['osmid'] = edge_osmid
+            edge_attrs['geometry'] = edge_geometry
+
+            # elif self.source == "DIY": 
+            #     # default edge length for DIY graphs to 1
+            #     # useful for testing
+            #     edge_attrs['length'] = 1
 
             edge_attrs['num_traversals'] = 1
 
@@ -119,25 +126,25 @@ class OSMGraph:
         nodes_dict = {}
 
         # if the graph instance was made from OSM data, set dataframe variable
-        if self.source == "OSM":
+        # if self.source == "OSM":
 
-            nodes_df = self.nodes_df
+        nodes_df = self.nodes_df
 
         for node in self.nodes:
 
             node_attrs = {} 
 
-            if self.source == "OSM": 
+            # if self.source == "OSM": 
 
-                node_df_row = nodes_df.loc[(nodes_df['osmid'] == node)]
+            node_df_row = nodes_df.loc[(nodes_df['osmid'] == node)]
 
-                node_x = node_df_row['x'].values[0]
-                node_y = node_df_row['y'].values[0]
-                node_geometry = node_df_row['geometry'].values[0]
+            node_x = node_df_row['x'].values[0]
+            node_y = node_df_row['y'].values[0]
+            node_geometry = node_df_row['geometry'].values[0]
 
-                node_attrs['x'] = node_x
-                node_attrs['y'] = node_y
-                node_attrs['geometry'] = node_geometry
+            node_attrs['x'] = node_x
+            node_attrs['y'] = node_y
+            node_attrs['geometry'] = node_geometry
 
             connected_edges = []
 

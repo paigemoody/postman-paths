@@ -8,6 +8,8 @@ from circuit_constructor import get_bbox_from_geojson, get_eulerian_graph_edges,
 
 from pprint import pprint
 
+from random import choice 
+
 # from classes import 
 
 app = Flask(__name__)
@@ -46,9 +48,19 @@ def receive_bbox_geometry():
 
 
     bbox_geometry = request.args.get('bbox_geometry')
+
+    print("\n\n\ntype(bbox_geometry):",type(bbox_geometry))
+
+    print("\n\nbbox geometry:",bbox_geometry)
+
     bbox = get_bbox_from_geojson(bbox_geometry)
 
+    print("bbox:", bbox)
+
+
     updated_graph_inst = get_eulerian_graph_edges(bbox, "osm")
+
+    print("\n\n\nupdated_graph_inst.edges_dict:",updated_graph_inst.edges_dict)
 
     start_node = choice(list(updated_graph_inst.nodes_dict.keys()))
     
@@ -57,6 +69,8 @@ def receive_bbox_geometry():
     nodes_geometry = euler_circuit_output_graph.node_geojson
 
     route_geometry = euler_circuit_output_graph.edge_geojson
+
+
 
     # TO DO: RUN reoute creation function!
     # route = my_funct(bbox_geometry)
@@ -72,9 +86,9 @@ def receive_bbox_geometry():
     # print(route_geometry)
 
     return jsonify({ 
-        "bbox_geometry" : bbox_geometry,
-        "route_geometry" : route_geometry,
-        "nodes_geometry" : nodes_geometry
+        "bbox_geometry" : bbox_geometry
+        ,"route_geometry" : route_geometry
+        ,"nodes_geometry" : nodes_geometry
         })
 
 # @app.route('/route_geometry.geojson', methods = ['GET'])

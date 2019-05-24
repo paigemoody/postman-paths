@@ -204,7 +204,16 @@ def make_node_geojson(graph_instance):
     for node in graph_instance.node_visit_order:
         # get node attributes from nodes dict 
 
+        # check if node is the start node
+
+        if node == node_visit_order[0]:
+            start_node = True
+        else:
+            start_node = False
+
         node_attributes = graph_instance.nodes_dict[node]
+
+        print("\n\nnode_attributes:",node_attributes)
 
         # make list of point coords from shapely geometry
         point_shapely = node_attributes['geometry']
@@ -218,7 +227,8 @@ def make_node_geojson(graph_instance):
                             "osmid" : int(node),
                             "connected_edges" : node_attributes['connected_edges'],
                             "visit_order": node_visit_dict[node],
-                            "was_odd" : node_attributes["is_odd"]
+                            "was_odd" : node_attributes["is_odd"],
+                            "start_node": start_node
                           },
                           "geometry": {
                             "type": "Point",
@@ -337,7 +347,7 @@ def make_edge_geojson(graph_instance):
 
 # def make_euler_circuit(start_node, updated_graph_instance): 
 
-def make_euler_circuit(updated_graph_instance): 
+def make_euler_circuit(start_node, updated_graph_instance): 
     """ Given a graph instance (with updated num traversal) 
     attributes in edges_dict, return a list contain the sequence in which
     the graph's nodes should be visited.
@@ -416,33 +426,37 @@ if __name__ == '__main__':
     # 3. get graph with updated traversals count 
     # bbox = [NORTH, SOUTH , EAST, WEST] # min lng 
 
-    bbox = get_bbox_from_geojson('test_bbox_input.geojson')
+    bbox_geom_str = str({"type":"FeatureCollection",
+                         "features":[{"id":"2a01221a7db21efadd487199ba4d89d9",
+                         "type":"Feature","properties":{},"geometry":
+                         {"coordinates":[[[-122.40017025263401,37.76001428340129],[-122.40238039286139,37.75982767848936],[-122.4020048835992,37.756841935919326],[-122.39958016664835,37.75696068934555],[-122.40017025263401,37.76001428340129]]],
+                         "type":"Polygon"}}]})
 
+    bbox = get_bbox_from_geojson(bbox_geom_str)
 
-    SOURCE = "OSM"
-    updated_graph_inst = get_eulerian_graph_edges(bbox, "osm")
+    # updated_graph_inst = get_eulerian_graph_edges(bbox, "osm")
 
-    # 2. get start node 
-    start_node = choice(list(updated_graph_inst.nodes_dict.keys()))
+    # # 2. get start node 
+    # start_node = choice(list(updated_graph_inst.nodes_dict.keys()))
 
-    # # 3. calculate euler circuit 
+    # # # 3. calculate euler circuit 
 
-    euler_circuit_output = make_euler_circuit(start_node, updated_graph_inst)
+    # euler_circuit_output = make_euler_circuit(start_node, updated_graph_inst)
 
-    print("\n\nEuler circuit order:")
+    # print("\n\nEuler circuit order:")
 
-    print("node visit order:", euler_circuit_output.node_visit_order)
-    print("edge visit order:", euler_circuit_output.edge_visit_order)
+    # print("node visit order:", euler_circuit_output.node_visit_order)
+    # print("edge visit order:", euler_circuit_output.edge_visit_order)
 
-    print("edges geojson")
-    print("\n\n\n")
-    print(euler_circuit_output.edge_geojson)
+    # print("edges geojson")
+    # print("\n\n\n")
+    # print(euler_circuit_output.edge_geojson)
 
-    print("nodes geojson")
-    print("\n\n\n")
-    print(euler_circuit_output.node_geojson)
+    # print("nodes geojson")
+    # print("\n\n\n")
+    # print(euler_circuit_output.node_geojson)
 
-    print("\n\nProcess time:", time.time() - start, "seconds")
+    # print("\n\nProcess time:", time.time() - start, "seconds")
 
 
 
