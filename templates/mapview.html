@@ -170,7 +170,7 @@ map.on('draw.create', function(evt) {
 function addBboxAndRoute(displayGeojsons) {
 
     // remove draw function 
-    map.removeControl(draw);
+    // map.removeControl(draw);
 
     // hide calculate route button
     $('#calcuate-route-btn').attr('style','display:none ;');
@@ -178,17 +178,39 @@ function addBboxAndRoute(displayGeojsons) {
     // get geometry feature collections back from get request and 
     // jsonify each
 
-    let bboxGeometry = JSON.parse(displayGeojsons['bbox_geometry']);
+    // let bboxGeometry = JSON.parse(displayGeojsons['bbox_geometry']);
     let routeGeometry = JSON.parse(displayGeojsons['route_geometry']);
     let nodesGeometry = JSON.parse(displayGeojsons['nodes_geometry']);
 
-
+    // reduce bbox opacity
+    map.setPaintProperty('bbox-geometry', 'fill-opacity', .1);
 
     console.log("\n\ntype bbox geom:", typeof bboxGeometry);
     console.log("\n\ntype route geom:", typeof routeGeometry);
     
 
     console.log("\n\n\n nodes geometry", nodesGeometry)
+
+    // add nodes feature collection to map
+
+    map.addSource('nodes', {
+        "type": "geojson",
+        "data" : nodesGeometry
+    });
+    
+    map.addLayer({
+        "id" : "nodes-geometry",
+        "type" : "symbol",
+        "source" : "nodes",
+        "layout": {
+            "icon-image": "circle-15",
+            "icon-size" : .5,
+            "text-field": "{visit_order}",
+            "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
+            "text-offset": [0, 0.6],
+            "text-anchor": "top"
+            }
+    });
 
     // add route feature collection to map
 
@@ -214,23 +236,23 @@ function addBboxAndRoute(displayGeojsons) {
             "line-width": 8,
             "line-opacity": 1
         }
-    });
+    }, "nodes-geometry"); // second agument determines which layer should be direcly above the bbox layer
 
-    // add bbox to map 
-    map.addSource('bbox', { //  bbox in this case is a variable that is a feature collection
-        "type": "geojson",
-        "data": bboxGeometry
-        });
+    // // add bbox to map 
+    // map.addSource('bbox', { //  bbox in this case is a variable that is a feature collection
+    //     "type": "geojson",
+    //     "data": bboxGeometry
+    //     });
 
-    map.addLayer({
-        "id": "bbox-geometry", // rename?
-        "type": "fill", // bbox is a polygon
-        "source": "bbox", 
-        "paint": {
-            'fill-color': '#FFE400',
-            'fill-opacity': 0.1,
-        }
-    }, "route-geometry"); // second agument determines which layer should be direcly above the bbox layer
+    // map.addLayer({
+    //     "id": "bbox-geometry", // rename?
+    //     "type": "fill", // bbox is a polygon
+    //     "source": "bbox", 
+    //     "paint": {
+    //         'fill-color': '#FFE400',
+    //         'fill-opacity': 0.1,
+    //     }
+    // }, "route-geometry"); // second agument determines which layer should be direcly above the bbox layer
 
 }
 
@@ -239,6 +261,25 @@ function addBboxAndRoute(displayGeojsons) {
 function handleBboxSend(evt) {
 
     let bbox = draw.getAll();
+
+    // add bbox to map 
+    map.addSource('bbox', { //  bbox in this case is a variable that is a feature collection
+        "type": "geojson",
+        "data": bbox
+        });
+
+    map.addLayer({
+        "id": "bbox-geometry", // rename?
+        "type": "fill", // bbox is a polygon
+        "source": "bbox", 
+        "paint": {
+            'fill-color': '#FFE400',
+            'fill-opacity': 0.3,
+        }
+    }); 
+
+    // remove ability to draw polygon after the bbox polygon is added 
+    map.removeControl(draw);
 
     bbox = JSON.stringify(bbox);
 
