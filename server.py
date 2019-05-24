@@ -6,7 +6,7 @@ import json
 
 from circuit_constructor import get_bbox_from_geojson, get_eulerian_graph_edges, make_euler_circuit
 
-from pprint import pprint
+from pprint import PrettyPrinter as pprint
 
 from random import choice 
 
@@ -69,6 +69,14 @@ def receive_bbox_geometry():
     nodes_geometry = euler_circuit_output_graph.node_geojson
 
     route_geometry = euler_circuit_output_graph.edge_geojson
+
+    print("\n\n\n\nNODES GEOM:")
+    print(nodes_geometry)
+
+    print("\n\n\n\nROUTE GEOM:")
+    print(route_geometry)
+
+
 
 
 

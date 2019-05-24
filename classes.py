@@ -99,7 +99,16 @@ class OSMGraph:
             print("\n\n\nedge_length:", edge_length)
 
             edge_hwy_type = edge_df_row['highway'].values[0]
+
+            # handle edges that don't have a name - 
+            # check for nan by looking for names with class 'float'
             edge_name = edge_df_row['name'].values[0]
+
+            if type(edge_name) is float: 
+
+                edge_name = "None"
+
+
             edge_osmid = edge_df_row['osmid'].values[0]
             edge_geometry = edge_df_row['geometry'].values[0]
 

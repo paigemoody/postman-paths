@@ -224,7 +224,7 @@ def make_node_geojson(graph_instance):
                           "type": "Feature",
                           "properties": {
                             # node identifier is the osmid
-                            "osmid" : int(node),
+                            "osmid" : float(node),
                             "connected_edges" : node_attributes['connected_edges'],
                             "visit_order": node_visit_dict[node],
                             "was_odd" : node_attributes["is_odd"],
@@ -303,6 +303,41 @@ def make_edge_geojson(graph_instance):
         # so we transform each tuple into a list to creata list of lists:
         line_coords_list = [ list(coord_tuple) for coord_tuple in list(shape(line_shapely).coords)]
 
+
+        # some ways (edges) have more than one osmid because they are 
+        # part of more than one way - to handle this while also handling
+        # the conversion of numpy 64 ints to regular ints
+        # I do something different for wayids that are lists and 
+        # way ids that are numpy64 ints 
+
+        converted_osm_id = ""
+
+        if type(edge_attributes['osmid']) is list:
+            # if osmid is a list, keep as list but make each item a regular
+            # python int rather than numpy64
+
+            converted_osm_id = []
+
+            for osmid in edge_attributes['osmid']: 
+
+                converted_osm_id.append(float(osmid))
+
+        else: 
+
+            print("edge_attributes['osmid']", edge_attributes['osmid'])
+            print("type(edge_attributes['osmid'])",type(edge_attributes['osmid']) )
+            # if osmid is not a list just convert the numpy64 int into
+            # a regular int 
+            converted_osm_id = float(edge_attributes['osmid'])
+
+
+
+
+        # print("\n\n\n\n\nLOOKING AT EDGE OSMID TYPE")
+
+        # print("\nOG type:", edge_attributes['osmid'])
+
+        # print("\n made to string type:", str(edge_attributes['osmid']))
         # build edge feature dict from graph attributes 
         edge_feature = {
                           "type": "Feature",
@@ -311,8 +346,8 @@ def make_edge_geojson(graph_instance):
                             "length" : edge_attributes['length'], 
                             "hwy_type" : edge_attributes['hwy_type'], 
                             "road_name" : edge_attributes['name'], #road name
-                            # need to transform numpy.int64 into regular int 
-                            "osmid" : int(edge_attributes['osmid']),    
+                            # need to transform numpy.int64 into str?
+                            "osmid" : converted_osm_id,    
                             "visit_order" : edge_visit_dict[edge],     
 
                             # add dict of node information - add coordinates proprety for
