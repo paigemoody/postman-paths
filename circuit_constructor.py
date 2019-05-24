@@ -392,11 +392,9 @@ def make_euler_circuit(start_node, updated_graph_instance):
 
     updated_graph_instance.edge_visit_order = edge_visit_order
         
-    # return {
-    #         "node_visit_order": node_visit_order, 
-    #         "edge_visit_order": edge_visit_order,
-    #         "graph_instance" : updated_graph_instance
-    #         }
+    updated_graph_instance.node_geojson = make_node_geojson(updated_graph_instance)
+
+    updated_graph_instance.edge_geojson = make_edge_geojson(updated_graph_instance)
 
     return updated_graph_instance
 
@@ -453,12 +451,13 @@ if __name__ == '__main__':
 
     print("edges geojson")
     print("\n\n\n")
-    print(make_edge_geojson(euler_circuit_output))
+    print(euler_circuit_output.edge_geojson)
+
 
 
     print("nodes geojson")
     print("\n\n\n")
-    print(make_node_geojson(euler_circuit_output))
+    print(euler_circuit_output.node_geojson)
 
     # for edge in euler_circuit_output["edge_visit_order"]:
     #     # print edge info
