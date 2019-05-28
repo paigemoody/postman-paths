@@ -3,10 +3,13 @@
 
 {% block content %}
 
-    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
   <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.54.0/mapbox-gl.js'></script>
 
   <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
   <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.54.0/mapbox-gl.css' rel='stylesheet' />
 
@@ -65,7 +68,6 @@
     <script src='https://api.tiles.mapbox.com/mapbox.js/plugins/turf/v3.0.11/turf.min.js'></script>
     <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.9/mapbox-gl-draw.js'></script>
     <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.9/mapbox-gl-draw.css' type='text/css'/>
-
     <div id='map'></div>
 
     <div id='calc-route'> 
@@ -91,6 +93,7 @@
         </button>" 
 
     </div> -->
+
 
 </body>
 
@@ -191,6 +194,10 @@ function addBboxAndRoute(displayGeojsons) {
 
     console.log("\n\n\n nodes geometry", nodesGeometry)
 
+
+    console.log("\n\n\n start node", nodesGeometry['features'][0]['properties']['start_node'])
+
+    console.log("\n\n\n start node type", (typeof nodesGeometry['features'][0]['properties']['start_node']))
     // add nodes feature collection to map
 
     map.addSource('nodes', {
@@ -198,19 +205,39 @@ function addBboxAndRoute(displayGeojsons) {
         "data" : nodesGeometry
     });
     
+    // add nodes layer as symbol type 
     map.addLayer({
         "id" : "nodes-geometry",
         "type" : "symbol",
         "source" : "nodes",
         "layout": {
-            "icon-image": "circle-15",
-            "icon-size" : .5,
+            "icon-image": [
+                'match',
+                ['get', 'start_node'],
+                'true', "star-15",
+                'false', "circle-11",
+                "circle-11"
+            ],
+
+            "icon-size" : [
+                'match',
+                ['get', 'start_node'],
+                'true', 1,
+                'false', .6,
+                .6
+            ],
             "text-field": "{visit_order}",
             "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
             "text-offset": [0, 0.6],
             "text-anchor": "top"
-            }
+            },
+        paint: {
+            "text-color": "#000000",
+            "text-halo-color": "#ffffff",
+            "text-halo-width": 1
+          }
     });
+
 
     // add route feature collection to map
 
@@ -237,22 +264,6 @@ function addBboxAndRoute(displayGeojsons) {
             "line-opacity": 1
         }
     }, "nodes-geometry"); // second agument determines which layer should be direcly above the bbox layer
-
-    // // add bbox to map 
-    // map.addSource('bbox', { //  bbox in this case is a variable that is a feature collection
-    //     "type": "geojson",
-    //     "data": bboxGeometry
-    //     });
-
-    // map.addLayer({
-    //     "id": "bbox-geometry", // rename?
-    //     "type": "fill", // bbox is a polygon
-    //     "source": "bbox", 
-    //     "paint": {
-    //         'fill-color': '#FFE400',
-    //         'fill-opacity': 0.1,
-    //     }
-    // }, "route-geometry"); // second agument determines which layer should be direcly above the bbox layer
 
 }
 

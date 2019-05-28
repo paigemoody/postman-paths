@@ -205,11 +205,13 @@ def make_node_geojson(graph_instance):
         # get node attributes from nodes dict 
 
         # check if node is the start node
+        # use string in order to enable 
+        # data-driven styling in the map - for start node
 
         if node == node_visit_order[0]:
-            start_node = True
+            start_node = 'true'
         else:
-            start_node = False
+            start_node = 'false'
 
         node_attributes = graph_instance.nodes_dict[node]
 
