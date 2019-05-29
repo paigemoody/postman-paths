@@ -204,10 +204,10 @@ map.on('load', function () {
     //     "data": route
     // });
 
-    map.addSource('route', {
-        "type" : "geojson",
-        "data" : route
-    });
+    // map.addSource('route', {
+    //     "type" : "geojson",
+    //     "data" : route
+    // });
 
     map.addSource('point', {
         "type": "geojson",
@@ -225,15 +225,15 @@ map.on('load', function () {
     // });
 
 
-    map.addLayer({
-        "id": "route",
-        "source": "route",
-        "type": "line",
-        "paint": {
-            "line-width": 4,
-            "line-color": "#007cbf"
-        }
-    });
+    // map.addLayer({
+    //     "id": "route",
+    //     "source": "route",
+    //     "type": "line",
+    //     "paint": {
+    //         "line-width": 4,
+    //         "line-color": "#007cbf"
+    //     }
+    // });
 
     map.addLayer({
         "id": "point",

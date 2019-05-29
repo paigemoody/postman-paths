@@ -256,10 +256,14 @@ function addBboxAndRoute(displayGeojsons) {
             "line-color" : [
                 'match',
                 ['get', 'num_traversals'],
-                1, '#e55e5e', // pink
-                2, '#fbb03b', // orange
-                3, '#00FF00', // green
-                '#123c69' // blue
+                1, 'rgba(0,0,205,0.3)', 
+                // 1, '#e55e5e', // pink
+                // 2, '#fbb03b', // orange
+                2, 'rgba(0,0,205,0.6)',
+                // 3, '#00FF00', // green
+                3, 'rgba(0,0,205,0.9)',
+                'rgba(0,0,205,1)',
+                // '#123c69' // blue
             ],
             "line-width": 8,
             "line-opacity": 1

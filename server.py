@@ -59,11 +59,11 @@ def receive_bbox_geometry():
 
     route_geometry = euler_circuit_output_graph.edge_geojson
 
-    # print("\n\n\n\nNODES GEOM:")
-    # print(nodes_geometry)
+    print("\n\n\n\nNODES GEOM:")
+    print(nodes_geometry)
 
-    # print("\n\n\n\nROUTE GEOM:")
-    # print(route_geometry)
+    print("\n\n\n\nROUTE GEOM:")
+    print(route_geometry) 
 
 
     return jsonify({ 
