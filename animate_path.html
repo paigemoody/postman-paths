@@ -147,14 +147,14 @@ var lineDistance = turf.lineDistance(route.features[0], 'kilometers');
 
 console.log("lineDistance:",lineDistance);
 
-// initialize an arc list, segments along the route will be added to the arc
-// each item in arc will be one coordinatate
-var arc = [];
+// initialize an path list, segments along the route will be added to the path
+// each item in path will be one coordinatate
+var path = [];
 
-// Number of steps to use in the arc and animation, more steps means
-// a smoother arc and animation, but too many steps will result in a
+// Number of steps to use in the path and animation, more steps means
+// a smoother path and animation, but too many steps will result in a
 // low frame rate
-var steps = 500; // lower steps = faster movement along route 
+var steps = 250; // lower steps = faster movement along route 
 
 console.log("steps:",steps);
 
@@ -162,7 +162,7 @@ console.log("steps:",steps);
 let total_i = 0;
 
 
-// Draw an arc between the `origin` & `destination` of the two points
+// Draw an path between the `origin` & `destination` of the two points
 for (var i = 0; i < lineDistance; i += lineDistance / steps) {
 
     // i is the distance you've traveled along the route
@@ -179,7 +179,7 @@ for (var i = 0; i < lineDistance; i += lineDistance / steps) {
     var segment = turf.along(input_line, distance_along_line, 'kilometers');
     console.log();
     console.log("segment:", segment);
-    arc.push(segment.geometry.coordinates);
+    path.push(segment.geometry.coordinates);
 
     total_i += 1
 }
@@ -187,54 +187,26 @@ for (var i = 0; i < lineDistance; i += lineDistance / steps) {
 
 console.log("total_i:", total_i);
 
-console.log("arc:",arc)
+console.log("path:",path)
 
-// Update the route with calculated arc coordinates
-// route.features[0].geometry.coordinates = arc;
+// Update the route with calculated path coordinates
+// route.features[0].geometry.coordinates = path;
 
-route.features[0].geometry.coordinates = arc;
+route.features[0].geometry.coordinates = path;
 
 // Used to increment the value of the point measurement against the route.
 var counter = 0;
 
 map.on('load', function () {
-    // Add a source and layer displaying a point which will be animated in a circle.
-    // map.addSource('route', {
-    //     "type": "geojson",
-    //     "data": route
-    // });
 
-    // map.addSource('route', {
-    //     "type" : "geojson",
-    //     "data" : route
-    // });
+    // Add a source and layer displaying a point which will be animated.
 
     map.addSource('point', {
         "type": "geojson",
         "data": point
     });
 
-    // map.addLayer({
-    //     "id": "route",
-    //     "source": "route",
-    //     "type": "line",
-    //     "paint": {
-    //         "line-width": 2,
-    //         "line-color": "#007cbf"
-    //     }
-    // });
-
-
-    // map.addLayer({
-    //     "id": "route",
-    //     "source": "route",
-    //     "type": "line",
-    //     "paint": {
-    //         "line-width": 4,
-    //         "line-color": "#007cbf"
-    //     }
-    // });
-
+    // add point to be animated to graph 
     map.addLayer({
         "id": "point",
         "source": "point",
@@ -251,24 +223,97 @@ map.on('load', function () {
     
     function animate() {
         // Update point geometry to a new position based on counter denoting
-        // the index to access the arc.
-        // point.features[0].geometry.coordinates = route.features[0].geometry.coordinates[counter];
+        // the index to access the path.
+        console.log("counter",counter)
 
-        // trying with straight line 
-        point.features[0].geometry.coordinates = route.features[0].geometry.coordinates[counter];
+        console.log("coords",route.features[0].geometry.coordinates[counter])
 
-        // Calculate the bearing to ensure the icon is rotated to match the route arc
+        console.log("coords count:",(route.features[0].geometry.coordinates).length)
+
+        // what makes the icon move
+        // need to control for the end of the route where you don't want
+        // to index outside of the coordinates array
+        if (counter < (route.features[0].geometry.coordinates).length) {
+            point.features[0].geometry.coordinates = route.features[0].geometry.coordinates[counter];
+        } else {
+            point.features[0].geometry.coordinates = route.features[0].geometry.coordinates[counter-1];
+        }; 
+        
+        // Calculate the bearing to ensure the icon is rotated to match the route path
         // The bearing is calculate between the current point and the next point, except
-        // at the end of the arc use the previous point and the current point
-        point.features[0].properties.bearing = turf.bearing(
-            // turf.point(route.features[0].geometry.coordinates[counter >= steps ? counter - 1 : counter]),
-            // turf.point(route.features[0].geometry.coordinates[counter >= steps ? counter : counter + 1])
-            turf.point(route.features[0].geometry.coordinates[counter >= steps ? counter - 1 : counter]),
-            turf.point(route.features[0].geometry.coordinates[counter >= steps ? counter : counter + 1])
-        );
+        // at the end of the path use the previous point and the current point.
 
-        point.features[0].properties.bearing = point.features[0].properties.bearing - 90;
+         // turf.bearing takes two points and finds the geographic bearing between them, i.e. the angle measured in degrees from the north line (0 degrees)
 
+        // current point: 
+                // = counter - 1  if not all steps have been taken
+                // = counter if all steps have been taken
+        // next point:
+            // = counter + 1 if not all steps have been taken
+            // = counter is all steps have been taken
+
+        // let point_1 = null;
+        // let point_2 = null;
+
+        // if (counter >= steps) {
+        //     point_1 = counter - 1;
+        //     point_2 = counter;
+        // } else {
+        //     point_1 = counter - 1;
+        //     point_2 = counter + 1; 
+        // } 
+        
+        // point_1_geometry = turf.point(route.features[0].geometry.coordinates[point_1]);
+        // point_2_geometry = turf.point(route.features[0].geometry.coordinates[point_2]);
+    
+        // console.log("\n\n\npoint geometries:")
+        // console.log(point_1_geometry) 
+        // console.log(point_2_geometry)
+
+        // const currentBearing = turf.bearing(point_1_geometry, point_2_geometry);
+        // point.features[0].properties.bearing = currentBearing ; 
+
+        // if (counter >= steps) { 
+        //     console.log("steps:", steps)
+        //     console.log("counter:", counter)
+
+        //     console.log("DONE")
+        // }
+
+        // else {
+        //     console.log("steps:", steps)
+        //     console.log("counter:", counter)
+        // }
+
+        // console.log(
+        //     route.features[0].geometry.coordinates[counter >= steps ? counter - 1 : counter],
+        //     route.features[0].geometry.coordinates[counter >= steps ? counter : counter + 1]
+        //     )
+        // // not end 
+
+        // console.log("NOT END")
+        // console.log(
+        //     route.features[0].geometry.coordinates[counter],
+        //     route.features[0].geometry.coordinates[counter + 1]
+        //     )
+
+        // // end 
+        // console.log("END")
+        // console.log(
+        //     route.features[0].geometry.coordinates[counter - 1],
+        //     route.features[0].geometry.coordinates[counter]
+        //     )
+
+
+        // point.features[0].properties.bearing = turf.bearing(
+        //     turf.point(route.features[0].geometry.coordinates[counter >= steps ? counter - 1 : counter]),
+        //     turf.point(route.features[0].geometry.coordinates[counter >= steps ? counter : counter + 1])
+        // );
+
+        // point.features[0].properties.bearing = point.features[0].properties.bearing - 90;
+
+
+        point.features[0].properties.bearing = 0;
         // Update the source with this new data.
         map.getSource('point').setData(point);
 
@@ -299,6 +344,7 @@ map.on('load', function () {
     });
 
     // Start the animation.
+    console.log(counter)
     animate(counter);
 });
 </script>
