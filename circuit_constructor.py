@@ -143,7 +143,8 @@ def choose_edge_to_traverse(current_node, possible_next_edges, current_bridges):
     bridge_next_edge_options = []
     
     # find all possible next edges that are not in current bridges list 
-    
+    print("current_node:", current_node)
+    print("\n\n\n\npossible next edges: ", possible_next_edges)
     for possible_next_edge in possible_next_edges:
         
         # print(f"\n\nREVIEWING: {possible_next_edge}:")

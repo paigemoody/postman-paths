@@ -147,6 +147,70 @@ def get_list_of_all_pairs_lists(input_list):
     
     return list_of_possible_pairs_lists
 
+
+def get_list_of_all_pairs_lists_short(odd_nodes):
+    """Given list of nodes, output a list of three basic pairing options:
+
+    1. neighbors, starting at index 0
+    2. neighbors, starting at index 1
+    3. pairs starting from (first, last) then (second, second to last)
+    """
+
+    all_pairs_list = [] 
+    
+    pair_list = [] 
+
+    all_nodes = odd_nodes
+
+
+    pairing_options = [] 
+    
+    # do twice - to get immediate neighbors start at 0 and then 1 
+    # list1 = slice by neighbors
+    # list2 = slice by neighbors - shifted 1 -> to pair up first and last 
+    for k in range(0,2):  
+        
+        curr_list = [] 
+        total_nodes = len(all_nodes)
+
+        i = k
+        while i < total_nodes: # there will be len/2 pairs in each option 
+
+            pair_first = all_nodes[i]
+
+            next_index = (i + 1) % len(all_nodes) # get the remainder
+            pair_second = all_nodes[next_index]
+
+            pair = (pair_first, pair_second)
+            
+            curr_list.append(pair)
+
+            i += 2
+
+        pairing_options.append(curr_list)
+        
+    # get pairs moving in from the outside - in (eg first pairs with last, second pairs with second to last)
+    curr_list = [] 
+    first = 0 
+    last = -1 
+    
+    mid_point = (len(all_nodes) / 2)
+    
+    while first < mid_point:
+        pair_first = all_nodes[first]
+        pair_second = all_nodes[last]
+        
+        pair = (pair_first, pair_second) 
+                
+        curr_list.append(pair)
+        
+        first += 1 
+        last -= 1
+    pairing_options.append(curr_list)   
+       
+    return pairing_options 
+
+
 def get_shortest_route_two_nodes(start_node, end_node, graph_instance):
     """ Given a start and end node, 
     return sequenced list of nodes included in shortest route
@@ -364,13 +428,29 @@ def get_eulerian_graph_edges(bbox, source):
 
     # print("\nodd_nodes",odd_nodes)
 
-    all_pairs_list = get_list_of_all_pairs_lists(odd_nodes)
+    # initialize all_pairs_list
+
+    all_pairs_list = [] 
+
+    # if there are 4 or fewer odd nodes look for all possible options,
+    # otherwise look for just three basic pairing options 
+
+    if len(odd_nodes) < 5:
+
+        all_pairs_list = get_list_of_all_pairs_lists(odd_nodes)
+
+    else:
+
+        all_pairs_list = get_list_of_all_pairs_lists_short(odd_nodes)
 
     # print("\nall_pairs_list",all_pairs_list)
 
+    for item in all_pairs_list:
+        print("Pair option:", item)
+
     dict_pairings_lists_lengths = get_dict_pairings_lists_lengths(all_pairs_list, osm_graph)
 
-    # print("\ndict_pairings_lists_lengths", dict_pairings_lists_lengths)
+    print("\ndict_pairings_lists_lengths", dict_pairings_lists_lengths)
 
     twice_traversals_edges = get_twice_traversals_edges(dict_pairings_lists_lengths)
 
