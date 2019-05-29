@@ -52,7 +52,6 @@ var map = new mapboxgl.Map({
     zoom: 17
 });
 
-
 // first [point in route]
 // start node?
 // var origin = [-122.47822523117064, 37.763514185754794];
@@ -60,37 +59,6 @@ var map = new mapboxgl.Map({
 // last point in route
 // end node? 
 // var destination = [-122.47836470603943, 37.76534619499628];
-
-// A simple line from origin to destination.
-// var route = {
-//     "type": "FeatureCollection",
-//     "features": [{
-//         "type": "Feature",
-//         "geometry": {
-//             "type": "LineString",
-//             "coordinates": [
-//                 origin,
-//                 destination
-//             ]
-//         }
-//     }]
-// };
-
-// A line from origin to destination - does not change.
-// var route = {
-//     "type": "FeatureCollection",
-//     "features": [{
-//         "type": "Feature",
-//         "properties": {},
-//         "geometry": {
-//             "type": "LineString",
-//             "coordinates": [
-//                 origin,
-//                 destination
-//             ]
-//         }
-//     }]
-// };
 
 // route is the geometry of the edge
 // will need to add something so that the coordinates go in the right oder
@@ -156,20 +124,10 @@ var path = [];
 // low frame rate
 var steps = 250; // lower steps = faster movement along route 
 
-console.log("steps:",steps);
-
-
-let total_i = 0;
-
-
 // Draw an path between the `origin` & `destination` of the two points
 for (var i = 0; i < lineDistance; i += lineDistance / steps) {
 
     // i is the distance you've traveled along the route
-    // console.log("i:", i);
-
-    // let input_line = route.features[0
-
     let input_line = route.features[0];
 
     const distance_along_line = i; 
@@ -177,17 +135,8 @@ for (var i = 0; i < lineDistance; i += lineDistance / steps) {
     // turf.along takes a LineString and 
     // returns a Point at a specified distance along the line.
     var segment = turf.along(input_line, distance_along_line, 'kilometers');
-    console.log();
-    console.log("segment:", segment);
     path.push(segment.geometry.coordinates);
-
-    total_i += 1
 }
-
-
-console.log("total_i:", total_i);
-
-console.log("path:",path)
 
 // Update the route with calculated path coordinates
 // route.features[0].geometry.coordinates = path;
@@ -251,60 +200,6 @@ map.on('load', function () {
         // next point:
             // = counter + 1 if not all steps have been taken
             // = counter is all steps have been taken
-
-        // let point_1 = null;
-        // let point_2 = null;
-
-        // if (counter >= steps) {
-        //     point_1 = counter - 1;
-        //     point_2 = counter;
-        // } else {
-        //     point_1 = counter - 1;
-        //     point_2 = counter + 1; 
-        // } 
-        
-        // point_1_geometry = turf.point(route.features[0].geometry.coordinates[point_1]);
-        // point_2_geometry = turf.point(route.features[0].geometry.coordinates[point_2]);
-    
-        // console.log("\n\n\npoint geometries:")
-        // console.log(point_1_geometry) 
-        // console.log(point_2_geometry)
-
-        // const currentBearing = turf.bearing(point_1_geometry, point_2_geometry);
-        // point.features[0].properties.bearing = currentBearing ; 
-
-        // if (counter >= steps) { 
-        //     console.log("steps:", steps)
-        //     console.log("counter:", counter)
-
-        //     console.log("DONE")
-        // }
-
-        // else {
-        //     console.log("steps:", steps)
-        //     console.log("counter:", counter)
-        // }
-
-        // console.log(
-        //     route.features[0].geometry.coordinates[counter >= steps ? counter - 1 : counter],
-        //     route.features[0].geometry.coordinates[counter >= steps ? counter : counter + 1]
-        //     )
-        // // not end 
-
-        // console.log("NOT END")
-        // console.log(
-        //     route.features[0].geometry.coordinates[counter],
-        //     route.features[0].geometry.coordinates[counter + 1]
-        //     )
-
-        // // end 
-        // console.log("END")
-        // console.log(
-        //     route.features[0].geometry.coordinates[counter - 1],
-        //     route.features[0].geometry.coordinates[counter]
-        //     )
-
-
         // point.features[0].properties.bearing = turf.bearing(
         //     turf.point(route.features[0].geometry.coordinates[counter >= steps ? counter - 1 : counter]),
         //     turf.point(route.features[0].geometry.coordinates[counter >= steps ? counter : counter + 1])
