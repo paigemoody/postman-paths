@@ -1,5 +1,7 @@
 from osmnx import graph_from_bbox, graph_to_gdfs
 
+import networkx as nx
+
 # sample bbox constraints
 # NORTH = 37.7599 # max lat 
 # SOUTH = 37.7569 # min lat
@@ -36,12 +38,12 @@ class OSMGraph:
         # set self.edges_dict 
         self.make_edges_dict()
 
-        print("\n\nCLASS -- edges_dict:", self.edges_dict)
+        # print("\n\nCLASS -- edges_dict:", self.edges_dict)
 
         # set self.nodes_dict
         self.make_nodes_dict()
 
-        print("\n\nCLASS -- nodes_dict:", self.nodes_dict)
+        # print("\n\nCLASS -- nodes_dict:", self.nodes_dict)
 
         # instantiate an attribute for node visit order and 
         # edge visit order -- will be updated once calculated 
@@ -63,15 +65,46 @@ class OSMGraph:
         """From uni-directional ox graph, make list of unique edges"""
 
         # make list of edges without default weight parameter
-        all_edges = [ edge[0:2] for edge in list(( self.ox_graph ).edges)]
+        all_edges = [] 
+
+        ox_graph = self.ox_graph
+
+        edge_count = 0
+
+        for edge in list(ox_graph.edges):
+            edge_count += 1 
+
+            all_edges.append(edge[0:2])
+
+        # [ edge[0:2] for edge in list(( self.ox_graph ).edges)]
+
+        print("edges from nx: ", len(all_edges))
 
         unique_edges = []
 
         for edge in all_edges:
-            if edge not in unique_edges and edge[::-1] not in unique_edges:
-                unique_edges.append(edge)
 
-        self.edges = unique_edges
+            # testing what happens when edges that have the 
+            # same start and end node are ignored
+
+            if edge[0] == edge[1]:
+                print(f"\n\n\n{edge} has matching nodes")
+
+            else:
+                rev_edge = edge[::-1]
+
+                # make sure that both versions of the edge are not 
+                # already accounted for 
+
+                if edge not in unique_edges:
+
+                    if rev_edge not in unique_edges:
+
+                        unique_edges.append(edge)
+
+            print("unique_edges:", len(unique_edges))
+
+            self.edges = unique_edges
 
 
     def make_edges_dict(self):
@@ -96,7 +129,7 @@ class OSMGraph:
 
             edge_length = edge_df_row['length'].values[0]
 
-            print("\n\n\nedge_length:", edge_length)
+            # print("\n\n\nedge_length:", edge_length)
 
             edge_hwy_type = edge_df_row['highway'].values[0]
 
@@ -161,14 +194,39 @@ class OSMGraph:
                 if node in edge:
                     connected_edges.append(edge)
 
-            is_odd = False
+
+            # checking claculation of odd nodes 
+            is_odd_mine = False
             # if there are an odd number of edges that contain the node
             # mark node as odd 
-            if len(connected_edges) % 2 != 0:
-                is_odd = True
+            # print("\n\nnode:", node)
+            # print("\n\nconnected_edges:", connected_edges)
+
+            if (len(connected_edges) != 0) and (len(connected_edges) % 2 != 0):
+                print(node, ":",len(connected_edges) )
+                is_odd_mine = True
+
+            # # use nx's odd node calcu
+            # is_odd_nx = False
+
+            # graph = self.ox_graph
+            # deg = graph.degree[node]
+
+            # if deg % 2 != 0:
+            #     is_odd_nx = True
 
             node_attrs['connected_edges'] = connected_edges
-            node_attrs['is_odd'] = is_odd
+            # node_attrs['is_odd_mine'] = is_odd_mine
+
+            node_attrs['is_odd'] = is_odd_mine
+
+            # if deg != len(connected_edges):
+            #     print("\n\n\nnode:",node)
+            #     print("is_odd_mine",is_odd_mine)
+            #     print("len(connected_edges):",len(connected_edges))
+
+            #     print("\nis_odd_nx",is_odd_nx)
+            #     print("deg:",deg)
 
             nodes_dict[node] = node_attrs
 

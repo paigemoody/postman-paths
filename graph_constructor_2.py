@@ -67,12 +67,16 @@ def get_odd_nodes(nodes_dict):
     list of odd nodes -- nodes that have 'is_odd = True'.
     """
 
-    print("\n\nodd nodes")
+    
     odd_nodes_list = []
 
     for node in nodes_dict:
         if nodes_dict[node]['is_odd'] == True:
+            # print()
+            # print(node)
             odd_nodes_list.append(node)
+
+    print("\n\n\n\nLEN ODD NODES",len(odd_nodes_list))
 
     return odd_nodes_list
 
@@ -119,7 +123,7 @@ def get_all_pairing_options(lst):
             
             for rest in get_all_pairing_options(items_to_left_of_pair + items_to_right_of_pair):
                 
-                print("\n\n [pair] + rest", [pair] + rest )
+                # print("\n\n [pair] + rest", [pair] + rest )
                 yield [pair] + rest
 
 def get_list_of_all_pairs_lists(input_list):
@@ -131,11 +135,11 @@ def get_list_of_all_pairs_lists(input_list):
     (Calls the function I didn't write, returns a list)
     """
 
-    print("\n\n\n\nget_list_of_all_pairs_lists -- input_list", input_list)
+    # print("\n\n\n\nget_list_of_all_pairs_lists -- input_list", input_list)
 
-    time.sleep(5)
+    print("\n\n\n\n\n\n ODD NODE COUNT:", len(input_list))
     
-    print("\n\nget_list_of_all_pairs_lists")
+    # print("\n\nget_list_of_all_pairs_lists")
 
     list_of_possible_pairs_lists = []
     
@@ -155,6 +159,8 @@ def get_list_of_all_pairs_lists_short(odd_nodes):
     2. neighbors, starting at index 1
     3. pairs starting from (first, last) then (second, second to last)
     """
+
+    print("\n\n\n\n\n\n ODD NODE COUNT:", len(odd_nodes))
 
     all_pairs_list = [] 
     
@@ -217,7 +223,7 @@ def get_shortest_route_two_nodes(start_node, end_node, graph_instance):
     between the nodes.
     """
 
-    print("\n\nget_shortest_route_two_nodes")
+    # print("\n\nget_shortest_route_two_nodes")
 
     route = shortest_path(graph_instance.ox_graph, start_node, end_node, weight='length')
     # route = nx.shortest_path(graph_instance.ox_graph, start_node, end_node, weight='length')
@@ -232,7 +238,7 @@ def get_route_edges_from_route(route):
 
     """
 
-    print("\n\nget_route_edges_from_route")
+    # print("\n\nget_route_edges_from_route")
 
     edges_in_route = []
     
@@ -252,14 +258,14 @@ def get_route_length(route_edges_list, edges_dict):
     return the total length of the route 
     (sum of the lengths of all edges in list).
     """
-
-    print("\n\nget_route_length")
+# 
+    # print("\n\nget_route_length")
 
     total_edges_length = 0
 
-    print("\n\n\nroute_edges_list:", route_edges_list)
+    # print("\n\n\nroute_edges_list:", route_edges_list)
 
-    print("\n\n get_route_length -- edges dict:", edges_dict)
+    # print("\n\n get_route_length -- edges dict:", edges_dict)
 
 
 
@@ -273,12 +279,12 @@ def get_route_length(route_edges_list, edges_dict):
 
             edge = edge[::-1]
 
-        print("\n\n\n route edges list:", route_edges_list)
-        print("\n\n edges_dict.keys():", list(edges_dict.keys()))
+        # print("\n\n\n route edges list:", route_edges_list)
+        # print("\n\n edges_dict.keys():", list(edges_dict.keys()))
 
         # print("\n\nedges dict[edge[::-1]]:", edges_dict[edge[::-1]])
 
-        print("\n\nedges dict[edge]:", edges_dict[edge])
+        # print("\n\nedges dict[edge]:", edges_dict[edge])
 
         #  BUG HERE - SOME EDGES DICT DON'T HAVE LENGTH
 
@@ -305,7 +311,7 @@ def get_dict_pairings_lists_lengths(list_of_possible_pairs_lists, graph_instance
 
     """
 
-    print("\n\nget_dict_pairings_lists_lengths")
+    # print("\n\nget_dict_pairings_lists_lengths")
 
     pairings_lengths_dict = {}
 
@@ -325,7 +331,7 @@ def get_dict_pairings_lists_lengths(list_of_possible_pairs_lists, graph_instance
 
             shortest_route_edges = get_route_edges_from_route(shortest_route_nodes_list)
 
-            print("\n\ngraph_instance.edges_dict:", graph_instance.edges_dict)
+            # print("\n\ngraph_instance.edges_dict:", graph_instance.edges_dict)
 
             total_route_length = get_route_length(shortest_route_edges, graph_instance.edges_dict)
 
@@ -343,7 +349,7 @@ def get_twice_traversals_edges(pairings_lengths_dict):
     [('A', 'B'), ('B', 'C')]
     """
     
-    print("\n\nget_twice_traversals_edges")
+    # print("\n\nget_twice_traversals_edges")
 
     optimal_pairing = None
     shortest_length = float('inf') 
@@ -364,11 +370,11 @@ def update_twice_traversal_edges(list_twice_trav_edges, graph_instance):
     Return edges dict for graph instance 
     """
     
-    print("\n\nupdate_twice_traversal_edges")
+    # print("\n\nupdate_twice_traversal_edges")
 
     edges_dict = graph_instance.edges_dict
 
-    print("\n\n update_twice_traversal_edges edges_dict:", edges_dict )
+    # print("\n\n update_twice_traversal_edges edges_dict:", edges_dict )
 
     # edges_dict = make_edges_dict(graph_instance)
 
@@ -411,7 +417,7 @@ def get_eulerian_graph_edges(bbox, source):
     return a dictionary of edges with metadata and traversal count.
     """
 
-    print("\n\nget_eulerian_graph_edges")
+    # print("\n\nget_eulerian_graph_edges")
 
     # north, south, east, west = bbox
 
@@ -421,7 +427,7 @@ def get_eulerian_graph_edges(bbox, source):
 
     osm_graph = OSMGraph(bbox, source)
 
-    print("osm_graph.edges_dict:",osm_graph.edges_dict)
+    # print("osm_graph.edges_dict:",osm_graph.edges_dict)
 
     # input all nodes  and get odd nodes, update node attributes
     odd_nodes = get_odd_nodes(osm_graph.nodes_dict)
@@ -435,7 +441,7 @@ def get_eulerian_graph_edges(bbox, source):
     # if there are 4 or fewer odd nodes look for all possible options,
     # otherwise look for just three basic pairing options 
 
-    if len(odd_nodes) < 5:
+    if len(odd_nodes) < 7:
 
         all_pairs_list = get_list_of_all_pairs_lists(odd_nodes)
 
@@ -446,11 +452,12 @@ def get_eulerian_graph_edges(bbox, source):
     # print("\nall_pairs_list",all_pairs_list)
 
     for item in all_pairs_list:
-        print("Pair option:", item)
+        print("\n\nPair option:", item)
+        print("Pair option len:", len(item))
 
     dict_pairings_lists_lengths = get_dict_pairings_lists_lengths(all_pairs_list, osm_graph)
 
-    print("\ndict_pairings_lists_lengths", dict_pairings_lists_lengths)
+    # print("\ndict_pairings_lists_lengths", dict_pairings_lists_lengths)
 
     twice_traversals_edges = get_twice_traversals_edges(dict_pairings_lists_lengths)
 
@@ -462,6 +469,8 @@ def get_eulerian_graph_edges(bbox, source):
 
 
 if __name__ == "__main__":
+
+    print("hi")
     # import doctest
     # doctest.testmod()
 
@@ -473,17 +482,17 @@ if __name__ == "__main__":
 
     # bbox = [NORTH, SOUTH , EAST, WEST] # min lng 
 
-    bbox = get_bbox_from_geojson('test_bbox_input.geojson')
+    # bbox = get_bbox_from_geojson('test_bbox_input.geojson')
 
     # osm_graph = OSMGraph(bbox, source)
 
-    print("bbox")
+    # print("bbox")
 
-    updated_graph_inst = get_eulerian_graph_edges(bbox, "OSM")
+    # updated_graph_inst = get_eulerian_graph_edges(bbox, "OSM")
 
-    for edge in updated_graph_inst.edges_dict:
-        print()
-        print(edge, "\n", updated_graph_inst.edges_dict[edge])
+    # for edge in updated_graph_inst.edges_dict:
+    #     print()
+    #     print(edge, "\n", updated_graph_inst.edges_dict[edge])
 
 
 

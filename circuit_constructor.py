@@ -37,6 +37,8 @@ def get_bridges(edges_list):
     []
 
     """
+
+    # print("all edges:", edges_list)
     
     # make a temporary graph 
     temp_G = nx.Graph()
@@ -143,12 +145,14 @@ def choose_edge_to_traverse(current_node, possible_next_edges, current_bridges):
     bridge_next_edge_options = []
     
     # find all possible next edges that are not in current bridges list 
-    print("current_node:", current_node)
-    print("\n\n\n\npossible next edges: ", possible_next_edges)
+    print("\n\n\n\ncurrent_node:", current_node)
+    print("possible next edges: ", possible_next_edges)
+
+
     for possible_next_edge in possible_next_edges:
         
         # print(f"\n\nREVIEWING: {possible_next_edge}:")
-        
+    
         if possible_next_edge in current_bridges or possible_next_edge[::-1] in current_bridges:
             # print(f" {possible_next_edge} or {possible_next_edge[::-1]} in current_bridges")
             bridge_next_edge_options.append(possible_next_edge)
@@ -156,8 +160,8 @@ def choose_edge_to_traverse(current_node, possible_next_edges, current_bridges):
             #print(f" {possible_next_edge} AND {possible_next_edge[::-1]} NOT in current_bridges")                               
             non_bridge_next_edges_options.append(possible_next_edge)
     
-    # print("\n\nnon_bridge_next_edges_options:", non_bridge_next_edges_options)
-    # print("bridge_next_edge_options:", bridge_next_edge_options)
+    print("\nnon_bridge_next_edges_options:", non_bridge_next_edges_options)
+    print("bridge_next_edge_options:", bridge_next_edge_options)
     
     
     # if non_bridge_next_edges is not empty, return the first item in non_bridges 
@@ -198,7 +202,7 @@ def make_node_geojson(graph_instance):
 
         curr_order_num += 1
 
-    print("\n\n\nnode_visit_dict:", node_visit_dict, "\n\n\n")
+    # print("\n\n\nnode_visit_dict:", node_visit_dict, "\n\n\n")
 
     node_features_list = [] 
 
@@ -214,9 +218,16 @@ def make_node_geojson(graph_instance):
         else:
             start_node = 'false'
 
+        
+
         node_attributes = graph_instance.nodes_dict[node]
 
-        print("\n\nnode_attributes:",node_attributes)
+        if node_attributes["is_odd"] == True:
+            was_odd = 'true'
+
+        else:
+            was_odd = 'false'
+        # print("\n\nnode_attributes:",node_attributes)
 
         # make list of point coords from shapely geometry
         point_shapely = node_attributes['geometry']
@@ -230,7 +241,8 @@ def make_node_geojson(graph_instance):
                             "osmid" : float(node),
                             "connected_edges" : node_attributes['connected_edges'],
                             "visit_order": node_visit_dict[node],
-                            "was_odd" : node_attributes["is_odd"],
+                            # "was_odd" : node_attributes["is_odd"],
+                            "was_odd" : was_odd,
                             "start_node": start_node
                           },
                           "geometry": {
@@ -327,8 +339,8 @@ def make_edge_geojson(graph_instance):
 
         else: 
 
-            print("edge_attributes['osmid']", edge_attributes['osmid'])
-            print("type(edge_attributes['osmid'])",type(edge_attributes['osmid']) )
+            # print("edge_attributes['osmid']", edge_attributes['osmid'])
+            # print("type(edge_attributes['osmid'])",type(edge_attributes['osmid']) )
             # if osmid is not a list just convert the numpy64 int into
             # a regular int 
             converted_osm_id = float(edge_attributes['osmid'])
@@ -401,8 +413,11 @@ def make_euler_circuit(start_node, updated_graph_instance):
     node_visit_order = [current_node]
     edge_visit_order = []
 
+    # print("\n\n\ncurrent_edges_on_graph_list:", current_edges_on_graph_list)
 
     while len(current_edges_on_graph_list) > 0:
+
+        # print("current_edges_on_graph_list:", current_edges_on_graph_list)
         # while there are still edges on the graph, keep traversing
 
         current_bridges_on_graph = get_bridges(current_edges_on_graph_list)

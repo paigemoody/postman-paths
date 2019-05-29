@@ -38,18 +38,18 @@ def receive_bbox_geometry():
 
     bbox_geometry = request.args.get('bbox_geometry')
 
-    print("\n\n\ntype(bbox_geometry):",type(bbox_geometry))
+    # print("\n\n\ntype(bbox_geometry):",type(bbox_geometry))
 
-    print("\n\nbbox geometry:",bbox_geometry)
+    # print("\n\nbbox geometry:",bbox_geometry)
 
     bbox = get_bbox_from_geojson(bbox_geometry)
 
-    print("bbox:", bbox)
+    # print("bbox:", bbox)
 
 
     updated_graph_inst = get_eulerian_graph_edges(bbox, "osm")
 
-    print("\n\n\nupdated_graph_inst.edges_dict:",updated_graph_inst.edges_dict)
+    # print("\n\n\nupdated_graph_inst.edges_dict:",updated_graph_inst.edges_dict)
 
     start_node = choice(list(updated_graph_inst.nodes_dict.keys()))
     
@@ -59,11 +59,11 @@ def receive_bbox_geometry():
 
     route_geometry = euler_circuit_output_graph.edge_geojson
 
-    print("\n\n\n\nNODES GEOM:")
-    print(nodes_geometry)
+    # print("\n\n\n\nNODES GEOM:")
+    # print(nodes_geometry)
 
-    print("\n\n\n\nROUTE GEOM:")
-    print(route_geometry)
+    # print("\n\n\n\nROUTE GEOM:")
+    # print(route_geometry)
 
 
     return jsonify({ 
