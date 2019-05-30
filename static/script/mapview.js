@@ -50,6 +50,8 @@ map.on('draw.create', function(evt) {
         // remove draw tool and add a new one with just a trashcan?
         // to limit drawing of more than one bbox
 
+        console.log(draw)
+
         // const formInputs = {
         //     bbox: bboxGeometryJSON
         // };
@@ -121,66 +123,40 @@ function animateRoute(evt){
     // Used to increment the value of the point measurement against the route.
     let counter = 0 
 
-    // map.on('load', 
 
-    // function () {
+    function animate() {
+        // Update point geometry to a new position based on counter denoting
+        // the index to access the path.
+        console.log("counter",counter)
 
-    // console.log("\n\nadding source:", point)
-    //     map.addSource('point', {
-    //         "type": "geojson",
-    //         "data": point
-    //     });
+        console.log("coords",route.features[0].geometry.coordinates[counter])
 
-    // console.log("adding layer")
-    //     // add point to be animated to graph 
-    //     map.addLayer({
-    //         "id": "point",
-    //         "source": "point",
-    //         "type": "symbol",
-    //         "layout": {
-    //             "icon-image": "restaurant-seafood-15", // change later
-    //             "icon-rotate": ["get", "bearing"],
-    //             "icon-rotation-alignment": "map",
-    //             "icon-allow-overlap": true,
-    //             "icon-ignore-placement": true,
-    //             "icon-size": 2
-    //         }
-    //     });
+        console.log("coords count:",(route.features[0].geometry.coordinates).length)
 
+        // what makes the icon move
+        // need to control for the end of the route where you don't want
+        // to index outside of the coordinates array
+        if (counter < (route.features[0].geometry.coordinates).length) {
+            point.features[0].geometry.coordinates = route.features[0].geometry.coordinates[counter];
+        } else {
+            point.features[0].geometry.coordinates = route.features[0].geometry.coordinates[counter-1];
+        }; 
+        
+        point.features[0].properties.bearing = 0;
+        // Update the source with this new data.
+        map.getSource('point').setData(point);
 
-        function animate() {
-            // Update point geometry to a new position based on counter denoting
-            // the index to access the path.
-            console.log("counter",counter)
-
-            console.log("coords",route.features[0].geometry.coordinates[counter])
-
-            console.log("coords count:",(route.features[0].geometry.coordinates).length)
-
-            // what makes the icon move
-            // need to control for the end of the route where you don't want
-            // to index outside of the coordinates array
-            if (counter < (route.features[0].geometry.coordinates).length) {
-                point.features[0].geometry.coordinates = route.features[0].geometry.coordinates[counter];
-            } else {
-                point.features[0].geometry.coordinates = route.features[0].geometry.coordinates[counter-1];
-            }; 
-            
-            point.features[0].properties.bearing = 0;
-            // Update the source with this new data.
-            map.getSource('point').setData(point);
-
-            // Request the next frame of animation so long the end has not been reached.
-            if (counter < steps) {
-                requestAnimationFrame(animate);
-            }
-
-            counter = counter + 1;
-
-            console.log("bearing:", point.features[0].properties.bearing);
+        // Request the next frame of animation so long the end has not been reached.
+        if (counter < steps) {
+            requestAnimationFrame(animate);
         }
 
-        animate(counter);
+        counter = counter + 1;
+
+        console.log("bearing:", point.features[0].properties.bearing);
+    }
+
+    animate(counter);
 
     // }
 
@@ -196,7 +172,7 @@ function addBboxAndRoute(displayGeojsons) {
     // map.removeControl(draw);
 
     // hide calculate route button, show animate button
-    $('#calcuate-route-btn').attr('style','display:none ;');
+    // $('#calcuate-route-btn').attr('style','display:none ;');
     $('#animate-route-btn').removeAttr('style');
 
 
@@ -341,6 +317,9 @@ function addBboxAndRoute(displayGeojsons) {
 
 function handleBboxSend(evt) {
 
+    // hide calculate route button as soon as clicked 
+    $('#calcuate-route-btn').attr('style','display:none ;');
+
     let bbox = draw.getAll();
 
     // add bbox to map 
@@ -359,7 +338,7 @@ function handleBboxSend(evt) {
         }
     }); 
 
-    // remove ability to draw polygon after the bbox polygon is added 
+    // // remove ability to draw polygon after the bbox polygon is added 
     map.removeControl(draw);
 
     bbox = JSON.stringify(bbox);
