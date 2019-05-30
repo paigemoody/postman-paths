@@ -422,6 +422,8 @@ def make_route_geojson(graph_instance):
 
     for edge in edge_visit_order:
 
+
+
         # print("edges_dict[edge]",edges_dict[edge])
 
         first_node = node_visit_order[edge_num]
@@ -440,15 +442,27 @@ def make_route_geojson(graph_instance):
         edge_geometry = edges_dict[edge]['geometry']
         edge_geometry_coords = [ list(coord_tuple) for coord_tuple in list(shape(edge_geometry).coords) ]
 
+        edge_len = edges_dict[edge]['length']
+
+        route_length += edge_len
+
+        # check if first node is first in edge coord, if not , reverse
+        # the order of the points in the line so that 
+        # the first node is first 
+        if edge_geometry_coords[0] != first_node_coords[0]:
+
+            print(".......reverse coords!")
+
+            print("og coords:",edge_geometry_coords )
+
+            edge_geometry_coords.reverse()
+
+            print("rev coords:",edge_geometry_coords )
+
+
         print("\n\n\nfirst node:", first_node)
         print("\nfirst node coords:", first_node_coords)
         print("\nedge_geometry_coords", edge_geometry_coords)
-
-        # check if first node is first in edge coord 
-
-        if edge_geometry_coords[0] != first_node_coords:
-
-            edge_geometry_coords.reverse()
 
         # if there are just two coords in edge line, add the
         # coordinates of the first node 
@@ -470,13 +484,22 @@ def make_route_geojson(graph_instance):
         # if it's the last edge, add the final coordinate of the 
         # edge -- to return to start 
 
-        if edge_num == len(edges_dict) - 1: 
+        print("\nedge_num", edge_num)
+        print("total edges", len(edge_visit_order))
+        print("last edge index:", (len(edge_visit_order) - 1))
+
+        if edge_num == (len(edge_visit_order) - 1): 
+
+            print("last edge!!")
 
             coordinates.append(edge_geometry_coords[-1])
+
+            # coordinates.append(edge_geometry_coords[-1])
 
         # increment edge num 
         edge_num += 1 
 
+    # add last node of last edge (should = first node) to coords:
 
     route_feature_collection = {
                                 "type": "FeatureCollection",
