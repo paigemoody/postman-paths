@@ -65,13 +65,129 @@ map.on('draw.create', function(evt) {
 })
 
 // function to play route
-function animateRoute(evt) {
+function animateRoute(evt){
+    let route = evt.data.routrgeometry
 
-    routeGeometry = evt.data.routrgeometry
+    // A single point that animates along the route.
+    // Coordinates are initially set to the first coordinate 
+    // in the route
+    let point  = {
+        "type": "FeatureCollection",
+        "features": [{
+        "type": "Feature",
+        "properties": {},
+        "geometry": {
+            "type": "Point",
+            "coordinates": route.features[0].geometry.coordinates[0]
+            }
+        }]
+    }
 
-    console.log("ROUTE GEOM",routeGeometry)
+    // get the full traversal distnace as line distance 
+    // to use to create small line sections to animate - using steps
+    let lineDistance = route.features[0]["properties"]["route_length_km"]
+
+    // initialize an path list, segments along the route will be added to the path
+    // each item in path will be one coordinatate
+    var path = [];
+
+    // Number of steps to use in the path and animation, more steps means
+    // a smoother path and animation, but too many steps will result in a
+    // low frame rate
+    var steps = 500; // lower steps = faster movement along route 
+
+    // make small route line segments to animate
+    // add the coordinates of each segment to the path list 
+    for (var i = 0; i < lineDistance; i += lineDistance / steps) {
+
+        // i is the distance you've traveled along the route
+        let input_line = route.features[0];
+
+        const distance_along_line = i; 
+
+        // turf.along takes a LineString and 
+        // returns a Point at a specified distance along the line.
+        var segment = turf.along(input_line, distance_along_line, 'kilometers');
+        path.push(segment.geometry.coordinates);
+
+        //  bug with not totally returning the original point
+        // need to add something that forces the return
+    }
+
+    // Update the route with calculated path coordinates
+    // route.features[0].geometry.coordinates = path;
+    route.features[0].geometry.coordinates = path;
+
+    // Used to increment the value of the point measurement against the route.
+    let counter = 0 
+
+    // map.on('load', 
+
+    // function () {
+
+    // console.log("\n\nadding source:", point)
+    //     map.addSource('point', {
+    //         "type": "geojson",
+    //         "data": point
+    //     });
+
+    // console.log("adding layer")
+    //     // add point to be animated to graph 
+    //     map.addLayer({
+    //         "id": "point",
+    //         "source": "point",
+    //         "type": "symbol",
+    //         "layout": {
+    //             "icon-image": "restaurant-seafood-15", // change later
+    //             "icon-rotate": ["get", "bearing"],
+    //             "icon-rotation-alignment": "map",
+    //             "icon-allow-overlap": true,
+    //             "icon-ignore-placement": true,
+    //             "icon-size": 2
+    //         }
+    //     });
+
+
+        function animate() {
+            // Update point geometry to a new position based on counter denoting
+            // the index to access the path.
+            console.log("counter",counter)
+
+            console.log("coords",route.features[0].geometry.coordinates[counter])
+
+            console.log("coords count:",(route.features[0].geometry.coordinates).length)
+
+            // what makes the icon move
+            // need to control for the end of the route where you don't want
+            // to index outside of the coordinates array
+            if (counter < (route.features[0].geometry.coordinates).length) {
+                point.features[0].geometry.coordinates = route.features[0].geometry.coordinates[counter];
+            } else {
+                point.features[0].geometry.coordinates = route.features[0].geometry.coordinates[counter-1];
+            }; 
+            
+            point.features[0].properties.bearing = 0;
+            // Update the source with this new data.
+            map.getSource('point').setData(point);
+
+            // Request the next frame of animation so long the end has not been reached.
+            if (counter < steps) {
+                requestAnimationFrame(animate);
+            }
+
+            counter = counter + 1;
+
+            console.log("bearing:", point.features[0].properties.bearing);
+        }
+
+        animate(counter);
+
+    // }
+
+// );
 
 }
+
 //GET ROUTE CALCULATION
 
 function addBboxAndRoute(displayGeojsons) {
@@ -113,6 +229,39 @@ function addBboxAndRoute(displayGeojsons) {
     // console.log("\n\n\n start node", nodesGeometry['features'][0]['properties']['start_node'])
 
     // console.log("\n\n\n start node type", (typeof nodesGeometry['features'][0]['properties']['start_node']))
+    
+    //  add point to be animated to graph 
+    let point  = {
+        "type": "FeatureCollection",
+        "features": [{
+        "type": "Feature",
+        "properties": {},
+        "geometry": {
+            "type": "Point",
+            "coordinates": routeGeometry.features[0].geometry.coordinates[0]
+            }
+        }]
+    }
+    map.addSource('point', {
+        "type": "geojson",
+        "data": point
+    });
+    // add point to be animated to graph 
+    map.addLayer({
+        "id": "point",
+        "source": "point",
+        "type": "symbol",
+        "layout": {
+            "icon-image": "police-15", // change later
+            // "icon-rotate": ["get", "bearing"],
+            // "icon-rotation-alignment": "map",
+            "icon-allow-overlap": true,
+            "icon-ignore-placement": true,
+            "icon-size": 2
+        }
+    });
+
+
     // add nodes feature collection to map
 
     map.addSource('nodes', {
@@ -151,7 +300,7 @@ function addBboxAndRoute(displayGeojsons) {
             "text-halo-color": "#ffffff",
             "text-halo-width": 1
           }
-    });
+    }, "point");
 
 
     // add route feature collection to map
@@ -184,8 +333,6 @@ function addBboxAndRoute(displayGeojsons) {
             "line-opacity": 1
         }
     }, "nodes-geometry"); // second agument determines which layer should be direcly above the bbox layer
-
-
 
 
 }

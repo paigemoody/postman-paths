@@ -231,21 +231,21 @@ map.on('load', function () {
         console.log("bearing:", point.features[0].properties.bearing);
     }
 
-    document.getElementById('replay').addEventListener('click', function() {
-        // Set the coordinates of the original point back to origin
-        // point.features[0].geometry.coordinates = origin;
+    // document.getElementById('replay').addEventListener('click', function() {
+    //     // Set the coordinates of the original point back to origin
+    //     // point.features[0].geometry.coordinates = origin;
 
-        point.features[0].geometry.coordinates = route.features[0].geometry.coordinates[0];
+    //     point.features[0].geometry.coordinates = route.features[0].geometry.coordinates[0];
 
-        // Update the source layer
-        map.getSource('point').setData(point);
+    //     // Update the source layer
+    //     map.getSource('point').setData(point);
 
-        // Reset the counter
-        counter = 0;
+    //     // Reset the counter
+    //     counter = 0;
 
-        // Restart the animation.
-        animate(counter);
-    });
+    //     // Restart the animation.
+    //     animate(counter);
+    // });
 
     // Start the animation.
     animate(counter);
