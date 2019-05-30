@@ -94,7 +94,7 @@ var map = new mapboxgl.Map({
 // };
 
 // example route 
-var route =  {"type": "FeatureCollection", "features": [{"type": "Feature", "properties": {"route_length_km": 1.7515349999999996}, "geometry": {"type": "LineString", "coordinates": [[-122.399914, 37.7573804], [-122.4001542, 37.7597898], [-122.4001542, 37.7597898], [-122.4002355, 37.7597842], [-122.4002355, 37.7597842], [-122.40113, 37.7597235], [-122.40113, 37.7597235], [-122.40096, 37.7581188], [-122.40096, 37.7581188], [-122.4019697, 37.758389], [-122.4019697, 37.758389], [-122.4020923, 37.7596792], [-122.4020923, 37.7596792], [-122.40113, 37.7597235], [-122.40113, 37.7597235], [-122.4020923, 37.7596792], [-122.4020923, 37.7596792], [-122.4019697, 37.758389], [-122.4019697, 37.758389], [-122.4018467, 37.757108], [-122.4018467, 37.757108], [-122.4008696, 37.757168], [-122.4008696, 37.757168], [-122.3999067, 37.7572271], [-122.3999067, 37.7572271], [-122.4008696, 37.757168], [-122.4008696, 37.757168], [-122.40096, 37.7581188], [-122.399914, 37.7573804], [-122.4000427, 37.7576043], [-122.4001114, 37.7576993], [-122.400218, 37.7577768], [-122.40096, 37.7581188], [-122.399914, 37.7573804], [-122.3999067, 37.7572271], [-122.3999067, 37.7572271], [-122.399914, 37.7573804]]}}]}
+var route = {"type": "FeatureCollection", "features": [{"type": "Feature", "properties": {"route_length_km": 1.7}, "geometry": {"type": "LineString", "coordinates": [[-122.3999067, 37.7572271], [-122.4008696, 37.757168], [-122.4018467, 37.757108], [-122.4019697, 37.758389], [-122.4020923, 37.7596792], [-122.40113, 37.7597235], [-122.40096, 37.7581188], [-122.4019697, 37.758389], [-122.4020923, 37.7596792], [-122.40113, 37.7597235], [-122.4002355, 37.7597842], [-122.4001542, 37.7597898], [-122.399914, 37.7573804], [-122.4000427, 37.7576043], [-122.4001114, 37.7576993], [-122.400218, 37.7577768], [-122.40096, 37.7581188], [-122.40096, 37.7581188], [-122.4008696, 37.757168], [-122.3999067, 37.7572271], [-122.399914, 37.7573804]]}}]}
 
 // A single point that animates along the route.
 // Coordinates are initially set to the first coordinate 
@@ -128,7 +128,7 @@ var path = [];
 // Number of steps to use in the path and animation, more steps means
 // a smoother path and animation, but too many steps will result in a
 // low frame rate
-var steps = 800; // lower steps = faster movement along route 
+var steps = 500; // lower steps = faster movement along route 
 
 // Draw an path between the `origin` & `destination` of the two points
 for (var i = 0; i < lineDistance; i += lineDistance / steps) {
@@ -142,6 +142,9 @@ for (var i = 0; i < lineDistance; i += lineDistance / steps) {
     // returns a Point at a specified distance along the line.
     var segment = turf.along(input_line, distance_along_line, 'kilometers');
     path.push(segment.geometry.coordinates);
+
+    //  bug with not totally returning the original point
+    // need to add something that forces the return
 }
 
 // Update the route with calculated path coordinates
