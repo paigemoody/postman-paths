@@ -59,6 +59,8 @@ def receive_bbox_geometry():
 
     edges_geometry = euler_circuit_output_graph.edge_geojson
 
+    route_geometry = euler_circuit_output_graph.route_geojson
+
     # print("\n\n\n\nNODES GEOM:")
     # print(nodes_geometry)
 
@@ -70,6 +72,7 @@ def receive_bbox_geometry():
         "bbox_geometry" : bbox_geometry
         ,"edges_geometry" : edges_geometry
         ,"nodes_geometry" : nodes_geometry
+        , "route_geometry" : route_geometry 
         })
 
 if __name__ == "__main__":

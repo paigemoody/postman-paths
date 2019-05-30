@@ -64,10 +64,14 @@ map.on('draw.create', function(evt) {
 
 })
 
-// RENDER BBOX as new source? 
-    
+// function to play route
+function animateRoute(evt) {
 
+    routeGeometry = evt.data.routrgeometry
 
+    console.log("ROUTE GEOM",routeGeometry)
+
+}
 //GET ROUTE CALCULATION
 
 function addBboxAndRoute(displayGeojsons) {
@@ -75,8 +79,11 @@ function addBboxAndRoute(displayGeojsons) {
     // remove draw function 
     // map.removeControl(draw);
 
-    // hide calculate route button
+    // hide calculate route button, show animate button
     $('#calcuate-route-btn').attr('style','display:none ;');
+    $('#animate-route-btn').removeAttr('style');
+
+
     
     // get geometry feature collections back from get request and 
     // jsonify each
@@ -84,6 +91,12 @@ function addBboxAndRoute(displayGeojsons) {
     // let bboxGeometry = JSON.parse(displayGeojsons['bbox_geometry']);
     let edgesGeometry = JSON.parse(displayGeojsons['edges_geometry']);
     let nodesGeometry = JSON.parse(displayGeojsons['nodes_geometry']);
+    let routeGeometry = JSON.parse(displayGeojsons['route_geometry']);
+
+    //  run animate route function - send route geometry to function
+    // $('#animate-route-btn').on('click', handleBboxSend(routeGeometry));
+
+    $('#animate-route-btn').click({routrgeometry : routeGeometry}, animateRoute);
 
     // reduce bbox opacity
     map.setPaintProperty('bbox-geometry', 'fill-opacity', .1);
@@ -92,8 +105,9 @@ function addBboxAndRoute(displayGeojsons) {
     // console.log("\n\ntype edges geom:", typeof edgesGeometry);
     
 
-    console.log("\n\n\n nodes geometry", nodesGeometry)
-    console.log("\n\n\n edges geometry", edgesGeometry)
+    console.log("\n\n\n nodes geometry", nodesGeometry);
+    console.log("\n\n\n edges geometry", edgesGeometry);
+    console.log("\n\n\n route geometry", routeGeometry);
 
 
     // console.log("\n\n\n start node", nodesGeometry['features'][0]['properties']['start_node'])
@@ -170,6 +184,9 @@ function addBboxAndRoute(displayGeojsons) {
             "line-opacity": 1
         }
     }, "nodes-geometry"); // second agument determines which layer should be direcly above the bbox layer
+
+
+
 
 }
 
