@@ -159,6 +159,7 @@ class OSMGraph:
 
             edge_attrs['num_traversals'] = 1
 
+            # the values of the edges dict for the edge is a dict of attributes
             edges_dict[edge] = edge_attrs
 
         self.edges_dict = edges_dict

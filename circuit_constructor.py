@@ -145,8 +145,8 @@ def choose_edge_to_traverse(current_node, possible_next_edges, current_bridges):
     bridge_next_edge_options = []
     
     # find all possible next edges that are not in current bridges list 
-    print("\n\n\n\ncurrent_node:", current_node)
-    print("possible next edges: ", possible_next_edges)
+    # print("\n\n\n\ncurrent_node:", current_node)
+    # print("possible next edges: ", possible_next_edges)
 
 
     for possible_next_edge in possible_next_edges:
@@ -160,8 +160,8 @@ def choose_edge_to_traverse(current_node, possible_next_edges, current_bridges):
             #print(f" {possible_next_edge} AND {possible_next_edge[::-1]} NOT in current_bridges")                               
             non_bridge_next_edges_options.append(possible_next_edge)
     
-    print("\nnon_bridge_next_edges_options:", non_bridge_next_edges_options)
-    print("bridge_next_edge_options:", bridge_next_edge_options)
+    # print("\nnon_bridge_next_edges_options:", non_bridge_next_edges_options)
+    # print("bridge_next_edge_options:", bridge_next_edge_options)
     
     
     # if non_bridge_next_edges is not empty, return the first item in non_bridges 
@@ -197,7 +197,6 @@ def make_node_geojson(graph_instance):
 
             node_visit_dict[node] = [curr_order_num]
         else: 
-
             node_visit_dict[node].append(curr_order_num)
 
         curr_order_num += 1
@@ -395,7 +394,155 @@ def make_edge_geojson(graph_instance):
     return json.dumps(edges_feature_collection)
 
 
-# def make_euler_circuit(start_node, updated_graph_instance): 
+def make_route_geojson(graph_instance):
+    """ 
+    Input: updated graph instance - has edge visit order 
+    and node visit order attributes.
+
+    Output: geojson Feature collection with one LineString feature
+    which contains all coordinates in graph, order by visit order. 
+    """
+
+    # instantiate list of coordinates 
+    coordinates = [] 
+
+    # instantiate counter for route length
+    # to be added when each edge is "traversed"
+    route_length = 0 
+
+    node_visit_order = graph_instance.node_visit_order
+    edge_visit_order = graph_instance.edge_visit_order
+
+    edges_dict = graph_instance.edges_dict
+    nodes_dict = graph_instance.nodes_dict
+
+    # loop over nodes in order of visit
+
+    print(node_visit_order)
+
+    # for node_index in range(0, len(node_visit_order) - 1):
+
+    node_index = 0 
+    for node in node_visit_order: 
+
+        print("current index:", node_index)
+        # if node isn't the end node, make edge for next traversal
+
+        # while node_index != len(node_visit_order) -1:
+
+        if node_index != len(node_visit_order)-1:
+            current_node = node_visit_order[node_index]
+
+
+            current_node_geometry = nodes_dict[current_node]['geometry']
+
+            current_node_coords = [ list(coord_tuple) for coord_tuple in list(shape(current_node_geometry).coords)]
+
+
+
+            # current_node_coords = (nodes_dict[current_node]['x'], 
+            #                        nodes_dict[current_node]['y'])
+
+            print("\ncurrent_node",current_node)
+            # print("\ncurrent_node_coords",current_node_coords)
+            
+
+
+            next_node = node_visit_order[node_index + 1]
+            # next_node_coords = (nodes_dict[next_node]['x'], 
+            #                     nodes_dict[next_node]['y'])
+
+
+            next_node_geometry = nodes_dict[next_node]['geometry']
+
+            next_node_coords = [ list(coord_tuple) for coord_tuple in list(shape(next_node_geometry).coords)]
+
+
+            print("next_node",next_node)
+            # print("next_node_coords",next_node_coords)
+            # find edge in graph that includes the current and 
+            # next nodes 
+
+            traversal_edge = (current_node, next_node)
+            traversal_edge_rev = traversal_edge[::-1]
+
+            edge_geometry = None
+
+            if traversal_edge in edges_dict:
+
+                # print(f"{traversal_edge} in dict!")
+                edge_geometry = edges_dict[traversal_edge]['geometry']
+
+                length = edges_dict[traversal_edge]['length']
+                route_length += length
+
+            # elif traversal_edge_rev in edges_dict:
+            else:
+                print(f"{traversal_edge} reversed in dict!")
+                edge_geometry = edges_dict[traversal_edge_rev]['geometry']
+
+                length = edges_dict[traversal_edge_rev]['length']
+                route_length += length
+
+                print(edge_geometry)
+                
+
+
+            # make shapely coords into a list of coords lists 
+            edge_geometry_coords = [ list(coord_tuple) for coord_tuple in list(shape(edge_geometry).coords) ]
+            
+            # if the edge geometry has only two points, add the start node, 
+            # then end node to the coordinates list,
+
+            if len(edge_geometry_coords) == 2:
+                # coordinates.append(current_node_coords)
+                # coordinates.append(next_node_coords)
+
+                print("\n\n\n\n\n\n\none line:", edge_geometry_coords)
+
+            # else, check that the start nodes is first and the end node is 
+            # last in the edge geometry list, if so, add coords,
+            # if not, reverse coordinates list, then add coordinates 
+            # else:
+            print()
+            print()
+            print()
+           
+            if edge_geometry_coords[0] == current_node_coords: # and edge_geometry_coords[-1] == next_node_coords:
+                for point in edge_geometry_coords:
+                    coordinates.append(point)
+                    print(point)
+            else: 
+                edge_geometry_coords.reverse()
+                for point in edge_geometry_coords:
+                    coordinates.append(point)
+                    print(point)
+
+            # print(edge_geometry_coords)
+
+            node_index += 1
+
+    route_feature_collection = {
+                                "type": "FeatureCollection",
+                                "features": [
+                                    {
+                                      "type": "Feature",
+                                      "properties": { "route_length_km" : route_length/1000},
+                                      "geometry": {
+                                        "type": "LineString",
+                                        "coordinates": coordinates
+                                    }
+                                }]
+                            }
+
+    print("total edges:", len(edge_visit_order))
+    print("total nodes:", len(node_visit_order))
+    print("total points in coords:", len(coordinates))
+
+     
+
+    return json.dumps(route_feature_collection)
+
 
 def make_euler_circuit(start_node, updated_graph_instance): 
     """ Given a graph instance (with updated num traversal) 
@@ -463,6 +610,13 @@ def make_euler_circuit(start_node, updated_graph_instance):
     updated_graph_instance.node_geojson = make_node_geojson(updated_graph_instance)
 
     updated_graph_instance.edge_geojson = make_edge_geojson(updated_graph_instance)
+
+    updated_graph_instance.route_geojson = make_route_geojson(updated_graph_instance)
+
+
+    print("\n\n\n\n\nROUTE COLLECTION",updated_graph_instance.route_geojson)
+
+    print("check done")
 
     return updated_graph_instance
 

@@ -48,8 +48,8 @@ mapboxgl.accessToken = 'pk.eyJ1IjoicGFpZ2VlbW9vZHkiLCJhIjoiY2owbDcyejhvMDJwNzJ5c
 var map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/mapbox/streets-v11',
-    center: [-122.47811, 37.76430],
-    zoom: 17
+    center: [-122.4008696, 37.757168],
+    zoom: 15
 });
 
 // first [point in route]
@@ -64,34 +64,37 @@ var map = new mapboxgl.Map({
 // will need to add something so that the coordinates go in the right oder
 // might need to reverse coordinates?  
 
-var route = {
-"type": "FeatureCollection",
-"features": [{
-    "type": "Feature",
-    "properties": {},
-    "geometry": {
-        "type": "LineString",
-        "coordinates": [
-              [
-                -122.47915863990782,
-                37.765329232155906
-              ],
-              [
-                -122.47763514518739,
-                37.76500693744932
-              ],
-              [
-                -122.47852563858032,
-                37.76406548960531
-              ],
-              [
-                -122.47751712799072,
-                37.76308162139503
-              ]
-            ]
-        }   
-    }]
-};
+// var route = {
+// "type": "FeatureCollection",
+// "features": [{
+//     "type": "Feature",
+//     "properties": {},
+//     "geometry": {
+//         "type": "LineString",
+//         "coordinates": [
+//               [
+//                 -122.47915863990782,
+//                 37.765329232155906
+//               ],
+//               [
+//                 -122.47763514518739,
+//                 37.76500693744932
+//               ],
+//               [
+//                 -122.47852563858032,
+//                 37.76406548960531
+//               ],
+//               [
+//                 -122.47751712799072,
+//                 37.76308162139503
+//               ]
+//             ]
+//         }   
+//     }]
+// };
+
+// example route 
+var route =  {"type": "FeatureCollection", "features": [{"type": "Feature", "properties": {"route_length_km": 1.7515349999999996}, "geometry": {"type": "LineString", "coordinates": [[-122.399914, 37.7573804], [-122.4001542, 37.7597898], [-122.4001542, 37.7597898], [-122.4002355, 37.7597842], [-122.4002355, 37.7597842], [-122.40113, 37.7597235], [-122.40113, 37.7597235], [-122.40096, 37.7581188], [-122.40096, 37.7581188], [-122.4019697, 37.758389], [-122.4019697, 37.758389], [-122.4020923, 37.7596792], [-122.4020923, 37.7596792], [-122.40113, 37.7597235], [-122.40113, 37.7597235], [-122.4020923, 37.7596792], [-122.4020923, 37.7596792], [-122.4019697, 37.758389], [-122.4019697, 37.758389], [-122.4018467, 37.757108], [-122.4018467, 37.757108], [-122.4008696, 37.757168], [-122.4008696, 37.757168], [-122.3999067, 37.7572271], [-122.3999067, 37.7572271], [-122.4008696, 37.757168], [-122.4008696, 37.757168], [-122.40096, 37.7581188], [-122.399914, 37.7573804], [-122.4000427, 37.7576043], [-122.4001114, 37.7576993], [-122.400218, 37.7577768], [-122.40096, 37.7581188], [-122.399914, 37.7573804], [-122.3999067, 37.7572271], [-122.3999067, 37.7572271], [-122.399914, 37.7573804]]}}]}
 
 // A single point that animates along the route.
 // Coordinates are initially set to the first coordinate 
@@ -109,7 +112,10 @@ var point = {
 };
 
 // // Calculate the distance in kilometers between route start/end point.
-var lineDistance = turf.lineDistance(route.features[0], 'kilometers');
+// var lineDistance = turf.lineDistance(route.features[0], 'kilometers');
+
+// use full traversal distnace as line distance 
+var lineDistance = route.features[0]["properties"]["route_length_km"]
 
 // var lineDistance = turf.lineDistance(route.features[0], 'kilometers');
 
@@ -122,7 +128,7 @@ var path = [];
 // Number of steps to use in the path and animation, more steps means
 // a smoother path and animation, but too many steps will result in a
 // low frame rate
-var steps = 250; // lower steps = faster movement along route 
+var steps = 800; // lower steps = faster movement along route 
 
 // Draw an path between the `origin` & `destination` of the two points
 for (var i = 0; i < lineDistance; i += lineDistance / steps) {
@@ -161,7 +167,7 @@ map.on('load', function () {
         "source": "point",
         "type": "symbol",
         "layout": {
-            "icon-image": "zoo-15",
+            "icon-image": "restaurant-seafood-15", // change later
             "icon-rotate": ["get", "bearing"],
             "icon-rotation-alignment": "map",
             "icon-allow-overlap": true,
@@ -239,7 +245,6 @@ map.on('load', function () {
     });
 
     // Start the animation.
-    console.log(counter)
     animate(counter);
 });
 </script>

@@ -106,7 +106,7 @@ var map = new mapboxgl.Map({
     container: 'map', // container id
     style: 'mapbox://styles/mapbox/satellite-v9', //hosted style id
     center: [-122.400932, 37.758250], // starting position is balloonicorn example route centr
-    zoom: 13 // starting zoom
+    zoom: 15 // starting zoom
 });
 
 
@@ -182,22 +182,23 @@ function addBboxAndRoute(displayGeojsons) {
     // jsonify each
 
     // let bboxGeometry = JSON.parse(displayGeojsons['bbox_geometry']);
-    let routeGeometry = JSON.parse(displayGeojsons['route_geometry']);
+    let edgesGeometry = JSON.parse(displayGeojsons['edges_geometry']);
     let nodesGeometry = JSON.parse(displayGeojsons['nodes_geometry']);
 
     // reduce bbox opacity
     map.setPaintProperty('bbox-geometry', 'fill-opacity', .1);
 
-    console.log("\n\ntype bbox geom:", typeof bboxGeometry);
-    console.log("\n\ntype route geom:", typeof routeGeometry);
+    // console.log("\n\ntype bbox geom:", typeof bboxGeometry);
+    // console.log("\n\ntype edges geom:", typeof edgesGeometry);
     
 
     console.log("\n\n\n nodes geometry", nodesGeometry)
+    console.log("\n\n\n edges geometry", edgesGeometry)
 
 
-    console.log("\n\n\n start node", nodesGeometry['features'][0]['properties']['start_node'])
+    // console.log("\n\n\n start node", nodesGeometry['features'][0]['properties']['start_node'])
 
-    console.log("\n\n\n start node type", (typeof nodesGeometry['features'][0]['properties']['start_node']))
+    // console.log("\n\n\n start node type", (typeof nodesGeometry['features'][0]['properties']['start_node']))
     // add nodes feature collection to map
 
     map.addSource('nodes', {
@@ -243,7 +244,7 @@ function addBboxAndRoute(displayGeojsons) {
 
     map.addSource('route', { //  bbox in this case is a variable that is a feature collection
         "type": "geojson",
-        "data": routeGeometry
+        "data": edgesGeometry
         });
 
     map.addLayer({
