@@ -8,7 +8,7 @@ EAST = -122.3997 # max lng
 WEST = -122.4023 # min lng 
 SOURCE = "OSM"
 
-TEST_GRAPH = OSMGraph(NORTH, SOUTH, EAST, WEST, SOURCE)
+TEST_GRAPH = OSMGraph([NORTH, SOUTH, EAST, WEST], SOURCE)
 
 class TestGetOddNodes(unittest.TestCase):
 
