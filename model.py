@@ -1,13 +1,14 @@
+from flask import Flask
+
 from flask_sqlalchemy import SQLAlchemy
 
-from GeoAlchemy2 import Geometry
+from geoalchemy2 import Geometry
 
 # This is the connection to the PostgreSQL database; we're getting this through
 # the Flask-SQLAlchemy helper library. On this, we can find the `session`
 # object, where we do most of our interactions (like committing, etc.)
 
 db = SQLAlchemy()
-
 
 ##############################################################################
 # Model definitions
@@ -23,26 +24,30 @@ class User(db.Model):
     __tablename__ = "users"
 
     user_id  = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    email    = db.Column(db.String(100), nullable=False)
+
+    email    = db.Column(db.String(100), nullable=True)
     password = db.Column(db.String(64), nullable=False)
 
-class RouteCollection(db.Model):
+class Collection(db.Model):
     """Collection of routes."""
 
     def __repr__(self): 
         """provide helpful represeation."""
 
-        return f"<RouteCollection collection_id={self.collection_id} user_id={self.user_id}>"
+        return f"<Collection collection_id={self.collection_id} user_id={self.user_id}>"
 
-    __tablename__ = "route_collections"
+    __tablename__ = "collections" # long name
 
     collection_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+
     user_id       = db.Column(db.Integer, db.ForeignKey('users.user_id'))
     collecion_name = db.Column(db.String(100))
-
+    description = db.Column(db.String(200), nullable=False)
+    created_date = db.Column(db.DateTime, nullable=False)
+    
     # define relationship with user table 
     user = db.relationship("User",
-                           backref=db.backref("route_collections", 
+                           backref=db.backref("collections", 
                                               order_by=collection_id))
 
 class Route(db.Model):
@@ -56,13 +61,40 @@ class Route(db.Model):
     __tablename__ = "routes"
 
     route_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    collection_id = db.Column(db.Integer, db.ForeignKey('route_collections.collection_id'))
-    route_name = db.Column(db.String(100))
 
-    # define relationship with route_collections table
-    route_collection = db.relationship("RouteCollection",
+    route_name = db.Column(db.String(100))
+    collection_id = db.Column(db.Integer, db.ForeignKey('collections.collection_id'))
+    created_date = db.Column(db.DateTime, nullable=False)
+    route_complete = db.Column(db.Boolean, nullable=False)
+    tasekd_to = db.Column(db.String(100), nullable=True)
+
+    # add route_complete boolean 
+    # add tasked to - for tasking a route in a collection
+
+    # define relationship with collections table
+    collection = db.relationship("Collection",
                                         backref=db.backref("routes"),
                                                             order_by=route_id)
+
+    # define relationship with bboxes table
+    bbox = db.relationship("BboxGeometry", 
+                            backref=db.backref("routes"),
+                                                order_by=route_id)
+
+    # define relationship with edges geometries table
+    edges_geom = db.relationship("EdgesGeometry", 
+                            backref=db.backref("routes"),
+                                                order_by=route_id)
+
+    # define relationship with nodes geometries table
+    nodes_geom = db.relationship("NodesGeometry", 
+                            backref=db.backref("routes"),
+                                                order_by=route_id)
+
+    # define relationship with route geometries table
+    route_geom = db.relationship("RouteGeometry", 
+                            backref=db.backref("routes"),
+                                                order_by=route_id)
 
 
 class BboxGeometry(db.Model):
@@ -76,16 +108,9 @@ class BboxGeometry(db.Model):
     __tablename__ = "bboxes"
 
     bbox_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    bbox_geometry = db.Column(db.JSON)
+
     route_id = db.Column(db.Integer, db.ForeignKey('routes.route_id'))
-
-    bbox_wkb_geometry = db.Column(Geometry("GEOMETRYCOLLECTION"))
-
-    # define relationship with route table
-    route_collection = db.relationship("Route",
-                                        backref=db.backref("bboxes"),
-                                                            order_by=bbox_id)
-
+    bbox_wkb_geometry = db.Column(Geometry(geometry_type="GEOMETRYCOLLECTION"))
 
 class EdgesGeometry(db.Model):
     """Geometry of an edges feature collection"""
@@ -98,15 +123,9 @@ class EdgesGeometry(db.Model):
     __tablename__ = "edges_geoms"
 
     edges_geom_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    route_id = db.Column(db.Integer, db.ForeignKey('routes.route_id'))
-   
-    edges_wkb_geometry = db.Column(Geometry("GEOMETRYCOLLECTION"))
-    # edges_geometry = db.Column(db.JSON)
 
-    # define relationship with route table
-    route_collection = db.relationship("Route",
-                                        backref=db.backref("edges_geoms"),
-                                                            order_by=edges_geom_id)
+    route_id = db.Column(db.Integer, db.ForeignKey('routes.route_id'))
+    edges_wkb_geometry = db.Column(Geometry(geometry_type="GEOMETRYCOLLECTION"))
 
 class NodesGeometry(db.Model):
     """Geometry of a nodes feature collection"""
@@ -121,13 +140,7 @@ class NodesGeometry(db.Model):
     nodes_geom_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     route_id = db.Column(db.Integer, db.ForeignKey('routes.route_id'))
    
-    nodes_wkb_geometry = db.Column(Geometry("GEOMETRYCOLLECTION"))
-    # nodes_geometry = db.Column(db.JSON)
-
-    # define relationship with route table
-    route_collection = db.relationship("Route",
-                                        backref=db.backref("nodes_geoms"),
-                                                            order_by=nodes_geom_id)
+    nodes_wkb_geometry = db.Column(Geometry(geometry_type="GEOMETRYCOLLECTION"))
 
 
 class RouteGeometry(db.Model):
@@ -140,16 +153,11 @@ class RouteGeometry(db.Model):
 
     __tablename__ = "route_geoms"
 
+
     route_geom_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     route_id = db.Column(db.Integer, db.ForeignKey('routes.route_id'))
-
-    route_length = db.Column(db.Integer, nullable=False)
-    route_wkb_geometry = db.Column(Geometry("GEOMETRYCOLLECTION"))
-
-    # define relationship with route table
-    route_collection = db.relationship("Route",
-                                        backref=db.backref("route_geoms"),
-                                                            order_by=route_geom_id)
+    route_wkb_geometry = db.Column(Geometry(geometry_type="GEOMETRYCOLLECTION"))
+    route_length = db.Column(db.Integer, nullable=True)
 
 ##############################################################################
 # Helper functions
