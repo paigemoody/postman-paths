@@ -36,7 +36,7 @@ class Collection(db.Model):
 
         return f"<Collection collection_id={self.collection_id} user_id={self.user_id}>"
 
-    __tablename__ = "collections" # long name
+    __tablename__ = "collections"
 
     collection_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
 
