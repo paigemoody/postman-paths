@@ -1,32 +1,48 @@
 
 
-    body { margin:0; padding:0; }
-    #map { position:absolute; top:0; bottom:0; width:100%; }
 
-
-    .calc-route-btn {
-        background-color: rgba(255, 255, 255, .9);
-        position: absolute;
-        height: 75px;
-        width: 150px;   
-    } 
-
-    .calc-route-btn:hover {
-        background-color: #FFE400; 
-        color: black;
+/*    body { 
+            margin:0; 
+            padding:0; 
+        }*/
+#map { 
+        position:absolute; 
+        top:0; 
+        /*top:50px; so you can see the nav bar*/
+        bottom:0; 
+        width:100%; 
     }
 
-    .animate-route-btn{
-        background-color: rgba(255, 255, 255, .9);
-        position: absolute;
-        height: 75px;
-        width: 150px;   
-    } 
+.calc-route-btn {
+    background-color: rgba(255, 255, 255, .9);
+    position: absolute;
+    height: 75px;
+    width: 150px;  
+    z-index: 2; 
+} 
 
-    .animate-route-btn:hover {
-        background-color: #FFE400; 
-        color: black;
-    }
+.calc-route-btn:hover {
+    background-color: #FFE400; 
+    color: black;
+}
+
+.animate-route-btn{
+    background-color: rgba(255, 255, 255, .9);
+    position: absolute;
+    height: 75px;
+    width: 150px;   
+    z-index: 2; 
+} 
+
+.animate-route-btn:hover {
+    background-color: #FFE400; 
+    color: black;
+}
+
+.main-content {
+  position: relative;
+  height: 100vh
+}
 /*
 .change-style-b{
     position: fixed;
