@@ -5,6 +5,7 @@ from model import User, Collection, Route, BboxGeometry,EdgesGeometry,NodesGeome
 import datetime
 from model import connect_to_db, db
 from server import app
+import json
 
 
 def load_users():
@@ -59,17 +60,133 @@ def load_collections():
 def load_routes():
     print("ROUTES")
 
+    # Delete all rows in table, so if we need to run this a second time,
+    # we won't be trying to add duplicate routes
+    Route.query.delete()
+
+    # Read u.user file and insert data
+    for row in open("seed_data/routes"):
+        
+        row = row.rstrip()
+
+        route_id, route_name, collection_id, tasked_to = row.split("|")
+
+        route = Route(route_id=route_id,
+                                route_name=route_name,
+                                collection_id=collection_id,
+                                tasked_to=tasked_to)
+
+        # add to the session 
+        db.session.add(route)
+
+    # commit data
+    db.session.commit()
+
 def load_bbox_geoms():
     print("BBOXES") 
+
+    # Delete all rows in table, so if we need to run this a second time,
+    # we won't be trying to add duplicate bboxes
+    BboxGeometry.query.delete()
+
+    # Read u.user file and insert data
+    for row in open("seed_data/bboxes"):
+        
+        row = row.rstrip()
+
+        bbox_id, route_id, bbox_geometry = row.split("|")
+
+        # loads to make sure postgres reads as json not string
+        bbox_geometry = json.loads(bbox_geometry) 
+
+
+        bbox = BboxGeometry(bbox_id=bbox_id,
+                      route_id=route_id,
+                      bbox_geometry=bbox_geometry
+                      )
+
+        # add to the session 
+        db.session.add(bbox)
+
+    # commit data
+    db.session.commit()
 
 def load_edges_geoms():
     print("EDGES_GEOMS") 
 
+    # Delete all rows in table, so if we need to run this a second time,
+    # we won't be trying to add duplicate edges geometries
+    EdgesGeometry.query.delete()
+
+    # Read u.user file and insert data
+    for row in open("seed_data/edges_geoms"):
+        
+        row = row.rstrip()
+
+        edges_geom_id, route_id, edges_geometry = row.split("|")
+
+        # print(edges_geom_id, route_id, edges_geometry )
+
+        edges_geometry = json.loads(edges_geometry)
+
+        edges_geom = EdgesGeometry(edges_geom_id=edges_geom_id,
+                                   route_id=route_id,
+                                   edges_geometry=edges_geometry)
+        # add to the session 
+        db.session.add(edges_geom)
+
+    # commit data
+    db.session.commit()
+
 def load_nodes_geoms():
     print("NODES_GEOMS") 
 
+    # Delete all rows in table, so if we need to run this a second time,
+    # we won't be trying to add duplicate nodes geometries 
+    NodesGeometry.query.delete()
+
+    # Read u.user file and insert data
+    for row in open("seed_data/nodes_geoms"):
+        
+        row = row.rstrip()
+
+        nodes_geom_id, route_id, nodes_geometry = row.split("|")
+
+        nodes_geometry = json.loads(nodes_geometry)
+
+        nodes_geom = NodesGeometry( nodes_geom_id=nodes_geom_id,
+                                   route_id=route_id,
+                                   nodes_geometry=nodes_geometry)
+        # add to the session 
+        db.session.add(nodes_geom)
+
+    # commit data
+    db.session.commit()
+
 def load_routes_geoms():
     print("ROUTES_GEOMS")  
+
+    # Delete all rows in table, so if we need to run this a second time,
+    # we won't be trying to add duplicate nodes geometries 
+    RouteGeometry.query.delete()
+
+    # Read u.user file and insert data
+    for row in open("seed_data/route_geoms"):
+        
+        row = row.rstrip()
+
+        route_geom_id, route_id, route_geometry = row.split("|")
+
+        route_geometry = json.loads(route_geometry)
+
+        route_geom = RouteGeometry( route_geom_id=route_geom_id,
+                                    route_id=route_id,
+                                    route_geometry=route_geometry)
+        # add to the session 
+        db.session.add(route_geom)
+
+    # commit data
+    db.session.commit()
 
 
 def set_val_user_id():

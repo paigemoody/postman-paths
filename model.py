@@ -67,8 +67,8 @@ class Route(db.Model):
     route_name = db.Column(db.String(100))
     collection_id = db.Column(db.Integer, db.ForeignKey('collections.collection_id'))
     created_date = db.Column(db.DateTime, nullable=True, default=datetime.datetime.utcnow)
-    route_complete = db.Column(db.Boolean, nullable=False)
-    tasekd_to = db.Column(db.String(100), nullable=True)
+    route_complete = db.Column(db.Boolean, nullable=False, default=False)
+    tasked_to = db.Column(db.String(100), nullable=True)
 
     # add route_complete boolean 
     # add tasked to - for tasking a route in a collection
