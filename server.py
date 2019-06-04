@@ -40,7 +40,7 @@ def receive_bbox_geometry():
 
     # print("\n\n\ntype(bbox_geometry):",type(bbox_geometry))
 
-    # print("\n\nbbox geometry:",bbox_geometry)
+    print("\n\nbbox geometry:",bbox_geometry)
 
     bbox = get_bbox_from_geojson(bbox_geometry)
 
@@ -61,11 +61,17 @@ def receive_bbox_geometry():
 
     route_geometry = euler_circuit_output_graph.route_geojson
 
-    # print("\n\n\n\nNODES GEOM:")
-    # print(nodes_geometry)
+    print("\n\n\n\nbbox_geometry:")
+    print(bbox_geometry)
 
-    # print("\n\n\n\nROUTE GEOM:")
-    # print(edges_geometry) 
+    # print("\n\n\n\nnodes geom:")
+    # print(nodes_geometry) 
+
+    # print("\n\n\n\nedges_geometry")
+    # print(edges_geometry)
+
+    # print("\n\n\n\nroute_geometry")
+    # print(route_geometry)
 
 
     return jsonify({ 
@@ -78,8 +84,10 @@ def receive_bbox_geometry():
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the
     # point that we invoke the DebugToolbarExtension
+    
     # app.debug = True
     # make sure templates, etc. are not cached in debug mode
+
     # app.jinja_env.auto_reload = app.debug
 
     # connect_to_db(app)

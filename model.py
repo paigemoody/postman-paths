@@ -2,7 +2,9 @@ from flask import Flask
 
 from flask_sqlalchemy import SQLAlchemy
 
-from geoalchemy2 import Geometry
+import datetime 
+
+# from geoalchemy2 import Geometry
 
 # This is the connection to the PostgreSQL database; we're getting this through
 # the Flask-SQLAlchemy helper library. On this, we can find the `session`
@@ -41,9 +43,9 @@ class Collection(db.Model):
     collection_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
 
     user_id       = db.Column(db.Integer, db.ForeignKey('users.user_id'))
-    collecion_name = db.Column(db.String(100))
+    collection_name = db.Column(db.String(100))
     description = db.Column(db.String(200), nullable=False)
-    created_date = db.Column(db.DateTime, nullable=False)
+    created_date = db.Column(db.DateTime, nullable=True, default=datetime.datetime.utcnow)
     
     # define relationship with user table 
     user = db.relationship("User",
@@ -64,7 +66,7 @@ class Route(db.Model):
 
     route_name = db.Column(db.String(100))
     collection_id = db.Column(db.Integer, db.ForeignKey('collections.collection_id'))
-    created_date = db.Column(db.DateTime, nullable=False)
+    created_date = db.Column(db.DateTime, nullable=True, default=datetime.datetime.utcnow)
     route_complete = db.Column(db.Boolean, nullable=False)
     tasekd_to = db.Column(db.String(100), nullable=True)
 
@@ -110,7 +112,8 @@ class BboxGeometry(db.Model):
     bbox_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
 
     route_id = db.Column(db.Integer, db.ForeignKey('routes.route_id'))
-    bbox_wkb_geometry = db.Column(Geometry(geometry_type="GEOMETRYCOLLECTION"))
+    # bbox_coords = db.Column(Geometry(geometry_type="GEOMETRYCOLLECTION"))
+    bbox_geometry = db.Column(db.JSON, nullable = False)
 
 class EdgesGeometry(db.Model):
     """Geometry of an edges feature collection"""
@@ -125,7 +128,8 @@ class EdgesGeometry(db.Model):
     edges_geom_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
 
     route_id = db.Column(db.Integer, db.ForeignKey('routes.route_id'))
-    edges_wkb_geometry = db.Column(Geometry(geometry_type="GEOMETRYCOLLECTION"))
+    # edges_geometry = db.Column(Geometry(geometry_type="GEOMETRYCOLLECTION"))
+    edges_geometry = db.Column(db.JSON, nullable=False)
 
 class NodesGeometry(db.Model):
     """Geometry of a nodes feature collection"""
@@ -140,7 +144,8 @@ class NodesGeometry(db.Model):
     nodes_geom_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     route_id = db.Column(db.Integer, db.ForeignKey('routes.route_id'))
    
-    nodes_wkb_geometry = db.Column(Geometry(geometry_type="GEOMETRYCOLLECTION"))
+    # nodes_geometry = db.Column(Geometry(geometry_type="GEOMETRYCOLLECTION"))
+    nodes_geometry = db.Column(db.JSON, nullable=False)
 
 
 class RouteGeometry(db.Model):
@@ -156,7 +161,8 @@ class RouteGeometry(db.Model):
 
     route_geom_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     route_id = db.Column(db.Integer, db.ForeignKey('routes.route_id'))
-    route_wkb_geometry = db.Column(Geometry(geometry_type="GEOMETRYCOLLECTION"))
+    route_geometry = db.Column(db.JSON, nullable=False)
+    # route_geometry = db.Column(Geometry(geometry_type="GEOMETRYCOLLECTION"))
     route_length = db.Column(db.Integer, nullable=True)
 
 ##############################################################################
