@@ -3,128 +3,55 @@
 
 {% block content %}
 
-  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
-  <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.54.0/mapbox-gl.js'></script>
+<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
 
-  <!-- <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' /> -->
-  <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.0.0/mapbox-gl.js'></script>
-  <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.0.0/mapbox-gl.css' rel='stylesheet' />
+<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.54.0/mapbox-gl.js'></script>
 
-  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<!-- <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' /> -->
+<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.0.0/mapbox-gl.js'></script>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.0.0/mapbox-gl.css' rel='stylesheet' />
 
-  <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.54.0/mapbox-gl.css' rel='stylesheet' />
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 
-  <style>
-    body { margin:0; padding:0; }
-    #map { position:absolute; top:0; bottom:0; width:100%; }
-  </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
 
-     <!-- remove later! just for playing around purposes -->
-    <style>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
-        .calc-route-btn {
-            background-color: rgba(255, 255, 255, .9);
-            position: absolute;
-            height: 75px;
-            width: 150px;   
-        } 
+<link rel='stylesheet' href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.54.0/mapbox-gl.css'  />
 
-        .calc-route-btn:hover {
-            background-color: #FFE400; 
-            color: black;
-        }
+<link rel = "stylesheet" href = "static/style/mapview.css" />
 
-        .animate-route-btn{
-            background-color: rgba(255, 255, 255, .9);
-            position: absolute;
-            height: 75px;
-            width: 150px;   
-        } 
+<script src='https://api.tiles.mapbox.com/mapbox.js/plugins/turf/v3.0.11/turf.min.js'></script>
+<script src='https://api.tiles.mapbox.com/mapbox.js/plugins/turf/v2.0.0/turf.min.js' charset='utf-8'></script>
+<script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.9/mapbox-gl-draw.js'></script>
+<link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.9/mapbox-gl-draw.css' type='text/css'/>
 
-        .animate-route-btn:hover {
-            background-color: #FFE400; 
-            color: black;
-        }
-/*
-        .change-style-b{
-            position: fixed;
-            bottom: 0;
-            right: 0;
-            height: 75px;
-            width: 150px;
-        }
+<div class="container-fluid"> 
 
-        .change-style-b:hover {
-            background-color: #fd5e79;
-            color: white;
-        }
+    <div class="row">
+    
+        <div id='map'>
+            
+        </div>
 
-        .change-style-s{
-            position: fixed;
-            bottom: 0;
-            right: -5;
-            height: 75px;
-            width: 150px;
-        }
+            <div id='calc-route'> 
+                <button type='button' id='calcuate-route-btn' class='calc-route-btn' style="display:none;"> 
+                    Calculate Route  
+                </button>"
+            </div>
 
-        .change-style-s:hover {
-            background-color: black;
-            color: white;
-        }*/
+            <div id='animate-route'> 
+                <button type='button' id='animate-route-btn' class='animate-route-btn' style="display:none;"> 
+                    Animate Route  
+                </button>"
+            </div>
 
-    </style>
-
-</head>
-
-<body>
-
-    <script src='https://api.tiles.mapbox.com/mapbox.js/plugins/turf/v3.0.11/turf.min.js'></script>
-    <script src='https://api.tiles.mapbox.com/mapbox.js/plugins/turf/v2.0.0/turf.min.js' charset='utf-8'></script>
-    <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.9/mapbox-gl-draw.js'></script>
-    <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.9/mapbox-gl-draw.css' type='text/css'/>
-    <div id='map'></div>
-
-    <div id='calc-route'> 
-
-        <button type='button' id='calcuate-route-btn' class='calc-route-btn' style="display:none;"> 
-            Calculate Route  
-        </button>"
+        <script type="text/javascript" src="static/script/mapview.js"></script>
 
     </div>
-
-    <div id='animate-route'> 
-
-        <button type='button' id='animate-route-btn' class='animate-route-btn' style="display:none;"> 
-            Animate Route  
-        </button>"
-
-    </div>
-
-    <!-- <div id='set-map-style-baloon'>
-        
-        <button type='button' id='change-style-b' class='change-style-b'> 
-           Baloonicornize!
-        </button>" 
-
-    </div>
-
-    <div id='set-map-style-sat'>
-        
-        <button type='button' id='change-style-s' class='change-style-s'> 
-           Satellite
-        </button>" 
-
-    </div> -->
-
-
-    <!-- </body> -->
-
-    <script type="text/javascript" src="static/script/mapview.js"></script>
-
-</body>
+</div>
+    
 
 {% endblock %}
 
