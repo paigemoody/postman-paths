@@ -12,19 +12,52 @@ from random import choice
 
 from model import User, Collection, Route, BboxGeometry,EdgesGeometry,NodesGeometry, RouteGeometry, connect_to_db, db
 
-# from classes import 
+from flask_login import LoginManager, login_user, login_required
+
 
 app = Flask(__name__)
 
 # Required to use Flask sessions and the debug toolbar
 app.secret_key = "ABC"
 
+
+####################################
+# Configuration for login handling
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = "login"
+
+
+
+@login_manager.user_loader
+def load_user(email):
+    """Requirement for flask_login."""
+
+    return Admin.query.get(email) # need to change - stole from ashley!
+
+
+####################################
 @app.route('/')
 def index():
     """Homepage."""
     return render_template("homepage.html")
 
-@app.route("/user/<user_id>")
+@app.route('/login')
+def get_login():
+
+    return render_template("login.html")
+
+@app.route('/register', methods=['POST'])
+def redirect():
+
+    # when someone registers:
+        # add user info to db 
+        # log them in
+        # send them to their user profile page 
+
+    return redirect('/')
+
+@app.route("/user/<user_id>") # add @login_required
 def user_info(user_id):
     """Show user info."""
     

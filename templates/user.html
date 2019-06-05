@@ -13,11 +13,15 @@
              {% for collection in user.collections %}
         
                 <h3>{{ collection.collection_name}}</h3>
+
+                <!-- to do: map showing all bboxes of routes within collection -->
                 
                 <ul>
                     {% for route in collection.routes %}
 
                         <p>Route ID: {{route.route_id}}</p>
+                        <!-- to do: map showing route, with ability to animate 
+                             within collection -->
 
                         <ul>
                             <li>Tasked to: {{route.tasked_to}}</li>

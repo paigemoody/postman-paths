@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!-- add functionality that shows login or register forms depending on
+what the user clicks -->
+
+<div>
+  <button>Login</button>
+  <button>Register</button>
+</div>  
+  
+
+</div>
+
+<div class="login">
+  <h2>LOG IN</h2>
+    <form method="POST" action="/admin/login">
+      <ul>
+        
+        Username: <input type="text" name="username" required/> <br>
+        Password: <input type="password" name="password" required/> <br>
+        <input type="submit" />
+
+      </ul>
+    </form>
+</div>
+
+<div class = "register">
+  <h2>REGISTER</h2>
+    <!-- TODO: Add registration modal -->
+    <!-- when someone registers, make them a user in the db, then log them in -->
+    <form method="POST" action="/register">
+
+      <ul>
+        Username: <input type="text" name="username" required/> <br>
+        Email: <input type="text" name="email" required/><br>
+        Password: <input type="password" name="password" required/> <br>
+        <input type="submit" />
+
+      </ul>
+    </form>
+</div>
+
+{% endblock %}
