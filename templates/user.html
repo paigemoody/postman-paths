@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div>
+    <h1> Hey {{ user.username }} </h1>
+</div>
+
+<div>
+    <h2>Route collections</h2>
+        
+        <ul>
+
+             {% for collection in user.collections %}
+        
+                <h3>{{ collection.collection_name}}</h3>
+                
+                <ul>
+                    {% for route in collection.routes %}
+
+                        <p>Route ID: {{route.route_id}}</p>
+
+                        <ul>
+                            <li>Tasked to: {{route.tasked_to}}</li>
+                            <li>Bbox Id: {{route.bbox.bbox_geometry}} </li>
+
+                        </ul>
+
+                    {% endfor %}
+                </ul>
+
+            {% endfor %}
+
+    </ul> 
+</div>
+
+{% endblock %}

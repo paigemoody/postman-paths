@@ -82,19 +82,19 @@ class Route(db.Model):
 
     # define relationship with bboxes table
     bbox = db.relationship("BboxGeometry", 
-                            backref=db.backref("routes"))
+                            backref=db.backref("routes"), uselist = False)
 
     # define relationship with edges geometries table
     edges_geom = db.relationship("EdgesGeometry", 
-                            backref=db.backref("routes"))
+                            backref=db.backref("routes"), uselist = False)
 
     # define relationship with nodes geometries table
     nodes_geom = db.relationship("NodesGeometry", 
-                            backref=db.backref("routes"))
+                            backref=db.backref("routes"),uselist = False)
 
     # define relationship with route geometries table
     route_geom = db.relationship("RouteGeometry", 
-                            backref=db.backref("routes"))
+                            backref=db.backref("routes"), uselist = False)
 
 
 class BboxGeometry(db.Model):
