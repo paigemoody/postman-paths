@@ -25,8 +25,10 @@ class User(db.Model):
 
     __tablename__ = "users"
 
-    user_id  = db.Column(db.Integer, autoincrement=True, primary_key=True)
 
+
+    user_id  = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    username = db.Column(db.String(100), nullable=False)    
     email    = db.Column(db.String(100), nullable=True)
     password = db.Column(db.String(64), nullable=False)
 
@@ -80,23 +82,19 @@ class Route(db.Model):
 
     # define relationship with bboxes table
     bbox = db.relationship("BboxGeometry", 
-                            backref=db.backref("routes"),
-                                                order_by=route_id)
+                            backref=db.backref("routes"))
 
     # define relationship with edges geometries table
     edges_geom = db.relationship("EdgesGeometry", 
-                            backref=db.backref("routes"),
-                                                order_by=route_id)
+                            backref=db.backref("routes"))
 
     # define relationship with nodes geometries table
     nodes_geom = db.relationship("NodesGeometry", 
-                            backref=db.backref("routes"),
-                                                order_by=route_id)
+                            backref=db.backref("routes"))
 
     # define relationship with route geometries table
     route_geom = db.relationship("RouteGeometry", 
-                            backref=db.backref("routes"),
-                                                order_by=route_id)
+                            backref=db.backref("routes"))
 
 
 class BboxGeometry(db.Model):
@@ -175,6 +173,7 @@ def connect_to_db(app):
     # Configure to use our PstgreSQL database
     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///postman_paths'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.config['SQLALCHEMY_ECHO'] = True
     db.app = app
     db.init_app(app)
 

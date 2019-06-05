@@ -10,6 +10,8 @@ from pprint import PrettyPrinter as pprint
 
 from random import choice 
 
+from model import User, Collection, Route, BboxGeometry,EdgesGeometry,NodesGeometry, RouteGeometry, connect_to_db, db
+
 # from classes import 
 
 app = Flask(__name__)
@@ -22,6 +24,15 @@ def index():
     """Homepage."""
     return render_template("homepage.html")
 
+@app.route("/user/<user_id>")
+def user_info(user_id):
+    """Show user info."""
+    
+    # sqlalchemy database calls for user and user ratings
+    user = User.query.filter(User.user_id == user_id).one()
+    # ratings = db.session.query(Rating).filter(Rating.user_id == user_id).all()
+    return render_template('user.html',
+                            user=user)
 
 @app.route('/mapview')
 def mapview():
@@ -89,7 +100,8 @@ if __name__ == "__main__":
     # make sure templates, etc. are not cached in debug mode
 
     app.jinja_env.auto_reload = app.debug
-    # connect_to_db(app)
+    
+    connect_to_db(app)
 
     # Use the DebugToolbar
     # DebugToolbarExtension(app)

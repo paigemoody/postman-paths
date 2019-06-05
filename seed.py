@@ -18,9 +18,10 @@ def load_users():
     # Read u.user file and insert data
     for row in open("seed_data/users"):
         row = row.rstrip()
-        user_id, email, password = row.split("|")
+        user_id, username, email, password = row.split("|")
 
         user = User(user_id=user_id,
+                    username=username,
                     email=email,
                     password=password)
 
