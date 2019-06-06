@@ -27,14 +27,6 @@ var draw = new MapboxDraw({
 
 map.addControl(draw);
  
-// map.on('draw.create', updateStatus);
-// map.on('draw.delete', updateStatus);
-// map.on('draw.update', updateStatus);
-
-
-
-
-
 // when bboxx is double-clicked, you have the 
 // bbox data
 
@@ -48,21 +40,9 @@ map.on('draw.create', function(evt) {
     if (data.features.length > 0) {
     // if there is a bbox feature, show the calculate button 
         $('#calcuate-route-btn').removeAttr('style');
-
         // remove draw tool and add a new one with just a trashcan?
         // to limit drawing of more than one bbox
-
-        console.log(draw)
-
-        // const formInputs = {
-        //     bbox: bboxGeometryJSON
-        // };
-
-        //$.get('/bbox_geometry.geojson', {hi :"hi"}, sendAlert);
-    } 
-
-    else {
-
+    } else {
         if (e.type !== 'draw.delete') alert("Use the draw tools to draw a bbox!");
     }
 
@@ -165,16 +145,12 @@ function animateRoute(evt){
     }
 
     animate(counter);
-
-    // }
-
-// );
-
 }
 
 
 function saveRouteData(evt) {
-        alert("Saving route....");
+        alert("Saving route [not really -- WIP ]....");
+        $('#save-route-btn').attr('style','display:none ;');
     }
 
 
@@ -182,13 +158,7 @@ function saveRouteData(evt) {
 
 function addBboxAndRoute(displayGeojsons) {
 
-    // remove draw function 
-    // map.removeControl(draw);
-
-    // hide calculate route button, show animate button
-    // $('#calcuate-route-btn').attr('style','display:none ;');
     $('#animate-route-btn').removeAttr('style');
-
     $('#save-route-btn').removeAttr('style');
     $('#save-route-btn').on('click', saveRouteData);
 
@@ -374,6 +344,7 @@ function addBboxAndRoute(displayGeojsons) {
 
 function handleBboxSend(evt) {
 
+    // $('#calcuating-alert').removeAttr('style');
 
 
     // hide calculate route button as soon as clicked 

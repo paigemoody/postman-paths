@@ -7,19 +7,15 @@
 
     <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.54.0/mapbox-gl.js'></script>
 
-    <!-- <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' /> -->
     <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.0.0/mapbox-gl.js'></script>
 
     <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.0.0/mapbox-gl.css' rel='stylesheet' />
-
-    <!-- <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script> -->
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
 
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
     <link rel='stylesheet' href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.54.0/mapbox-gl.css' />
-
 
     <script src='https://api.tiles.mapbox.com/mapbox.js/plugins/turf/v3.0.11/turf.min.js'></script>
     <script src='https://api.tiles.mapbox.com/mapbox.js/plugins/turf/v2.0.0/turf.min.js' charset='utf-8'></script>
@@ -36,54 +32,43 @@
 {% block content %}
 
     <div class="main-content">
-
-
-
-         <!-- <div id='calc-route'> 
-            <button type='button' id='calcuate-route-btn' class='calc-route-btn' style="display:none;"> 
-                Calculate Route  
-            </button>"
-        </div> -->
-
         <div id="map-btns" class="container">
-
             <div id='calc-route' class="row"> 
                 <button type='button' id='calcuate-route-btn' class='calc-route-btn' style="display:none;"> 
                     Calculate Route  
                 </button>"
             </div>  
 
+           <!--  <div id='calcuating-alert' class="row"> 
+                <div style="display:none;" class="calcuating-alert"> 
+                    <p>Calculating Route...</p>
+                </div>"
+            </div>  -->
+
             <div id='animate-route' class="row"> 
-            <button type='button' id='animate-route-btn' class='animate-route-btn' style="display:none;"> 
-                Animate Route  
-            </button>"
+                <button type='button' id='animate-route-btn' class='animate-route-btn' style="display:none;"> 
+                    Animate Route  
+                </button>"
             </div>
 
             <div id='save-route' class="row">
                 {% if current_user.is_authenticated %}
-     
-                <button type='button' id='save-route-btn' class='save-route-btn' style="display:none;"> 
-                    Save Route 
-                </button>
+                    <button type='button' id='save-route-btn' class='save-route-btn' style="display:none;"> 
+                        Save Route 
+                    </button>
+                {% else %}
+                    <script type="text/javascript">
+                        
+                        alert("Login to save your route!")
+                    </script>
                 {% endif %}
-
-                <script type="text/javascript">
-                    
-                </script>
-                </div>
-            
-
+                <script type="text/javascript"></script>
+             </div>
         </div>
-
         
-        
-        
-        <div id="map">
-            
+        <div id="map"> 
             <script type="text/javascript" src="static/script/mapview.js"></script>
-
         </div>
-
     </div>
     
 

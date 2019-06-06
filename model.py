@@ -121,7 +121,6 @@ class BboxGeometry(db.Model):
     bbox_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
 
     route_id = db.Column(db.Integer, db.ForeignKey('routes.route_id'))
-    # bbox_coords = db.Column(Geometry(geometry_type="GEOMETRYCOLLECTION"))
     bbox_geometry = db.Column(db.JSON, nullable = False)
 
 class EdgesGeometry(db.Model):
@@ -137,7 +136,6 @@ class EdgesGeometry(db.Model):
     edges_geom_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
 
     route_id = db.Column(db.Integer, db.ForeignKey('routes.route_id'))
-    # edges_geometry = db.Column(Geometry(geometry_type="GEOMETRYCOLLECTION"))
     edges_geometry = db.Column(db.JSON, nullable=False)
 
 class NodesGeometry(db.Model):
@@ -152,8 +150,6 @@ class NodesGeometry(db.Model):
 
     nodes_geom_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     route_id = db.Column(db.Integer, db.ForeignKey('routes.route_id'))
-   
-    # nodes_geometry = db.Column(Geometry(geometry_type="GEOMETRYCOLLECTION"))
     nodes_geometry = db.Column(db.JSON, nullable=False)
 
 
@@ -171,7 +167,6 @@ class RouteGeometry(db.Model):
     route_geom_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     route_id = db.Column(db.Integer, db.ForeignKey('routes.route_id'))
     route_geometry = db.Column(db.JSON, nullable=False)
-    # route_geometry = db.Column(Geometry(geometry_type="GEOMETRYCOLLECTION"))
     route_length = db.Column(db.Integer, nullable=True)
 
 ##############################################################################

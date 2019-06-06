@@ -7,3 +7,9 @@ body {
 #flash-message-wrapper { 
     z-index: 2;
 }
+
+.navbar-custom .navbar-brand,
+.navbar-custom .navbar-text {
+    color: rgba(255,255,255,.8);
+}
+

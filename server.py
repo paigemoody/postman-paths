@@ -127,6 +127,7 @@ def user_info(user_id):
     # sqlalchemy database calls for user and user ratings
     user = User.query.filter(User.user_id == user_id).one()
     # ratings = db.session.query(Rating).filter(Rating.user_id == user_id).all()
+
     return render_template('user.html',
                             user=user)
 
@@ -137,7 +138,7 @@ def mapview():
     return render_template("mapview.html")
 
 
-@app.route('/route_geometry.geojson')
+@app.route('/route_geometry.geojson') # becaomes queue job, some job_id
 def receive_bbox_geometry():
     """Get bbox from DOM, render route geometry from path scripts, 
     output geojson of route."""

@@ -8,7 +8,6 @@
 #map { 
         position:absolute; 
         top:0; 
-        top:50px; /*so you can see the nav bar*/
         bottom:0; 
         width:100%;
     }
