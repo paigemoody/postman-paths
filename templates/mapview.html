@@ -66,39 +66,38 @@
                 <script type="text/javascript"></script>
              </div>
         
-            <div id='save-form' class="row"><!-- add style="display:none;" -->
+            <div id='save-form' class="row" style="display:none;" >
                 <div class="save-route-form" id="save-route-form"  class="col-6" > 
-                    <!-- <form action="/save-route-submission" method="POST" >   -->
+                    Add to existing collection: <br>
 
-                        Add to existing collection: <br>
+                    Collection: <input type="text" id="collecion_name" name="collecion_name" hidden="true">
 
-                        Collection: <input type="text" id="collecion_name" name="collecion_name" hidden="true">
+                        <select id="dropdown">
 
-                            <select id="dropdown">
+                            <option value="" disabled selected hidden>Collections...</option>
+                            {% for collection in current_user.collections %}
 
-                                <option value="" disabled selected hidden>Collections...</option>
-                                {% for collection in current_user.collections %}
+                                <option value="{{collection.collection_name}}">{{collection.collection_name}}</option>
 
-                                    <option value="{{collection.collection_name}}">{{collection.collection_name}}</option>
+                            {% endfor %}
 
-                                {% endfor %}
+                        </select>
 
-                            </select>
+                        <!-- <script type="text/javascript">
+                            let inputBox = document.getElementById('collecion_name');
+                            let dropdownList = document.getElementById('dropdown');
 
-                            <!-- <script type="text/javascript">
-                                let inputBox = document.getElementById('collecion_name');
-                                let dropdownList = document.getElementById('dropdown');
+                            dropdownList.onchange = function(){
+                                 inputBox.innerHTML = this.value;
+                            }
+                        </script> -->
 
-                                dropdownList.onchange = function(){
-                                     inputBox.innerHTML = this.value;
-                                }
-                            </script> -->
+                    <br>                        
+                    Route Name: <input type="text" name="route_name"><br>
 
-                        <br>                        
-                        Route Name: <input type="text" name="route_name"><br>
-
-                        <input type="submit" name="Save" value="Save">
-                    <!-- </form> -->
+                    <button type='button' id='save-route-form-btn' class='save-route-form-btn' style="display:none;"> 
+                    Save Route 
+                    </button>
                 </div>
             </div>
         </div>
@@ -110,6 +109,7 @@
     
 
 {% endblock %}
+
 
 
 

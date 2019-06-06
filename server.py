@@ -143,6 +143,7 @@ def receive_bbox_geometry():
     """Get bbox from DOM, render route geometry from path scripts, 
     output geojson of route."""
 
+
     bbox_geometry = request.args.get('bbox_geometry')
 
     # print("\n\n\ntype(bbox_geometry):",type(bbox_geometry))
@@ -186,6 +187,23 @@ def receive_bbox_geometry():
         ,"edges_geometry" : edges_geometry
         ,"nodes_geometry" : nodes_geometry
         , "route_geometry" : route_geometry 
+        })
+
+
+
+@app.route("/save_route.json", methods=["POST"])
+@login_required
+def save_route():
+    """Processes save route data to db."""
+
+    print("\n\n\nin server")
+
+    all_data_recieved = request.args.get('confirmation')
+
+    print("all_data_recieved",all_data_recieved)
+
+    return jsonify({ 
+        "confirmed" : "YES"
         })
 
 if __name__ == "__main__":

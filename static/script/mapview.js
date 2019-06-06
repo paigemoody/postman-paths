@@ -56,6 +56,7 @@ map.on('draw.create', function(evt) {
 
 // function to play route
 function animateRoute(evt){
+
     let route = evt.data.routrgeometry
 
     // A single point that animates along the route.
@@ -153,12 +154,44 @@ function animateRoute(evt){
     animate(counter);
 }
 
-
-function saveRouteData(evt) {
+// Remove save route button, show form
+function removeSaveRouteBtn(evt) {
         $('#save-route-btn').attr('style','display:none ;');
-        $('#save-route-form').removeAttr('style');
+        $('#save-form').removeAttr('style');
+        $('#save-route-form-btn').removeAttr('style');
 
+        // save-route-form-btn
     }
+
+// SUBMIT SAVE ROUTE FORM INFORMATION
+$('#save-route-form-btn').on('click', handleSaveRoute);
+
+function handleSaveRoute(evt) {
+
+    // get data currently on map to send back for saving 
+
+    nodesData = map.getSource('nodes')._data
+    bboxData = map.getSource('bbox')._data
+    edgesData = map.getSource('edges')._data
+    routeLine_data = map.getSource('route')._data
+
+    console.log("nodesData",nodesData);
+
+
+
+    console.log("SEND STUFF")
+    const formInputs = {
+        'confirmation' : "HI SERVER SUP"
+      };
+    console.log("formInputs",formInputs);
+    // the outout of the get request (what is returned from the url route)
+    // is sent as the parameter to addBboxAndRoute
+    $.post('/save_route.json', formInputs, confirmSavedRoute);
+}
+
+function confirmSavedRoute(confirmationMessage){
+    console.log("confirmationMessage",confirmationMessage['confirmed'])    
+}
 
 
 //GET ROUTE CALCULATION
@@ -167,10 +200,7 @@ function addBboxAndRoute(displayGeojsons) {
 
     $('#animate-route-btn').removeAttr('style');
     $('#save-route-btn').removeAttr('style');
-    $('#save-route-btn').on('click', saveRouteData);
-
-
-    
+    $('#save-route-btn').on('click', removeSaveRouteBtn);
     // get geometry feature collections back from get request and 
     // jsonify each
 
@@ -289,17 +319,6 @@ function addBboxAndRoute(displayGeojsons) {
         "type" : "symbol",
         "source" : "nodes",
         "layout": {
-
-            // "icon-image" : "marker-11",
-            // "icon-image": [
-            //     'match',
-            //     ['get', 'start_node'],
-            //     'true', "star-15",
-            //     'false', "circle-11",
-            //     "circle-11"
-            // ],
-
-            // "icon-size" : 3,
             "text-field": "{visit_order}",
             "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
             "text-offset": [0, 0.6],
@@ -313,17 +332,16 @@ function addBboxAndRoute(displayGeojsons) {
     }, "point");
 
 
-    // add route feature collection to map
-
-    map.addSource('route', { //  bbox in this case is a variable that is a feature collection
+    // add edges feature collection to map
+    map.addSource('edges', { //  bbox in this case is a variable that is a feature collection
         "type": "geojson",
         "data": edgesGeometry
         });
 
     map.addLayer({
-        "id": "route-geometry", // rename?
+        "id": "edges-geometry", // rename?
         "type": "line",
-        "source": "route", 
+        "source": "edges", 
         "paint": {
             // set line color based on number of traversals, to highlight which streets to 
             // traverse twice
@@ -345,6 +363,21 @@ function addBboxAndRoute(displayGeojsons) {
     }, "nodes-geometry"); // second agument determines which layer should be direcly above the bbox layer
 
 
+    // add route feature collection to map - for later use 
+    map.addSource('route', { //  bbox in this case is a variable that is a feature collection
+        "type": "geojson",
+        "data": routeGeometry
+        });
+
+    map.addLayer({
+        "id": "route-geometry", // rename?
+        "type": "line",
+        "source": "route", 
+        "paint": {
+            "line-color" : 'rgba(0,0,205,0)',
+        }
+    }); // second agument determines which layer should be direcly above the bbox layer
+
 }
 
 // when the calculate route button is clicked, send bbox geometry to 
@@ -358,9 +391,6 @@ function handleBboxSend(evt) {
     $('#calcuate-route-btn').attr('style','display:none ;');
 
     let bbox = draw.getAll();
-
-
-
 
     // add bbox to map 
     map.addSource('bbox', { //  bbox in this case is a variable that is a feature collection
