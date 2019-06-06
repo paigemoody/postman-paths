@@ -29,29 +29,61 @@
 
     <link rel = "stylesheet" href = "static/style/mapview.css" />
 
+    <script src="https://cdn.jsdelivr.net/npm/@turf/turf@5/turf.min.js"></script>
+
 {% endblock %}
-
-
 
 {% block content %}
 
     <div class="main-content">
 
-        <div id='calc-route'> 
+
+
+         <!-- <div id='calc-route'> 
             <button type='button' id='calcuate-route-btn' class='calc-route-btn' style="display:none;"> 
                 Calculate Route  
             </button>"
-        </div>
+        </div> -->
 
-        <div id='animate-route'> 
+        <div id="map-btns" class="container">
+
+            <div id='calc-route' class="row"> 
+                <button type='button' id='calcuate-route-btn' class='calc-route-btn' style="display:none;"> 
+                    Calculate Route  
+                </button>"
+            </div>  
+
+            <div id='animate-route' class="row"> 
             <button type='button' id='animate-route-btn' class='animate-route-btn' style="display:none;"> 
                 Animate Route  
             </button>"
+            </div>
+
+            <div id='save-route' class="row">
+                {% if current_user.is_authenticated %}
+     
+                <button type='button' id='save-route-btn' class='save-route-btn' style="display:none;"> 
+                    Save Route 
+                </button>
+                {% endif %}
+
+                <script type="text/javascript">
+                    
+                </script>
+                </div>
+            
+
         </div>
 
+        
+        
+        
         <div id="map">
+            
             <script type="text/javascript" src="static/script/mapview.js"></script>
+
         </div>
+
     </div>
     
 

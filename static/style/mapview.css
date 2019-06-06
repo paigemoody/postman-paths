@@ -8,14 +8,34 @@
 #map { 
         position:absolute; 
         top:0; 
-        /*top:50px; so you can see the nav bar*/
+        top:50px; /*so you can see the nav bar*/
         bottom:0; 
-        width:100%; 
+        width:100%;
     }
+
+.save-route-btn {
+
+    background-color: rgba(255, 255, 255, .9);
+/*    position: absolute;*/
+    height: 75px;
+    width: 150px;  
+    z-index: 2; 
+
+}
+
+.save-route-btn:hover {
+    background-color: #FFE400; 
+    color: black;
+}
+
+.animate-route-btn:hover {
+    background-color: #FFE400; 
+    color: black;
+}
 
 .calc-route-btn {
     background-color: rgba(255, 255, 255, .9);
-    position: absolute;
+    /*position: absolute;*/
     height: 75px;
     width: 150px;  
     z-index: 2; 
@@ -28,7 +48,7 @@
 
 .animate-route-btn{
     background-color: rgba(255, 255, 255, .9);
-    position: absolute;
+    /*position: absolute;*/
     height: 75px;
     width: 150px;   
     z-index: 2; 

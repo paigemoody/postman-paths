@@ -1,10 +1,12 @@
+
 mapboxgl.accessToken = 'pk.eyJ1IjoicGFpZ2VlbW9vZHkiLCJhIjoiY2owbDcyejhvMDJwNzJ5cDR0YXE1aG10MCJ9.a-JLnrmMPSJNwOGQdloTDA';
 
 
 // LOAD MAP 
 var map = new mapboxgl.Map({
     container: 'map', // container id
-    style: 'mapbox://styles/mapbox/satellite-v9', //hosted style id
+    // style: 'mapbox://styles/mapbox/satellite-v9', //hosted style id
+    style: 'mapbox://styles/paigeemoody/cjwjzqywq2orj1dqqvdvwchhm',
     center: [-122.400932, 37.758250], // starting position is balloonicorn example route centr
     zoom: 15 // starting zoom
 });
@@ -109,9 +111,15 @@ function animateRoute(evt){
 
         // turf.along takes a LineString and 
         // returns a Point at a specified distance along the line.
-        var segment = turf.along(input_line, distance_along_line, 'kilometers');
-        path.push(segment.geometry.coordinates);
 
+        console.log("\n\n\ninput_line",input_line)
+        console.log("distance_along_line",distance_along_line)
+
+        let options = {units: 'kilometers'};
+
+        let segment = turf.along(input_line, distance_along_line, options);
+        
+        path.push(segment.geometry.coordinates);
         //  bug with not totally returning the original point
         // need to add something that forces the return
     }
@@ -164,6 +172,12 @@ function animateRoute(evt){
 
 }
 
+
+function saveRouteData(evt) {
+        alert("Saving route....");
+    }
+
+
 //GET ROUTE CALCULATION
 
 function addBboxAndRoute(displayGeojsons) {
@@ -174,6 +188,9 @@ function addBboxAndRoute(displayGeojsons) {
     // hide calculate route button, show animate button
     // $('#calcuate-route-btn').attr('style','display:none ;');
     $('#animate-route-btn').removeAttr('style');
+
+    $('#save-route-btn').removeAttr('style');
+    $('#save-route-btn').on('click', saveRouteData);
 
 
     
@@ -248,24 +265,21 @@ function addBboxAndRoute(displayGeojsons) {
     // add nodes layer as symbol type 
     map.addLayer({
         "id" : "nodes-geometry",
+        // "type" : "symbol",
         "type" : "symbol",
         "source" : "nodes",
         "layout": {
-            "icon-image": [
-                'match',
-                ['get', 'start_node'],
-                'true', "star-15",
-                'false', "circle-11",
-                "circle-11"
-            ],
 
-            "icon-size" : [
-                'match',
-                ['get', 'was_odd'],
-                'true', 1,
-                'false', .4,
-                .6
-            ],
+            // "icon-image" : "marker-11",
+            // "icon-image": [
+            //     'match',
+            //     ['get', 'start_node'],
+            //     'true', "star-15",
+            //     'false', "circle-11",
+            //     "circle-11"
+            // ],
+
+            // "icon-size" : 3,
             "text-field": "{visit_order}",
             "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
             "text-offset": [0, 0.6],
@@ -317,10 +331,64 @@ function addBboxAndRoute(displayGeojsons) {
 
 function handleBboxSend(evt) {
 
+
+
     // hide calculate route button as soon as clicked 
     $('#calcuate-route-btn').attr('style','display:none ;');
 
     let bbox = draw.getAll();
+
+    
+
+    // let centroid = turf.centroid(polygon)
+
+    // const centroidCoords = centroid.geometry.coordinates;
+
+    // map.easeTo({center: centroidCoords});
+
+    // use turf to get [minX, minY, maxX, maxY] list 
+
+    // turn that list into []
+
+    let polygon = turf.polygon(bbox.features[0].geometry.coordinates);
+
+    let turfBox = turf.bbox(polygon);
+
+    let turfbboxPolygon = turf.bboxPolygon(turfBox);
+
+    let polygonCoordsList = turfbboxPolygon.geometry.coordinates[0]
+
+
+    console.log("turfbboxPolygon",polygonCoordsList)
+
+    let allX = [] 
+    let allY = [] 
+
+    polygonCoordsList.forEach((coord) => {
+        allX.push(coord[0]);
+        allY.push(coord[1]);
+    })
+    
+
+    let minX =  Math.min.apply(null,allX);
+    let minY = Math.min.apply(null,allY);
+    let maxX = Math.max.apply(null,allX);
+    let maxY = Math.max.apply(null,allY);
+
+
+    let fitBoundsArray = [[minX, minY] , [maxX, maxY]];
+
+    console.log(fitBoundsArray)
+
+    // var bbox = [[-79, 43], [-73, 45]];
+    map.fitBounds(fitBoundsArray, {padding: {
+                                    top: 40, 
+                                    bottom:55, 
+                                    left: 35, 
+                                    right: 25}
+                    });
+
+
 
     // add bbox to map 
     map.addSource('bbox', { //  bbox in this case is a variable that is a feature collection

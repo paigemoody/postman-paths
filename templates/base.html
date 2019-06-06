@@ -20,18 +20,27 @@
 
     <div class="nav-wrapper">
       <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">Postman Paths</a>
+
+        <a class="navbar-brand" href="/">Postman Paths</a>
+
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav ml-auto">
-            <li class="nav-item active">
-              <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+           <!--  <li class="nav-item active">
+              <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+            </li> -->
+
+            <li class="nav-item">
+                <a class="nav-link" href="/mapview">Route Builder</a>
             </li>
 
             {% if current_user.is_authenticated %}
+              <li class="nav-item">
+                <a class="nav-link" href="/user/{{current_user.user_id}}">Profile</a>
+              </li>
               <li class="nav-item">
                 <a class="nav-link" href="/logout">Logout</a>
               </li>
@@ -40,34 +49,36 @@
                 <a class="nav-link" href="/login">Login</a>
               </li>
             {% endif %}
+
+            
           </ul>
         </div>
       </nav>
     </div>
 
-    <div class="flash-message-wrapper">
-      {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            <ul class=flashes>
-            
-            {% for message in messages %}
-              
-              <div class="alert alert-warning" role="alert" id="success-alert">
-                <strong>{{message}}</strong>
-              </div>
 
-            {% endfor %}
+        {% with messages = get_flashed_messages() %}            
+            {% if messages %}
+                <ul class=flashes>
+                
+                {% for message in messages %}
+                  
+                  <div class="alert alert-warning" role="alert" id="success-alert">
+                    <strong>{{message}}</strong>
+                  </div>
 
-            </ul>
-        {% endif %}
-      {% endwith %}
-      <script type="text/javascript">
-        $("#success-alert").fadeTo(2000, 500).slideUp(500, function(){
-            $("#success-alert").slideUp(500);
-        });
-      </script>
+                  <script type="text/javascript">
+                  $("#success-alert").fadeTo(2000, 500).slideUp(500, function(){
+                      $("#success-alert").slideUp(500);
+                  });
+                </script>
 
-    </div>
+                {% endfor %}
+
+                </ul>
+            {% endif %}
+
+        {% endwith %}
 
     {% block content %} 
 

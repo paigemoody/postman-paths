@@ -95,29 +95,32 @@ def register_process():
 
     print("\n\n\nemail", email)
 
-    old_user = User.query.filter(User.email == email).first()
+    old_user_email = User.query.filter(User.email == email).first()
 
-    print("old_user", old_user)
+    old_user_username = User.query.filter(User.username == username).first()
 
     # try to get user associated with email from database
-    if not old_user:
-        # if no user returned: make a new user object with email, username and pw
+    if not old_user_email:
 
-        new_user = User(email=email,username=username,password=password)
+        if not old_user_username:
+            # if no user returned: make a new user object with email, username and pw
 
-        # new_user = User(email="hi@gmail",username="name",password="1234")
+            new_user = User(email=email,username=username,password=password)
 
-        # add database changes to staging  
-        db.session.add(new_user)
-        # commit db changes 
-        db.session.commit()
+            # new_user = User(email="hi@gmail",username="name",password="1234")
 
-        flash(f'Welcome {new_user.username}!') 
+            # add database changes to staging  
+            db.session.add(new_user)
+            # commit db changes 
+            db.session.commit()
+
+            flash(f'Welcome {new_user.username}!')
 
     return redirect('/')
 
 
-@app.route("/user/<user_id>") # add @login_required
+@app.route("/user/<user_id>")
+@login_required
 def user_info(user_id):
     """Show user info."""
     
