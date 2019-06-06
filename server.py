@@ -12,7 +12,7 @@ from random import choice
 
 from model import User, Collection, Route, BboxGeometry,EdgesGeometry,NodesGeometry, RouteGeometry, connect_to_db, db
 
-from flask_login import LoginManager, login_user, login_required
+from flask_login import LoginManager, login_user, logout_user, login_required
 
 
 app = Flask(__name__)
@@ -28,12 +28,11 @@ login_manager.init_app(app)
 login_manager.login_view = "login"
 
 
-
 @login_manager.user_loader
-def load_user(email):
+def load_user(user_id):
     """Requirement for flask_login."""
 
-    return Admin.query.get(email) # need to change - stole from ashley!
+    return User.query.filter(User.user_id == user_id).first()
 
 
 ####################################
@@ -44,18 +43,79 @@ def index():
 
 @app.route('/login')
 def get_login():
+    """Display login page."""
 
     return render_template("login.html")
 
-@app.route('/register', methods=['POST'])
-def redirect():
+@app.route('/login_submission', methods=['POST'])
+def login_sub():
+    """Process login."""
 
-    # when someone registers:
-        # add user info to db 
-        # log them in
-        # send them to their user profile page 
+    username = request.form.get('username')
+    password = request.form.get('password')
+
+    print("\n\nusername",username)
+    print("\n\npassword",password)
+
+
+    user = User.query.filter(User.username == username).first()
+
+    # user = User.query.filter(User.user_id == user_id).one() ??
+
+    print("\n\n\nuser:",user)
+
+    if user.password == password:
+
+        user.is_authenticated = True 
+
+        login_user(user)
+
+        flash('Login success!') 
+
+        return redirect(f"/user/{user.user_id}") 
+
+    alert('Wrong username and/or password')
+    return redirect('/login')
+
+@app.route("/logout")
+@login_required
+def logout():
+
+    logout_user()
 
     return redirect('/')
+
+@app.route("/register", methods=["POST"])
+def register_process():
+    """Processes registration request."""
+
+    username=request.form['username']
+    email=request.form['email']
+    password=request.form['password']
+
+    print("\n\n\nemail", email)
+
+    old_user = User.query.filter(User.email == email).first()
+
+    print("old_user", old_user)
+
+    # try to get user associated with email from database
+    if not old_user:
+        # if no user returned: make a new user object with email, username and pw
+
+        new_user = User(email=email,username=username,password=password)
+
+        # new_user = User(email="hi@gmail",username="name",password="1234")
+
+        # add database changes to staging  
+        db.session.add(new_user)
+        # commit db changes 
+        db.session.commit()
+
+        flash(f'Welcome {new_user.username}!') 
+
+    return redirect('/')
+
 
 @app.route("/user/<user_id>") # add @login_required
 def user_info(user_id):

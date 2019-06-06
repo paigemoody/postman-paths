@@ -6,7 +6,11 @@
 
     <div class="col-6">
 
-    some content
+    {% if current_user.is_authenticated %}
+      Hi {{ current_user.username }}!
+    {% else %}
+      Log in to save a route!
+    {% endif %}
     </div>
 
 </div>

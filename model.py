@@ -25,12 +25,23 @@ class User(db.Model):
 
     __tablename__ = "users"
 
-
-
     user_id  = db.Column(db.Integer, autoincrement=True, primary_key=True)
     username = db.Column(db.String(100), nullable=False)    
     email    = db.Column(db.String(100), nullable=True)
     password = db.Column(db.String(64), nullable=False)
+
+    # Flask-Login integration
+    def is_authenticated(self):
+        return True
+
+    def is_active(self): # line 37
+        return True
+
+    def is_anonymous(self):
+        return False
+
+    def get_id(self):
+        return self.user_id
 
 class Collection(db.Model):
     """Collection of routes."""

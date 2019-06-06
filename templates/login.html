@@ -5,41 +5,36 @@
 <!-- add functionality that shows login or register forms depending on
 what the user clicks -->
 
-<div>
+<!-- <div>
   <button>Login</button>
   <button>Register</button>
-</div>  
+</div>   -->
   
 
 </div>
 
-<div class="login">
+<div>
   <h2>LOG IN</h2>
-    <form method="POST" action="/admin/login">
+    <form method="POST" action="/login_submission">
       <ul>
-        
-        Username: <input type="text" name="username" required/> <br>
-        Password: <input type="password" name="password" required/> <br>
+        Username: <input type="text" name="username" value="happypanda1"required/> <br>
+        Password: <input type="password" name="password" value="something1"required/> <br>
         <input type="submit" />
-
       </ul>
     </form>
 </div>
 
 <div class = "register">
   <h2>REGISTER</h2>
-    <!-- TODO: Add registration modal -->
-    <!-- when someone registers, make them a user in the db, then log them in -->
     <form method="POST" action="/register">
-
       <ul>
-        Username: <input type="text" name="username" required/> <br>
-        Email: <input type="text" name="email" required/><br>
-        Password: <input type="password" name="password" required/> <br>
+        Username: <input type="text" name="username" value="test_user" required/> <br>
+        Email: <input type="text" name="email" value="test_user2@aol.fake"required/><br>
+        Password: <input type="password" name="password" value="1234" required/> <br>
         <input type="submit" />
 
       </ul>
     </form>
-</div>
+</div> 
 
 {% endblock %}

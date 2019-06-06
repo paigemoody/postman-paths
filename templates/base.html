@@ -1,13 +1,17 @@
 <!doctype html>
 <html>
 <head>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
   <link rel = "stylesheet" href = "static/style/base.css" />
   <title>Postman Paths</title>
 
   {% block head_content %}
+
   {% endblock %}
+
+  
 </head>
 
 <body>
@@ -26,12 +30,43 @@
             <li class="nav-item active">
               <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#" >Login</a>
-            </li>
+
+            {% if current_user.is_authenticated %}
+              <li class="nav-item">
+                <a class="nav-link" href="/logout">Logout</a>
+              </li>
+            {% else %}
+              <li class="nav-item">
+                <a class="nav-link" href="/login">Login</a>
+              </li>
+            {% endif %}
           </ul>
         </div>
       </nav>
+    </div>
+
+    <div class="flash-message-wrapper">
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul class=flashes>
+            
+            {% for message in messages %}
+              
+              <div class="alert alert-warning" role="alert" id="success-alert">
+                <strong>{{message}}</strong>
+              </div>
+
+            {% endfor %}
+
+            </ul>
+        {% endif %}
+      {% endwith %}
+      <script type="text/javascript">
+        $("#success-alert").fadeTo(2000, 500).slideUp(500, function(){
+            $("#success-alert").slideUp(500);
+        });
+      </script>
+
     </div>
 
     {% block content %} 
@@ -39,8 +74,6 @@
     {% endblock %}
 
   </div>
-
-
 
 </body>
 
