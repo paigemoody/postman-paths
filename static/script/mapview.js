@@ -25,12 +25,18 @@ var draw = new MapboxDraw({
 
 }); 
 
+// handle drop down form in save route action
+let inputBox = document.getElementById('collecion_name');
+                                let dropdownList = document.getElementById('dropdown');
+
+                                dropdownList.onchange = function(){
+                                     inputBox.innerHTML = this.value;
+                                }
+
 map.addControl(draw);
  
 // when bboxx is double-clicked, you have the 
 // bbox data
-
-
 map.on('draw.create', function(evt) {
 
     let data = draw.getAll();
@@ -109,7 +115,7 @@ function animateRoute(evt){
     route.features[0].geometry.coordinates = path;
 
     // Used to increment the value of the point measurement against the route.
-    let counter = 0 
+    let counter = 0
 
 
     function animate() {
@@ -149,8 +155,9 @@ function animateRoute(evt){
 
 
 function saveRouteData(evt) {
-        alert("Saving route [not really -- WIP ]....");
         $('#save-route-btn').attr('style','display:none ;');
+        $('#save-route-form').removeAttr('style');
+
     }
 
 

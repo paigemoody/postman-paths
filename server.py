@@ -143,7 +143,6 @@ def receive_bbox_geometry():
     """Get bbox from DOM, render route geometry from path scripts, 
     output geojson of route."""
 
-
     bbox_geometry = request.args.get('bbox_geometry')
 
     # print("\n\n\ntype(bbox_geometry):",type(bbox_geometry))
