@@ -118,7 +118,7 @@ function animateRoute(evt){
         let options = {units: 'kilometers'};
 
         let segment = turf.along(input_line, distance_along_line, options);
-        
+
         path.push(segment.geometry.coordinates);
         //  bug with not totally returning the original point
         // need to add something that forces the return
@@ -201,6 +201,49 @@ function addBboxAndRoute(displayGeojsons) {
     let edgesGeometry = JSON.parse(displayGeojsons['edges_geometry']);
     let nodesGeometry = JSON.parse(displayGeojsons['nodes_geometry']);
     let routeGeometry = JSON.parse(displayGeojsons['route_geometry']);
+
+    // use fit bounds to center bbox area on screen
+    // let polygon = turf.polygon(bbox.features[0].geometry.coordinates);
+
+    let bboxLineString = turf.lineString(routeGeometry.features[0].geometry.coordinates);
+
+    let turfBox = turf.bbox(bboxLineString);
+
+    let turfbboxPolygon = turf.bboxPolygon(turfBox);
+
+    let coordsList = turfbboxPolygon.geometry.coordinates[0]
+
+
+    console.log("turfbboxPolygon",coordsList)
+
+    let allX = [] 
+    let allY = [] 
+
+    coordsList.forEach((coord) => {
+        allX.push(coord[0]);
+        allY.push(coord[1]);
+    })
+    
+
+    let minX =  Math.min.apply(null,allX);
+    let minY = Math.min.apply(null,allY);
+    let maxX = Math.max.apply(null,allX);
+    let maxY = Math.max.apply(null,allY);
+
+
+    let fitBoundsArray = [[minX, minY] , [maxX, maxY]];
+
+    console.log(fitBoundsArray)
+
+    // var bbox = [[-79, 43], [-73, 45]];
+    map.fitBounds(fitBoundsArray, {padding: {
+                                    top: 80, 
+                                    bottom:100, 
+                                    left: 60, 
+                                    right: 60}
+                    });
+
+
 
     //  run animate route function - send route geometry to function
     // $('#animate-route-btn').on('click', handleBboxSend(routeGeometry));
@@ -338,55 +381,6 @@ function handleBboxSend(evt) {
 
     let bbox = draw.getAll();
 
-    
-
-    // let centroid = turf.centroid(polygon)
-
-    // const centroidCoords = centroid.geometry.coordinates;
-
-    // map.easeTo({center: centroidCoords});
-
-    // use turf to get [minX, minY, maxX, maxY] list 
-
-    // turn that list into []
-
-    let polygon = turf.polygon(bbox.features[0].geometry.coordinates);
-
-    let turfBox = turf.bbox(polygon);
-
-    let turfbboxPolygon = turf.bboxPolygon(turfBox);
-
-    let polygonCoordsList = turfbboxPolygon.geometry.coordinates[0]
-
-
-    console.log("turfbboxPolygon",polygonCoordsList)
-
-    let allX = [] 
-    let allY = [] 
-
-    polygonCoordsList.forEach((coord) => {
-        allX.push(coord[0]);
-        allY.push(coord[1]);
-    })
-    
-
-    let minX =  Math.min.apply(null,allX);
-    let minY = Math.min.apply(null,allY);
-    let maxX = Math.max.apply(null,allX);
-    let maxY = Math.max.apply(null,allY);
-
-
-    let fitBoundsArray = [[minX, minY] , [maxX, maxY]];
-
-    console.log(fitBoundsArray)
-
-    // var bbox = [[-79, 43], [-73, 45]];
-    map.fitBounds(fitBoundsArray, {padding: {
-                                    top: 40, 
-                                    bottom:55, 
-                                    left: 35, 
-                                    right: 25}
-                    });
 
 
 
