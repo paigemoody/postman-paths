@@ -1,10 +1,4 @@
 
-
-
-/*    body { 
-            margin:0; 
-            padding:0; 
-        }*/
 #map { 
         position:absolute; 
         top:0; 
@@ -65,7 +59,6 @@
 
 .save-route-form {
     z-index: 2;
-
     background-color: gainsboro; 
 }
 
@@ -110,6 +103,14 @@
 
 .show {display: block;}
 
+
+.marker {
+  display: block;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  padding: 0;
+}
 /*
 .change-style-b{
     position: fixed;

@@ -2,10 +2,21 @@
 body { 
       margin:0; 
       padding:0; 
-  }
+      font-family: 'Didact Gothic';
+}
 
 #flash-message-wrapper { 
     z-index: 2;
 }
 
 
+#footer-copyright {
+    z-index: 3;
+    height: 5vh;
+    position: relative;
+
+}
+
+.bg-pm {
+    background-color: white;
+}

@@ -1,46 +1,39 @@
 {% extends 'base.html' %}
+
 {% block content %}
 
-<div>
-    <h1> Hey {{ user.username }} </h1>
-</div>
+    <div class="main-content">
 
-<div>
-    <h2>Route collections</h2>
-        
-        <ul>
+        <div>
+            <h1> Hey {{ user.username }} </h1>
+        </div>
 
-             {% for collection in user.collections %}
-        
-                <h3>{{ collection.collection_name}}</h3>
-
-                <!-- to do: map showing all bboxes of routes within collection -->
-                
+        <div>
+            <h2>Route collections</h2>
                 <ul>
-                <br>
-                    {% for route in collection.routes %}
 
-                        <p>Route Name: {{route.route_name}}</p>
-                        <!-- to do: map showing route, with ability to animate 
-                             within collection -->
+                     {% for collection in user.collections %}
+                
+                        <h3>{{ collection.collection_name}}</h3>                        
+                        <ul><br>
+                        {% for route in collection.routes %}
 
-                        <ul>
-                            <li>Tasked to: {{route.tasked_to}}</li>
-                            <li>Length: ___mi </li>
-                            <li>Est Walking Time: ___min </li>
-                            <li>Bbox: {{route.bbox.bbox_geometry}} </li>
-                            <!-- <li>Route: {{route.route_geom.route_geometry}} </li> -->
+                            <p>Route Name: {{route.route_name}}
+
+                            <ul>
+                                <li>Tasked to: {{route.tasked_to}}</li>
+                                <li>Length: ___mi </li>
+                                <li>Est Walking Time: ___min </li>
+                                <li>Bbox: {{route.bbox.bbox_geometry}} </li>
+
+                            </ul>
+                        {% endfor %}
 
                         </ul>
 
-                        <br>
-
                     {% endfor %}
-                </ul>
-
-            {% endfor %}
-
-    </ul> 
-</div>
+            </ul> 
+        </div>
+    </div>
 
 {% endblock %}

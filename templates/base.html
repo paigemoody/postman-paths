@@ -6,7 +6,9 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
   <link rel = "stylesheet" href = "static/style/base.css" />
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
-  <title> Postman Paths</title>
+  <link href='https://fonts.googleapis.com/css?family=Didact Gothic' rel='stylesheet'>
+
+  <title> WƎave </title>
 
   {% block head_content %}
 
@@ -20,8 +22,8 @@
   <div class="wrapper">
 
     <div class="nav-wrapper">
-      <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="/">  <i class="fas fa-walking fa-xs"></i><i class="fas fa-walking fa-sm"></i><i class="fas fa-walking fa-lg"></i>Postman Paths</a>
+      <nav class="navbar navbar-expand-lg navbar-light bg-pm">
+        <a class="navbar-brand" href="/">  <i class="fas fa-location-arrow"></i> WƎave </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -33,19 +35,23 @@
             </li> -->
 
             <li class="nav-item">
-                <a class="nav-link" href="/mapview"> <i class="fas fa-user-edit fa-sm"></i> Route Generator</a>
+                <a class="nav-link" href="/mapview"> <i class="far fa-map"></i></a>
+                <!-- Route Builder -->
             </li>
 
             {% if current_user.is_authenticated %}
               <li class="nav-item">
-                <a class="nav-link" href="/user/{{current_user.user_id}}"><i class="fas fa-clipboard-list fa-sm"></i> Routes</a>
+                <a class="nav-link" href="/user/{{current_user.user_id}}"> <i class="fas fa-tasks"></i></a> 
+                <!-- Routes -->
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/logout">Logout</a>
+                <a id="logout" class="nav-link" href="/logout"> <i class="fas fa-door-open"></i></a> 
+                <!-- logout -->
               </li>
             {% else %}
               <li class="nav-item">
-                <a class="nav-link" href="/login">Login</a>
+                <a id="login" class="nav-link" href="/login"> <i class="fas fa-door-closed"></i></a>
+                <!-- login -->
               </li>
             {% endif %}
 
@@ -79,11 +85,20 @@
 
         {% endwith %}
 
+      
+
     {% block content %} 
 
     {% endblock %}
 
+
+      <!-- <footer class="page-footer"> -->
+      <!-- <div class="footer-copyright text-center">© 2019 Copyright:
+        <a href="https://linkedin.com/in/paige-moody"> Paige Moody</a>
+      </div> -->
+     <!-- </footer> -->
   </div>
+
 
 </body>
 
