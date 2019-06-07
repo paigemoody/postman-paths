@@ -26,7 +26,7 @@ var draw = new MapboxDraw({
 }); 
 
 // handle drop down form in save route action
-let inputBox = document.getElementById('collecion_name');
+let inputBox = document.getElementById('collection_name');
                                 let dropdownList = document.getElementById('dropdown');
 
                                 dropdownList.onchange = function(){
@@ -170,19 +170,30 @@ function handleSaveRoute(evt) {
 
     // get data currently on map to send back for saving 
 
-    nodesData = map.getSource('nodes')._data
-    bboxData = map.getSource('bbox')._data
-    edgesData = map.getSource('edges')._data
-    routeLine_data = map.getSource('route')._data
+    const nodesData = map.getSource('nodes')._data;
+    const bboxData = map.getSource('bbox')._data;
+    const edgesData = map.getSource('edges')._data;
+    const routeLineData = map.getSource('route')._data;
 
-    console.log("nodesData",nodesData);
+    const destinationCollection = $('#collection_name').val();
+    const destinationRouteName = $('#route_name').val();
+
+    console.log("destinationCollection",destinationCollection);
+    console.log("destinationRouteName",destinationRouteName);
 
 
 
     console.log("SEND STUFF")
     const formInputs = {
-        'confirmation' : "HI SERVER SUP"
+        'nodes_data' : JSON.stringify(nodesData),
+        'bbox_data' : JSON.stringify(bboxData),
+        'edges_data' : JSON.stringify(edgesData),
+        'route_line_data': JSON.stringify(routeLineData),
+        'destination_collection_name' : JSON.stringify(destinationCollection),
+        'new_route_name' : JSON.stringify(destinationRouteName)
       };
+
+
     console.log("formInputs",formInputs);
     // the outout of the get request (what is returned from the url route)
     // is sent as the parameter to addBboxAndRoute
@@ -219,7 +230,6 @@ function addBboxAndRoute(displayGeojsons) {
     let turfbboxPolygon = turf.bboxPolygon(turfBox);
 
     let coordsList = turfbboxPolygon.geometry.coordinates[0]
-
 
     console.log("turfbboxPolygon",coordsList)
 

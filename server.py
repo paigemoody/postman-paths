@@ -142,45 +142,17 @@ def mapview():
 def receive_bbox_geometry():
     """Get bbox from DOM, render route geometry from path scripts, 
     output geojson of route."""
-
-
     bbox_geometry = request.args.get('bbox_geometry')
-
-    # print("\n\n\ntype(bbox_geometry):",type(bbox_geometry))
-
-    print("\n\nbbox geometry:",bbox_geometry)
-
     bbox = get_bbox_from_geojson(bbox_geometry)
-
-    # print("bbox:", bbox)
-
-
     updated_graph_inst = get_eulerian_graph_edges(bbox, "osm")
-
-    # print("\n\n\nupdated_graph_inst.edges_dict:",updated_graph_inst.edges_dict)
 
     start_node = choice(list(updated_graph_inst.nodes_dict.keys()))
     
     euler_circuit_output_graph = make_euler_circuit(start_node, updated_graph_inst)
 
     nodes_geometry = euler_circuit_output_graph.node_geojson
-
     edges_geometry = euler_circuit_output_graph.edge_geojson
-
     route_geometry = euler_circuit_output_graph.route_geojson
-
-    print("\n\n\n\nbbox_geometry:")
-    print(bbox_geometry)
-
-    # print("\n\n\n\nnodes geom:")
-    # print(nodes_geometry) 
-
-    # print("\n\n\n\nedges_geometry")
-    # print(edges_geometry)
-
-    # print("\n\n\n\nroute_geometry")
-    # print(route_geometry)
-
 
     return jsonify({ 
         "bbox_geometry" : bbox_geometry
@@ -194,13 +166,40 @@ def receive_bbox_geometry():
 @app.route("/save_route.json", methods=["POST"])
 @login_required
 def save_route():
-    """Processes save route data to db."""
+    """Save route data to db."""
+    nodes_data = json.loads(request.form['nodes_data'])
+    bbox_data = json.loads(request.form['bbox_data'])
+    edges_data = json.loads(request.form['edges_data'])
 
-    print("\n\n\nin server")
+    route_line_data = json.loads(request.form['route_line_data'])
+    route_length = route_line_data['features'][0]['properties']['route_length_km']
 
-    all_data_recieved = request.args.get('confirmation')
+    new_route_name = json.loads(request.form['new_route_name'])
+    desination_collection_name = json.loads(request.form['destination_collection_name'])
 
-    print("all_data_recieved",all_data_recieved)
+    print(f"\n\n\n\n\nadding {new_route_name} to {desination_collection_name}")
+
+    # check if collection exists 
+    collection_check = Collection.query.filter(Collection.collection_name == desination_collection_name).one()
+
+    # if collection exists check if a route with that name already exits
+    if collection_check:
+        
+        route_check = Route.query.filter(Route.route_name == new_route_name).first()
+
+        print("route_check",route_check)
+
+        # if route name isn't already taken, create a new route in the collection
+        if not route_check:
+
+            new_route = Route(route_id=route_id,
+                                route_name=route_name,
+                                collection_id=collection_check.collection_id,
+                                tasked_to=user.username)
+
+        # add to the session 
+            db.session.add(new_route)
+
 
     return jsonify({ 
         "confirmed" : "YES"

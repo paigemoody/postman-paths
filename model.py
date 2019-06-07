@@ -76,7 +76,6 @@ class Route(db.Model):
     __tablename__ = "routes"
 
     route_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-
     route_name = db.Column(db.String(100))
     collection_id = db.Column(db.Integer, db.ForeignKey('collections.collection_id'))
     created_date = db.Column(db.DateTime, nullable=True, default=datetime.datetime.utcnow)
