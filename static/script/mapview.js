@@ -201,7 +201,10 @@ function handleSaveRoute(evt) {
 }
 
 function confirmSavedRoute(confirmationMessage){
-    console.log("confirmationMessage",confirmationMessage['confirmed'])    
+
+    $('#save-form').attr('style','display:none ;');  
+    const savedRouteName = confirmationMessage['route_name']
+    alert( savedRouteName + ' saved!')
 }
 
 

@@ -4,6 +4,8 @@ from flask_debugtoolbar import DebugToolbarExtension
 
 import json
 
+from random import choice
+
 from circuit_constructor import get_bbox_from_geojson, get_eulerian_graph_edges, make_euler_circuit
 
 from pprint import PrettyPrinter as pprint
@@ -192,17 +194,56 @@ def save_route():
         # if route name isn't already taken, create a new route in the collection
         if not route_check:
 
-            new_route = Route(route_id=route_id,
-                                route_name=route_name,
-                                collection_id=collection_check.collection_id,
-                                tasked_to=user.username)
+            random_tasked_to_name = choice(["Sam", "Jim", "Rachelle", "Noami", "Kate"])
 
-        # add to the session 
+            new_route = Route(route_name=new_route_name,
+                                collection_id=collection_check.collection_id,
+                                tasked_to=random_tasked_to_name) 
+
+            # add to the session and commit so the route id can be used for 
+            # the other data pieces 
             db.session.add(new_route)
+            db.session.commit()
+
+            # get route id from route that was just added? 
+
+            route = Route.query.filter(Route.route_name == new_route_name).first()
+
+            route_id = route.route_id
+
+            # add bbox 
+            new_box_geom = BboxGeometry(route_id=route_id,
+                      bbox_geometry= bbox_data
+                      )
+            # add to the session and commit 
+            db.session.add(new_box_geom)
+            db.session.commit()
+ 
+            # get route id for the route that was just added 
+            new_route_geom = RouteGeometry(route_id=route_id,
+                                           route_geometry=route_line_data)
+            
+            # add to the session and commit 
+            db.session.add(new_route_geom)
+            db.session.commit()
+
+            new_nodes_geom = NodesGeometry( route_id=route_id,
+                                   nodes_geometry=nodes_data)
+
+            db.session.add(new_nodes_geom)
+            db.session.commit()
+
+            new_edges_geom = EdgesGeometry(route_id=route_id,
+                                   edges_geometry=edges_data)
+
+            db.session.add(new_edges_geom)
+            db.session.commit()
+
+        print("\n\n\ndone?")
 
 
     return jsonify({ 
-        "confirmed" : "YES"
+        "route_name" : new_route_name
         })
 
 if __name__ == "__main__":

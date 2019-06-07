@@ -202,6 +202,65 @@ def set_val_user_id():
     db.session.execute(query, {'new_id': max_id + 1})
     db.session.commit()
 
+def set_val_collection_id():
+    """Set value for the next collection_id after seeding database"""
+
+    result = db.session.query(func.max(Collection.collection_id)).one()
+    max_id = int(result[0])
+
+    query = "SELECT setval('collections_collection_id_seq', :new_id)"
+    db.session.execute(query, {'new_id': max_id + 1})
+    db.session.commit()
+
+def set_val_route_id():
+    """Set value for the next route_id after seeding database"""
+
+    result = db.session.query(func.max(Route.route_id)).one()
+    max_id = int(result[0])
+
+    query = "SELECT setval('routes_route_id_seq', :new_id)"
+    db.session.execute(query, {'new_id': max_id + 1})
+    db.session.commit()
+
+def set_val_bbox_id():
+    """Set value for the next bbox_id after seeding database"""
+
+    result = db.session.query(func.max(BboxGeometry.bbox_id)).one()
+    max_id = int(result[0])
+
+    query = "SELECT setval('bboxes_bbox_id_seq', :new_id)"
+    db.session.execute(query, {'new_id': max_id + 1})
+    db.session.commit()
+
+def set_val_edges_id():
+    """Set value for the next bbox_id after seeding database"""
+
+    result = db.session.query(func.max(EdgesGeometry.edges_geom_id)).one()
+    max_id = int(result[0])
+
+    query = "SELECT setval('edges_geoms_edges_geom_id_seq', :new_id)"
+    db.session.execute(query, {'new_id': max_id + 1})
+    db.session.commit()
+
+def set_val_nodes_id():
+    """Set value for the next bbox_id after seeding database"""
+
+    result = db.session.query(func.max(NodesGeometry.nodes_geom_id)).one()
+    max_id = int(result[0])
+
+    query = "SELECT setval('nodes_geoms_nodes_geom_id_seq', :new_id)"
+    db.session.execute(query, {'new_id': max_id + 1})
+    db.session.commit()
+
+def set_val_routes_id():
+    """Set value for the next bbox_id after seeding database"""
+
+    result = db.session.query(func.max(RouteGeometry.route_geom_id)).one()
+    max_id = int(result[0])
+
+    query = "SELECT setval('route_geoms_route_geom_id_seq', :new_id)"
+    db.session.execute(query, {'new_id': max_id + 1})
+    db.session.commit()
 
 if __name__ == "__main__":
     connect_to_db(app)
@@ -218,3 +277,13 @@ if __name__ == "__main__":
     load_edges_geoms()
     load_nodes_geoms()
     load_routes_geoms()
+
+    # set pk values to be able to auto increment after seeding 
+    set_val_user_id()
+    set_val_collection_id()
+    set_val_route_id()
+    set_val_bbox_id()
+    set_val_edges_id()
+    set_val_nodes_id()
+    set_val_routes_id()
+
