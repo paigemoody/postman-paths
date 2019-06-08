@@ -169,6 +169,9 @@ def receive_bbox_geometry():
 @login_required
 def save_route():
     """Save route data to db."""
+
+    user_id = request.form['user_id']
+
     nodes_data = json.loads(request.form['nodes_data'])
     bbox_data = json.loads(request.form['bbox_data'])
     edges_data = json.loads(request.form['edges_data'])
@@ -181,69 +184,97 @@ def save_route():
 
     print(f"\n\n\n\n\nadding {new_route_name} to {desination_collection_name}")
 
-    # check if collection exists 
-    collection_check = Collection.query.filter(Collection.collection_name == desination_collection_name).one()
 
-    # if collection exists check if a route with that name already exits
-    if collection_check:
-        
-        route_check = Route.query.filter(Route.route_name == new_route_name).first()
+    # get user object 
+    user = User.query.filter(User.user_id == user_id).one()
 
-        print("route_check",route_check)
+    # get route id - to use at the end to add all the geometries
+    route_id = None; 
 
-        # if route name isn't already taken, create a new route in the collection
-        if not route_check:
+    # check if user has collection with collection name 
 
-            random_tasked_to_name = choice(["Sam", "Jim", "Rachelle", "Noami", "Kate"])
+        # use AND thing like: q.filter( (Employee.state == 'CA') & (Employee.salary > 70000) )
 
-            new_route = Route(route_name=new_route_name,
-                                collection_id=collection_check.collection_id,
-                                tasked_to=random_tasked_to_name) 
-
-            # add to the session and commit so the route id can be used for 
-            # the other data pieces 
-            db.session.add(new_route)
-            db.session.commit()
-
-            # get route id from route that was just added? 
-
-            route = Route.query.filter(Route.route_name == new_route_name).first()
-
-            route_id = route.route_id
-
-            # add bbox 
-            new_box_geom = BboxGeometry(route_id=route_id,
-                      bbox_geometry= bbox_data
-                      )
-            # add to the session and commit 
-            db.session.add(new_box_geom)
-            db.session.commit()
- 
-            # get route id for the route that was just added 
-            new_route_geom = RouteGeometry(route_id=route_id,
-                                           route_geometry=route_line_data)
+        # no --> make a collection by the new name 
             
-            # add to the session and commit 
-            db.session.add(new_route_geom)
-            db.session.commit()
+            # add route to new collection
+            # update route_id var 
 
-            new_nodes_geom = NodesGeometry( route_id=route_id,
-                                   nodes_geometry=nodes_data)
+        # yes --> 
 
-            db.session.add(new_nodes_geom)
-            db.session.commit()
+            # check if route with name already exits 
 
-            new_edges_geom = EdgesGeometry(route_id=route_id,
-                                   edges_geometry=edges_data)
+                # no --> add route 
 
-            db.session.add(new_edges_geom)
-            db.session.commit()
+                # yes --> alert user that route had not been added 
+                    # return false to alert user
+                    # return jsonify({ 
+                    #         "route_name" : new_route_name,
+                    #         "success" : "false"
+                    #         })
 
-        print("\n\n\ndone?")
+    # add geometries based on route id
+
+    ## old stuff to re-og 
+    # check if a route with that name already exits    
+    route_check = Route.query.filter(Route.route_name == new_route_name).first()
+
+    print("route_check",route_check)
+
+    # if route name isn't already taken, create a new route in the collection
+    if not route_check:
+
+        random_tasked_to_name = choice(["Sam", "Jim", "Rachelle", "Noami", "Kate"])
+
+        new_route = Route(route_name=new_route_name,
+                            collection_id=collection_check.collection_id,
+                            tasked_to=random_tasked_to_name) 
+
+        # add to the session and commit so the route id can be used for 
+        # the other data pieces 
+        db.session.add(new_route)
+        db.session.commit()
+
+        # get route id from route that was just added? 
+
+        route = Route.query.filter(Route.route_name == new_route_name).first()
+
+        route_id = route.route_id
+
+        # add bbox 
+        new_box_geom = BboxGeometry(route_id=route_id,
+                  bbox_geometry= bbox_data
+                  )
+        # add to the session and commit 
+        db.session.add(new_box_geom)
+        db.session.commit()
+
+        # get route id for the route that was just added 
+        new_route_geom = RouteGeometry(route_id=route_id,
+                                       route_geometry=route_line_data)
+        
+        # add to the session and commit 
+        db.session.add(new_route_geom)
+        db.session.commit()
+
+        new_nodes_geom = NodesGeometry( route_id=route_id,
+                               nodes_geometry=nodes_data)
+
+        db.session.add(new_nodes_geom)
+        db.session.commit()
+
+        new_edges_geom = EdgesGeometry(route_id=route_id,
+                               edges_geometry=edges_data)
+
+        db.session.add(new_edges_geom)
+        db.session.commit()
+
+    print("\n\n\ndone?")
 
 
     return jsonify({ 
-        "route_name" : new_route_name
+        "route_name" : new_route_name,
+        "success" : "true"
         })
 
 if __name__ == "__main__":

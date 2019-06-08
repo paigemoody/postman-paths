@@ -54,23 +54,35 @@
                 <script type="text/javascript"></script>
              </div>
         
-            <div id='save-form' class="row" style="display:none;" >
-                <div class="save-route-form" id="save-route-form"  class="col-6" > 
-                    Add to existing collection: <br>
+            <!-- <div id='save-form' class="row" style="display:none;" > -->
+            <div id='save-form' class="row">
 
-                    Collection: <textarea id="collection_name" name="collection_name" hidden="true"></textarea>
+                <div class="current-user-id" style="display:none;">{{current_user.user_id}}</div>
+
+                <div class="save-route-form" id="save-route-form"  class="col-6" > 
+                    Collection <br>
+                    <textarea id="existing-collection-name" name="existing-collection-name" hidden="true"></textarea>
                         <select id="dropdown">
 
-                            <option value="" disabled selected hidden>Collections...</option>
+                            <option value="" disabled selected hidden>...</option>
                             {% for collection in current_user.collections %}
 
                                 <option value="{{collection.collection_name}}">{{collection.collection_name}}</option>
 
                             {% endfor %}
-
                         </select>
+                        <button type='button' id='new-collection-btn' class='new-collection-btn'> 
+                        New Collection
+                        </button>
+
+                        <input type="text" id='new-collection-name' class='new-collection-name' name="new-collection-name">
+                    <br>
                     <br>                        
-                    Route Name: <input type="text" name="route_name" id="route_name"><br>
+                    Route Name<br>
+                    <input type="text" name="route_name" id="route_name">
+                    <br>
+
+
                     <div>
                         <button type='button' id='save-route-form-btn' class='save-route-form-btn' style="display:none;"> 
                         Save Route 

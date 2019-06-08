@@ -26,7 +26,7 @@ var draw = new MapboxDraw({
 }); 
 
 // handle drop down form in save route action
-let inputBox = document.getElementById('collection_name');
+let inputBox = document.getElementById('existing-collection-name');
                                 let dropdownList = document.getElementById('dropdown');
 
                                 dropdownList.onchange = function(){
@@ -170,14 +170,41 @@ function handleSaveRoute(evt) {
 
     // get data currently on map to send back for saving 
 
+    const userId = $('#current-user-id');
     const nodesData = map.getSource('nodes')._data;
     const bboxData = map.getSource('bbox')._data;
     const edgesData = map.getSource('edges')._data;
     const routeLineData = map.getSource('route')._data;
 
-    const destinationCollection = $('#collection_name').val();
-    const destinationRouteName = $('#route_name').val();
+    // if there is no route name given - name NoRouteName
+    let  destinationRouteName = $('#route_name').val();
+    if (destinationRouteName == "") {
+        destinationRouteName = "NoRouteName";
+    }
 
+
+    let destinationCollection = ""; 
+
+    // check whether adding to existing or new collection 
+    let existingCollectionName = $('#existing-collection-name').val();
+    let newCollectionName = $('#new-collection-name').val();
+
+
+    // if there is a value in existing-collection-name - use that name
+
+    if (destinationCollection != "") {
+        destinationCollection = existingCollectionName;
+    }
+
+    else if (newCollectionName != "") {
+        destinationCollection = newCollectionName;
+    }
+
+    else {
+        destinationCollection = "NoCollectionName";
+    }
+    
+        
     console.log("destinationCollection",destinationCollection);
     console.log("destinationRouteName",destinationRouteName);
 
@@ -185,6 +212,7 @@ function handleSaveRoute(evt) {
 
     console.log("SEND STUFF")
     const formInputs = {
+        'user_id' : userId,
         'nodes_data' : JSON.stringify(nodesData),
         'bbox_data' : JSON.stringify(bboxData),
         'edges_data' : JSON.stringify(edgesData),
