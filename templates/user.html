@@ -1,39 +1,202 @@
 {% extends 'base.html' %}
 
-{% block content %}
 
-    <div class="main-content">
+{% block head_content %}
+<link href='https://fonts.googleapis.com/css?family=Didact Gothic' rel='stylesheet'>
 
-        <div>
-            <h1> Hey {{ user.username }} </h1>
-        </div>
+<!-- Map stuff -->
 
-        <div>
-            <h2>Route collections</h2>
-                <ul>
+<meta charset='utf-8' />
+<title>Display a map</title>
+<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.0.0/mapbox-gl.js'></script>
+<link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.0.0/mapbox-gl.css' rel='stylesheet' />
+<!-- end map stuff -->
 
-                     {% for collection in user.collections %}
-                
-                        <h3>{{ collection.collection_name}}</h3>                        
-                        <ul><br>
-                        {% for route in collection.routes %}
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<style>
 
-                            <p>Route Name: {{route.route_name}}
+body { 
+      margin:0; 
+      padding:0; 
+      font-family: 'Didact Gothic';
+}
 
-                            <ul>
-                                <li>Tasked to: {{route.tasked_to}}</li>
-                                <li>Length: ___mi </li>
-                                <li>Est Walking Time: ___min </li>
-                                <li>Bbox: {{route.bbox.bbox_geometry}} </li>
+.main-content {
+  position: relative;
+  height: 100vh
+}
 
-                            </ul>
-                        {% endfor %}
+#map { 
+        position:inherit; 
+        top:0; 
+        bottom:0; 
+        width:100%;
+    }
 
-                        </ul>
+/* Style the tab */
+.tab {
+  overflow: hidden;
+  /*border: 1px solid #ccc;*/
+  /*background-color: #f1f1f1;*/
+  border-bottom: 10px;
+}
 
-                    {% endfor %}
-            </ul> 
-        </div>
-    </div>
+/* Style the buttons inside the tab */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: 1px solid #ccc;
+  border-radius: 10px 10px 0 0;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+  font-size: 17px;
+  color: #ccc;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  /*background-color: #ddd;*/
+  background-color: #FFFFFF;
+  color: black;
+
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  border-bottom: 10px;
+  z-index: 2;
+  color: black;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-bottom: none;
+  border-radius: 0 10px 0 0;
+}
+
+</style>
 
 {% endblock %}
+
+{% block content %}
+
+<div class="main-content">
+
+    <div class="container"> 
+
+        <div id="tab-context">
+
+            <div class="row">
+                <h1>Collections</h1>
+            </div>
+
+            <div class="row">
+                <p>Click collection to see details</p>
+            </div>
+
+            <div  id="top-content">
+                <!-- make a button for each route name -->
+                <div class="tab"  class="row">
+                    {% for collection in current_user.collections %}
+                        <button class="tablinks" onclick="openCity(event, '{{collection.collection_name}}')">{{collection.collection_name}}</button>
+                    {% endfor %}
+                </div>  
+
+                <div class="tabcontent-parent" class="row">
+
+
+                        {% for collection in current_user.collections %}
+                        <div id="{{collection.collection_name}}" class="tabcontent">
+                          <!-- <h3>{{collection.collection_name}}</h3> -->
+                          <p>{{collection.collection_name}} is the best set of routes.</p>
+                        </div>
+                        
+                        {% endfor %}
+                        <script>
+                        function openCity(evt, cityName) {
+
+                              var i, tabcontent, tablinks;
+                              tabcontent = document.getElementsByClassName("tabcontent");
+
+                              // hide all tabs - set display to none 
+                              for (i = 0; i < tabcontent.length; i++) {
+                                tabcontent[i].style.display = "none";
+                              }
+
+                              // deactivate all items in class tab 
+                              tablinks = document.getElementsByClassName("tablinks");
+                              
+                              for (i = 0; i < tablinks.length; i++) {
+                                tablinks[i].className = tablinks[i].className.replace(" active", "");
+
+                              }
+
+                              document.getElementById(cityName).style.display = "block";
+                        
+                              evt.currentTarget.className += " active";
+                        }
+                        </script>
+
+                    <div id='map' class="row">
+                      <script>
+                        mapboxgl.accessToken = 'pk.eyJ1IjoicGFpZ2VlbW9vZHkiLCJhIjoiY2owbDcyejhvMDJwNzJ5cDR0YXE1aG10MCJ9.a-JLnrmMPSJNwOGQdloTDA';
+                        var map = new mapboxgl.Map({
+                            container: 'map', // container id
+                            style: 'mapbox://styles/mapbox/streets-v11', // stylesheet location
+                            center: [-122.453554,37.762436], // starting position [lng, lat]
+                            zoom: 10 // starting zoom
+                        });
+                      </script>
+
+                    </div> <!--end map-->
+
+                </div>
+
+            </div>
+
+        </div>
+        <!-- <div id='map' class="row">
+          <script>
+            mapboxgl.accessToken = 'pk.eyJ1IjoicGFpZ2VlbW9vZHkiLCJhIjoiY2owbDcyejhvMDJwNzJ5cDR0YXE1aG10MCJ9.a-JLnrmMPSJNwOGQdloTDA';
+            var map = new mapboxgl.Map({
+                container: 'map', // container id
+                style: 'mapbox://styles/mapbox/streets-v11', // stylesheet location
+                center: [-74.50, 40], // starting position [lng, lat]
+                zoom: 9 // starting zoom
+            });
+          </script>
+        </div> -->
+</div>
+
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

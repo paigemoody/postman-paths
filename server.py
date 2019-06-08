@@ -74,7 +74,8 @@ def login_sub():
 
         flash('Login success!') 
 
-        return redirect(f"/user/{user.user_id}") 
+        # return redirect(f"/user/{user.user_id}") 
+        return redirect(f"/collections") 
 
     alert('Wrong username and/or password')
     return redirect('/login')
@@ -121,17 +122,27 @@ def register_process():
     return redirect('/')
 
 
-@app.route("/user/<user_id>")
+# @app.route("/user/<user_id>")
+# @login_required
+# def user_info(user_id):
+#     """Show user info."""
+    
+#     # sqlalchemy database calls for user and user ratings
+#     user = User.query.filter(User.user_id == user_id).one()
+#     # ratings = db.session.query(Rating).filter(Rating.user_id == user_id).all()
+
+#     return render_template('user.html',
+#                             user=user)
+
+@app.route("/collections")
 @login_required
-def user_info(user_id):
+def collections_info():
     """Show user info."""
     
     # sqlalchemy database calls for user and user ratings
-    user = User.query.filter(User.user_id == user_id).one()
-    # ratings = db.session.query(Rating).filter(Rating.user_id == user_id).all()
+    # user = User.query.filter(User.user_id == user_id).one()
 
-    return render_template('user.html',
-                            user=user)
+    return render_template('user.html')
 
 @app.route('/mapview')
 def mapview():
