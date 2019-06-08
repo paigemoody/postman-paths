@@ -54,12 +54,11 @@
                 <script type="text/javascript"></script>
              </div>
         
-            <!-- <div id='save-form' class="row" style="display:none;" > -->
-            <div id='save-form' class="row">
-
-                <div class="current-user-id" style="display:none;">{{current_user.user_id}}</div>
-
+            <div id='save-form' class="row" style="display:none;" >
+                
                 <div class="save-route-form" id="save-route-form"  class="col-6" > 
+                    <input type="text" id="current-user-id" value="{{current_user.user_id}}" style="display:none;">
+                    </input>
                     Collection <br>
                     <textarea id="existing-collection-name" name="existing-collection-name" hidden="true"></textarea>
                         <select id="dropdown">
@@ -70,6 +69,7 @@
                                 <option value="{{collection.collection_name}}">{{collection.collection_name}}</option>
 
                             {% endfor %}
+                            <option value="new-collection-dropdown">New collection</option>
                         </select>
                         <button type='button' id='new-collection-btn' class='new-collection-btn'> 
                         New Collection

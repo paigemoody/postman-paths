@@ -170,7 +170,7 @@ function handleSaveRoute(evt) {
 
     // get data currently on map to send back for saving 
 
-    const userId = $('#current-user-id');
+    const userId = $('#current-user-id').val();
     const nodesData = map.getSource('nodes')._data;
     const bboxData = map.getSource('bbox')._data;
     const edgesData = map.getSource('edges')._data;
@@ -190,15 +190,18 @@ function handleSaveRoute(evt) {
     let newCollectionName = $('#new-collection-name').val();
 
 
-    // if there is a value in existing-collection-name - use that name
+    // if there is a value in new-collection-name - use that name
 
-    if (destinationCollection != "") {
+    if (newCollectionName != "") {
+        destinationCollection = newCollectionName;
+    }
+
+    // if not new collection name, user existing collection
+    else if (destinationCollection != "") {
         destinationCollection = existingCollectionName;
     }
 
-    else if (newCollectionName != "") {
-        destinationCollection = newCollectionName;
-    }
+    // if not collection name is given add to "NoCollectionName" collection
 
     else {
         destinationCollection = "NoCollectionName";

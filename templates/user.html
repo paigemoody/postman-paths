@@ -80,6 +80,20 @@ body {
   border-radius: 0 10px 0 0;
 }
 
+.tabcontent button {
+  border: none;
+  transition: 0.3s;
+  font-size: 14px;
+  color: black;
+}
+
+.tabcontent button:hover {
+  background-color: black;
+  color: white;
+  border-radius: 10px;
+
+}
+
 </style>
 
 {% endblock %}
@@ -95,11 +109,6 @@ body {
             <div class="row">
                 <h1>Collections</h1>
             </div>
-
-            <div class="row">
-                <p>Click collection to see details</p>
-            </div>
-
             <div  id="top-content">
                 <!-- make a button for each route name -->
                 <div class="tab"  class="row">
@@ -114,7 +123,15 @@ body {
                         {% for collection in current_user.collections %}
                         <div id="{{collection.collection_name}}" class="tabcontent">
                           <!-- <h3>{{collection.collection_name}}</h3> -->
-                          <p>{{collection.collection_name}} is the best set of routes.</p>
+                          <ul>
+                              {% for route in collection.routes %}
+
+                                <button id="{{route.route_id}}" class="animate"><i class="fa fa-play fa-sm" aria-hidden="true"></i>    {{(route.route_name)}}</button><br>
+
+                              {% endfor %}
+
+                          </ul>
+                          
                         </div>
                         
                         {% endfor %}
@@ -148,7 +165,7 @@ body {
                         mapboxgl.accessToken = 'pk.eyJ1IjoicGFpZ2VlbW9vZHkiLCJhIjoiY2owbDcyejhvMDJwNzJ5cDR0YXE1aG10MCJ9.a-JLnrmMPSJNwOGQdloTDA';
                         var map = new mapboxgl.Map({
                             container: 'map', // container id
-                            style: 'mapbox://styles/mapbox/streets-v11', // stylesheet location
+                            style: 'mapbox://styles/paigeemoody/cjwjzqywq2orj1dqqvdvwchhm',
                             center: [-122.453554,37.762436], // starting position [lng, lat]
                             zoom: 10 // starting zoom
                         });

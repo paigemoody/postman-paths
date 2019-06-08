@@ -72,7 +72,7 @@ def login_sub():
 
         login_user(user)
 
-        flash('Login success!') 
+        flash(f'Welcome {user.username}!') 
 
         # return redirect(f"/user/{user.user_id}") 
         return redirect(f"/collections") 
@@ -199,46 +199,36 @@ def save_route():
     # get user object 
     user = User.query.filter(User.user_id == user_id).one()
 
-    # get route id - to use at the end to add all the geometries
+    # hard-code hack -- randomly select some name to assign the route to
+    random_tasked_to_name = choice(["Sam", "Jim", "Rachelle", "Noami", "Kate"])
+
+    # initialize route id - to use at the end to add all the geometries
     route_id = None; 
 
     # check if user has collection with collection name 
+        # if it's a new coll collection_check will be None
+    collection = Collection.query.filter((Collection.collection_name == desination_collection_name) & (Collection.user_id == user.user_id)).first()
 
-        # use AND thing like: q.filter( (Employee.state == 'CA') & (Employee.salary > 70000) )
+    # if the collection is new
+    if collection == None:
 
-        # no --> make a collection by the new name 
-            
-            # add route to new collection
-            # update route_id var 
+        # make collection
+        new_collection = Collection(
+                    user_id = user.user_id,
+                    collection_name = desination_collection_name,
+                    description = "" # need to add 
+                    )
 
-        # yes --> 
+        db.session.add(new_collection)
+        db.session.commit()
 
-            # check if route with name already exits 
+        # get collection just added to get the collection id from it 
 
-                # no --> add route 
+        added_collection = Collection.query.filter(Collection.collection_name == desination_collection_name).first()
 
-                # yes --> alert user that route had not been added 
-                    # return false to alert user
-                    # return jsonify({ 
-                    #         "route_name" : new_route_name,
-                    #         "success" : "false"
-                    #         })
-
-    # add geometries based on route id
-
-    ## old stuff to re-og 
-    # check if a route with that name already exits    
-    route_check = Route.query.filter(Route.route_name == new_route_name).first()
-
-    print("route_check",route_check)
-
-    # if route name isn't already taken, create a new route in the collection
-    if not route_check:
-
-        random_tasked_to_name = choice(["Sam", "Jim", "Rachelle", "Noami", "Kate"])
-
+        # make route and add to collection 
         new_route = Route(route_name=new_route_name,
-                            collection_id=collection_check.collection_id,
+                            collection_id=added_collection.collection_id,
                             tasked_to=random_tasked_to_name) 
 
         # add to the session and commit so the route id can be used for 
@@ -246,39 +236,67 @@ def save_route():
         db.session.add(new_route)
         db.session.commit()
 
-        # get route id from route that was just added? 
+        # update route_id to be the id of the route just added 
+        added_route = Route.query.filter(Route.route_name == new_route_name).first()
+        route_id = added_route.route_id
 
-        route = Route.query.filter(Route.route_name == new_route_name).first()
+    else:
 
-        route_id = route.route_id
-
-        # add bbox 
-        new_box_geom = BboxGeometry(route_id=route_id,
-                  bbox_geometry= bbox_data
-                  )
-        # add to the session and commit 
-        db.session.add(new_box_geom)
-        db.session.commit()
-
-        # get route id for the route that was just added 
-        new_route_geom = RouteGeometry(route_id=route_id,
-                                       route_geometry=route_line_data)
+        # check if a route of the new route name already exists in the db
+        route = Route.query.filter((Route.route_name == new_route_name) & (Route.collection_id == collection.collection_id)).first()
         
-        # add to the session and commit 
-        db.session.add(new_route_geom)
-        db.session.commit()
+        # if route already exists return success as false 
 
-        new_nodes_geom = NodesGeometry( route_id=route_id,
-                               nodes_geometry=nodes_data)
+        if route != None:
+            return jsonify({ 
+                                "route_name" : new_route_name,
+                                "success" : "false"
+                                })
 
-        db.session.add(new_nodes_geom)
-        db.session.commit()
+        # else add route to collection
+        else:
+            new_route = Route(route_name = new_route_name,
+                            collection_id = collection.collection_id,
+                            tasked_to = random_tasked_to_name) 
 
-        new_edges_geom = EdgesGeometry(route_id=route_id,
-                               edges_geometry=edges_data)
+            # add to the session and commit so the route id can be used for 
+            # the other data pieces 
+            db.session.add(new_route)
+            db.session.commit()
 
-        db.session.add(new_edges_geom)
-        db.session.commit()
+            # update route_id to be that of the added route
+            added_route = Route.query.filter((Route.route_name == new_route_name) & (Route.collection.user_id == user.user_id))
+            route_id = added_route.route_id
+                    
+    # add geometries based on route id
+
+    # add bbox 
+    new_box_geom = BboxGeometry(route_id=route_id,
+              bbox_geometry= bbox_data
+              )
+    # add to the session and commit 
+    db.session.add(new_box_geom)
+    db.session.commit()
+
+    # get route id for the route that was just added 
+    new_route_geom = RouteGeometry(route_id=route_id,
+                                   route_geometry=route_line_data)
+    
+    # add to the session and commit 
+    db.session.add(new_route_geom)
+    db.session.commit()
+
+    new_nodes_geom = NodesGeometry( route_id=route_id,
+                           nodes_geometry=nodes_data)
+
+    db.session.add(new_nodes_geom)
+    db.session.commit()
+
+    new_edges_geom = EdgesGeometry(route_id=route_id,
+                           edges_geometry=edges_data)
+
+    db.session.add(new_edges_geom)
+    db.session.commit()
 
     print("\n\n\ndone?")
 

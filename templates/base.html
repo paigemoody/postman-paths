@@ -7,7 +7,6 @@
   <link rel = "stylesheet" href = "static/style/base.css" />
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
   <link href='https://fonts.googleapis.com/css?family=Didact Gothic' rel='stylesheet'>
-
   <title> WƎave </title>
 
   {% block head_content %}
@@ -23,7 +22,7 @@
 
     <div class="nav-wrapper">
       <nav class="navbar navbar-expand-lg navbar-light bg-pm">
-        <a class="navbar-brand" href="/">  <i class="fas fa-location-arrow"></i> WƎave </a>
+        <a class="navbar-brand" href="/">  <i class="fas fa-location-arrow fa-sm"></i> WƎave </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -35,22 +34,22 @@
             </li> -->
 
             <li class="nav-item">
-                <a class="nav-link" href="/mapview"> <i class="far fa-map"></i></a>
+                <a class="nav-link" href="/mapview"> <i class="far fa-map"></i>  Route Generator</a>
                 <!-- Route Builder -->
             </li>
 
             {% if current_user.is_authenticated %}
               <li class="nav-item">
-                <a class="nav-link" href="/user/{{current_user.user_id}}"> <i class="fas fa-tasks"></i></a> 
+                <a class="nav-link" href="/collections"> <i class="fas fa-tasks"></i>  Routes</a> 
                 <!-- Routes -->
               </li>
               <li class="nav-item">
-                <a id="logout" class="nav-link" href="/logout"> <i class="fas fa-door-open"></i></a> 
+                <a id="logout" class="nav-link" href="/logout"> <i class="fas fa-door-open"></i>  Logout</a> 
                 <!-- logout -->
               </li>
             {% else %}
               <li class="nav-item">
-                <a id="login" class="nav-link" href="/login"> <i class="fas fa-door-closed"></i></a>
+                <a id="login" class="nav-link" href="/login"> <i class="fas fa-door-closed"></i>  Login</a>
                 <!-- login -->
               </li>
             {% endif %}
