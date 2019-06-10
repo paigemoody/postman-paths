@@ -207,7 +207,7 @@ def get_existing_nodes_data(route_id):
 @app.route('/collections/get_route_data/<route_id>/animate_point_geometry.json') # make into queue job, some job_id
 @login_required
 def get_animate_point_data(route_id):
-    """Given route id, return edges geometry json"""
+    """Given route id, return start point geometry json"""
 
     route_geometry_obj = RouteGeometry.query.filter((RouteGeometry.route_id == route_id)).first()
     
@@ -228,6 +228,8 @@ def get_animate_point_data(route_id):
     print("\n\n\n\nfirst_point_geojson:",first_point_geojson)
 
     return jsonify(first_point_geojson)
+
+
 
 @app.route("/save_route.json", methods=["POST"])
 @login_required
