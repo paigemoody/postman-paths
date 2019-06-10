@@ -6,120 +6,180 @@ var map = new mapboxgl.Map({
     zoom: 10 // starting zoom
 });
 
+const collectionButtons = document.querySelectorAll('.tablinks')
 
-map.on("load", function() {
+collectionButtons.forEach(collectionButton => {
 
-    const route_ids = [1,2,3]
+    collectionButton.addEventListener('click', function (event) {  
+        // prevent browser's default action
+        event.preventDefault();
 
-    route_ids.forEach(route_id => {
+        collectionId = this.id
 
-        // POINT FOR ANIMATION
-        const id = route_id;
+        console.log(collectionId)
+        // get the id of the collection
 
-        animationId = `point${id}`
-        animationSource = `/collections/get_route_data/${id}/animate_point_geometry.json`
-        animationLayerId = `point${id}`
+        // call your awesome function here
+        showAllRoutes(this, collectionId); // 'this' refers to the current button on for loop
+   
+    }, false);
+})
 
-        map.addSource(animationId, {
-            "type": "geojson",
-            "data": animationSource
-        });
-        // add point to be animated to graph 
-        map.addLayer({
-            "id": animationLayerId,
-            "source": animationId,
-            "type": "symbol",
-            "layout": {
-                "icon-image": "police-15", // change later
-                // "icon-rotate": ["get", "bearing"],
-                // "icon-rotation-alignment": "map",
-                "icon-allow-overlap": true,
-                "icon-ignore-placement": true,
-                "icon-size": 2
+
+
+// map.on("load", function() {
+function showAllRoutes(evt, collectionId) {
+
+    $.getJSON(`/collections/get_collection_data/${collectionId}/all_routes.json`, function(collectionJson) {
+        // get obj of all layers currently on map 
+        const currentSources = map.getStyle().sources;
+        // get array of sources - to later determine if any need to be removed 
+        const currentSourcesArray = Object.keys(currentSources);
+
+        currentSourcesArray.forEach(source => {
+            // remove all current sources & layers 
+            if (source != "composite") {
+                map.removeLayer(source);
+                map.removeSource(source);
             }
-        });
-        //NODES
-        nodesId = `nodes${id}`
-        nodesSource = `collections/get_route_data/${id}/nodes_geometry.json`
-        nodesLayerId = `nodes${id}`
 
-        map.addSource(nodesId, {
-            "type": "geojson",
-            "data" : nodesSource
-        });
+        })
 
-        map.addLayer({
-            "id" : nodesLayerId,
-            // "type" : "symbol",
-            "type" : "symbol",
-            "source" : nodesId,
-            "layout": {
-                "text-field": "{visit_order}",
-                "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
-                "text-offset": [0, 0.6],
-                "text-anchor": "top"
+        const routeIds = collectionJson['route_ids'];
+
+        // get all routeCoords from all node geometries in collection
+        // to be used to zoom map
+        let allBboxCoords = []
+        
+        routeIds.forEach(route_id => {
+
+            const id = route_id;
+            // POINT FOR ANIMATION
+            animationId = `point${id}`
+            animationSource = `/collections/get_route_data/${id}/animate_point_geometry.json`
+
+            map.addSource(animationId, {
+                "type": "geojson",
+                "data": animationSource
+            });
+            // add point to be animated to graph 
+            map.addLayer({
+                "id": animationId,
+                "source": animationId,
+                "type": "symbol",
+                "layout": {
+                    "icon-image": "police-15", // change later
+                    // "icon-rotate": ["get", "bearing"],
+                    // "icon-rotation-alignment": "map",
+                    "icon-allow-overlap": true,
+                    "icon-ignore-placement": true,
+                    "icon-size": 2
+                }
+            });
+            
+            //NODES
+            nodesId = `nodes${id}`
+            nodesSource = `collections/get_route_data/${id}/nodes_geometry.json`
+
+            map.addSource(nodesId, {
+                "type": "geojson",
+                "data" : nodesSource
+            });
+
+            map.addLayer({
+                "id" : nodesId,
+                // "type" : "symbol",
+                "type" : "symbol",
+                "source" : nodesId,
+                "layout": {
+                    "text-field": "{visit_order}",
+                    "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
+                    "text-offset": [0, 0.6],
+                    "text-anchor": "top"
                 },
-            paint: {
-                "text-color": "#000000",
-                "text-halo-color": "#ffffff",
-                "text-halo-width": 1
-              }
-        }, animationId); // add point layer order ref 
+                paint: {
+                    "text-color": "#000000",
+                    "text-halo-color": "#ffffff",
+                    "text-halo-width": 1
+                }
+            }, animationId); // add point layer order ref 
 
-        // EDGES
-        edgesId = `edges${id}`
-        edgesSource = `collections/get_route_data/${id}/edges_geometry.json`
-        edgesLayerId = `edges${id}`
+            // EDGES
+            edgesId = `edges${id}`
+            edgesSource = `collections/get_route_data/${id}/edges_geometry.json`
 
-        map.addSource(edgesId, { //  bbox in this case is a variable that is a feature collection
-            "type": "geojson",
-            "data": edgesSource
+            map.addSource(edgesId, {
+                "type": "geojson",
+                "data": edgesSource
             });
 
-        map.addLayer({
-            "id": edgesLayerId, // rename?
-            "type": "line",
-            "source": edgesId, 
-            "paint": {
-                // set line color based on number of traversals, to highlight which streets to 
-                // traverse twice
-                "line-color" : [
-                    'match',
-                    ['get', 'num_traversals'],
-                    1, 'rgba(0,0,205,0.3)', 
-                    // 1, '#e55e5e', // pink
-                    // 2, '#fbb03b', // orange
-                    2, 'rgba(0,0,205,0.6)',
-                    // 3, '#00FF00', // green
-                    3, 'rgba(0,0,205,0.9)',
-                    'rgba(0,0,205,1)',
-                    // '#123c69' // blue
-                ],
-                "line-width": 8,
-                "line-opacity": 1
-            }
-        }, nodesId);
+            map.addLayer({
+                "id": edgesId,
+                "type": "line",
+                "source": edgesId, 
+                "paint": {
+                    // set line color based on number of traversals, to highlight which streets to 
+                    // traverse twice
+                    "line-color" : [
+                        'match',
+                        ['get', 'num_traversals'],
+                        1, 'rgba(0,0,205,0.3)', 
+                        // 1, '#e55e5e', // pink
+                        // 2, '#fbb03b', // orange
+                        2, 'rgba(0,0,205,0.6)',
+                        // 3, '#00FF00', // green
+                        3, 'rgba(0,0,205,0.9)',
+                        'rgba(0,0,205,1)',
+                        // '#123c69' // blue
+                    ],
+                    "line-width": 8,
+                    "line-opacity": 1
+                }
+            }, nodesId);
+  
+            // ROUTE GEOM FOR ANIMATION
+            routeId = `route${id}`
+            routeSource = `collections/get_route_data/${id}/route_geometry.json`
 
-        // ROUTE GEOM FOR ANIMATION
-        edgesId = `route${id}`
-        edgesSource = `collections/get_route_data/${id}/route_geometry.json`
-        edgesLayerId = `route${id}`
-
-        map.addSource(edgesId, { //  bbox in this case is a variable that is a feature collection
-            "type": "geojson",
-            "data": edgesSource
+            map.addSource(routeId, {
+                "type": "geojson",
+                "data": routeSource
             });
 
-        map.addLayer({
-            "id": edgesLayerId, // rename?
-            "type": "line",
-            "source": edgesId, 
-            "paint": {
-                "line-color" : 'rgba(0,0,205,0)',
-            }
-        });    
+            map.addLayer({
+                "id": routeId, // rename?
+                "type": "line",
+                "source": routeId, 
+                "paint": {
+                    "line-color" : 'rgba(0,0,205,0)',
+                    }
+            });    
 
+            // BBOX to use for centering map 
+            // add all bbox coordinates to allCoords array
 
-    })
+            // bboxSource = `collections/get_route_data/${id}/bbox_geometry.json`
 
-});
+            // $.get(bboxSource, function (featureCollection) {
+
+            //     bboxCoordsArray = featureCollection.features[0].geometry.coordinates;
+
+            //     bboxCoordsArray.forEach(coord => {
+            //         console.log("coord:",coord);
+            //         allBboxCoords.push(coord);
+
+            //         console.log("allBboxCoords",allBboxCoords)
+            //     });
+            // });
+
+        });
+
+        // use array of all bbox coords to zoom to extent of coolection
+        console.log("allBboxCoords len:", allBboxCoords.length)
+        const bboxLineString = turf.lineString(allBboxCoords);
+
+        console.log(bboxLineString);
+
+        
+    });   
+};

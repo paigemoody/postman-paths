@@ -3,6 +3,7 @@
 
 {% block head_content %}
 <link href='https://fonts.googleapis.com/css?family=Didact Gothic' rel='stylesheet'>
+<script src="https://cdn.jsdelivr.net/npm/@turf/turf@5/turf.min.js"></script>
 
 <!-- Map stuff -->
 
@@ -113,7 +114,8 @@ body {
                 <!-- make a button for each route name -->
                 <div class="tab"  class="row">
                     {% for collection in current_user.collections %}
-                        <button class="tablinks" onclick="openCollection(event, '{{collection.collection_name}}')">{{collection.collection_name}}</button>
+                        <button id="{{collection.collection_id}}" class="tablinks" onclick="openCollection(event, '{{collection.collection_name}}')">{{collection.collection_name}}
+                        </button>
                     {% endfor %}
                 </div>  
 

@@ -229,7 +229,40 @@ def get_animate_point_data(route_id):
 
     return jsonify(first_point_geojson)
 
+@app.route('/collections/get_collection_data/<collection_id>/all_bbox_coordinates.json')
+@login_required
+def get_all_bbox_coordinates_for_collection(collection_id):
+    """Given route id, return edges geometry json"""
 
+    # goal output -> return let fitBoundsArray = [[minX, minY] , [maxX, maxY]];
+
+    # get all coordinates for bboxes in collection
+    # make list of all Xs
+    # make list of all Ys
+
+    # get max and min for Xs and for Ys
+
+    # bbox_geometry_obj = BboxGeometry.query.filter((BboxGeometry.route_id == route_id)).first()
+    # bbox_geojson = bbox_geometry_obj.bbox_geometry
+
+    return jsonify("fitBoundsArray" : fitBoundsArray)
+
+@app.route('/collections/get_collection_data/<collection_id>/all_routes.json') # make into queue job, some job_id
+@login_required
+def get_collection_routes_list(collection_id):
+    """Given route id, return all routes in collection"""
+
+    all_routes_in_collection = Route.query.filter(Route.collection_id == collection_id).all()
+
+    all_route_ids_in_collection = []
+
+    for route in all_routes_in_collection:
+
+        all_route_ids_in_collection.append(route.route_id)
+
+    print("\n\n\n\n", all_route_ids_in_collection)
+
+    return jsonify({"route_ids" : all_route_ids_in_collection})
 
 @app.route("/save_route.json", methods=["POST"])
 @login_required

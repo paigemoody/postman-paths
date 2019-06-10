@@ -268,6 +268,8 @@ function addBboxAndRoute(displayGeojsons) {
 
     let bboxLineString = turf.lineString(routeGeometry.features[0].geometry.coordinates);
 
+    console.log("\n\n\n\nbboxLineString input", routeGeometry.features[0].geometry.coordinates)
+
     let turfBox = turf.bbox(bboxLineString);
 
     let turfbboxPolygon = turf.bboxPolygon(turfBox);
