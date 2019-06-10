@@ -158,7 +158,7 @@ class RouteGeometry(db.Model):
     def __repr__(self):
         """provide helpful represeation."""
 
-        return f"<Route Geometry route_geom_idd={self.bbox_id} route_length={self.route_length} route_id={self.route_id}>"
+        return f"<Route Geometry route_geom_idd={self.route_geom_id} route_length={self.route_length} route_id={self.route_id}>"
 
     __tablename__ = "route_geoms"
 

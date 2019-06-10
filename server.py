@@ -151,8 +151,8 @@ def mapview():
     return render_template("mapview.html")
 
 
-@app.route('/route_geometry.geojson') # becaomes queue job, some job_id
-def receive_bbox_geometry():
+@app.route('/generate_route_data.json') # make into queue job, some job_id
+def calculate_route_data():
     """Get bbox from DOM, render route geometry from path scripts, 
     output geojson of route."""
     bbox_geometry = request.args.get('bbox_geometry')
@@ -174,7 +174,60 @@ def receive_bbox_geometry():
         , "route_geometry" : route_geometry 
         })
 
+@app.route('/collections/get_route_data/<route_id>/route_geometry.json') # make into queue job, some job_id
+@login_required
+def get_existing_route_data(route_id):
+    """Given route id, return route json"""
 
+    route_geometry_obj = RouteGeometry.query.filter((RouteGeometry.route_id == route_id)).first()
+    route_geojson = route_geometry_obj.route_geometry
+
+    return jsonify(route_geojson)
+
+@app.route('/collections/get_route_data/<route_id>/edges_geometry.json') # make into queue job, some job_id
+@login_required
+def get_existing_edges_data(route_id):
+    """Given route id, return edges geometry json"""
+
+    edges_geometry_obj = EdgesGeometry.query.filter((EdgesGeometry.route_id == route_id)).first()
+    edges_geojson = edges_geometry_obj.edges_geometry
+
+    return jsonify(edges_geojson)
+
+@app.route('/collections/get_route_data/<route_id>/nodes_geometry.json') # make into queue job, some job_id
+@login_required
+def get_existing_nodes_data(route_id):
+    """Given route id, return edges geometry json"""
+
+    nodes_geometry_obj = NodesGeometry.query.filter((NodesGeometry.route_id == route_id)).first()
+    nodes_geojson = nodes_geometry_obj.nodes_geometry
+
+    return jsonify(nodes_geojson)
+
+@app.route('/collections/get_route_data/<route_id>/animate_point_geometry.json') # make into queue job, some job_id
+@login_required
+def get_animate_point_data(route_id):
+    """Given route id, return edges geometry json"""
+
+    route_geometry_obj = RouteGeometry.query.filter((RouteGeometry.route_id == route_id)).first()
+    
+    route_geojson = route_geometry_obj.route_geometry
+
+    first_point_geojson = {
+            "type": "FeatureCollection",
+            "features": [{
+            "type": "Feature",
+            "properties": {},
+            "geometry": {
+                "type": "Point",
+                "coordinates": route_geojson['features'][0]['geometry']['coordinates'][0]
+                }
+            }]
+        }
+
+    print("\n\n\n\nfirst_point_geojson:",first_point_geojson)
+
+    return jsonify(first_point_geojson)
 
 @app.route("/save_route.json", methods=["POST"])
 @login_required

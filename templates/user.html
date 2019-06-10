@@ -113,7 +113,7 @@ body {
                 <!-- make a button for each route name -->
                 <div class="tab"  class="row">
                     {% for collection in current_user.collections %}
-                        <button class="tablinks" onclick="openCity(event, '{{collection.collection_name}}')">{{collection.collection_name}}</button>
+                        <button class="tablinks" onclick="openCollection(event, '{{collection.collection_name}}')">{{collection.collection_name}}</button>
                     {% endfor %}
                 </div>  
 
@@ -136,7 +136,7 @@ body {
                         
                         {% endfor %}
                         <script>
-                        function openCity(evt, cityName) {
+                        function openCollection(evt, cityName) {
 
                               var i, tabcontent, tablinks;
                               tabcontent = document.getElementsByClassName("tabcontent");
@@ -161,17 +161,8 @@ body {
                         </script>
 
                     <div id='map' class="row">
-                      <script>
-                        mapboxgl.accessToken = 'pk.eyJ1IjoicGFpZ2VlbW9vZHkiLCJhIjoiY2owbDcyejhvMDJwNzJ5cDR0YXE1aG10MCJ9.a-JLnrmMPSJNwOGQdloTDA';
-                        var map = new mapboxgl.Map({
-                            container: 'map', // container id
-                            style: 'mapbox://styles/paigeemoody/cjwjzqywq2orj1dqqvdvwchhm',
-                            center: [-122.453554,37.762436], // starting position [lng, lat]
-                            zoom: 10 // starting zoom
-                        });
-                      </script>
-
-                    </div> <!--end map-->
+                      <script type="text/javascript" src="static/script/collections_map.js"></script>
+                    </div>
 
                 </div>
 

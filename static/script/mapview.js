@@ -234,8 +234,17 @@ function handleSaveRoute(evt) {
 function confirmSavedRoute(confirmationMessage){
 
     $('#save-form').attr('style','display:none ;');  
-    const savedRouteName = confirmationMessage['route_name']
-    alert( savedRouteName + ' saved!')
+    const savedRouteName = confirmationMessage['route_name'];
+    const savedRouteSuccess = confirmationMessage['success'];
+
+    if (savedRouteSuccess == 'true'){
+        alert( savedRouteName + ' saved!')
+    }
+        
+    else if (savedRouteSuccess == 'false'){
+        alert( savedRouteName + ' could not be saved. Try again.')
+    } 
+        
 }
 
 
@@ -463,7 +472,7 @@ function handleBboxSend(evt) {
 
     // the outout of the get request (what is returned from the url route)
     // is sent as the parameter to addBboxAndRoute
-    $.get('/route_geometry.geojson', formInputs, addBboxAndRoute);
+    $.get('/generate_route_data.json', formInputs, addBboxAndRoute);
 
     
 }
