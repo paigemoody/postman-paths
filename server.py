@@ -234,18 +234,37 @@ def get_animate_point_data(route_id):
 def get_all_bbox_coordinates_for_collection(collection_id):
     """Given route id, return edges geometry json"""
 
-    # goal output -> return let fitBoundsArray = [[minX, minY] , [maxX, maxY]];
+    # goal output -> return let fitBoundsArray = [[minX, minY] , [maxX, maxY]]
 
-    # get all coordinates for bboxes in collection
-    # make list of all Xs
-    # make list of all Ys
+    fitBoundsArray = []
 
-    # get max and min for Xs and for Ys
+    # get all routes for collection:
 
-    # bbox_geometry_obj = BboxGeometry.query.filter((BboxGeometry.route_id == route_id)).first()
-    # bbox_geojson = bbox_geometry_obj.bbox_geometry
+    all_routes_in_collection = Route.query.filter(Route.collection_id == collection_id).all()
 
-    return jsonify("fitBoundsArray" : fitBoundsArray)
+    all_lng = [] #x
+    all_lat = [] #y
+    
+    for route in all_routes_in_collection:
+
+        bbox_geometry = route.bbox.bbox_geometry
+
+        coordinates_list = bbox_geometry['features'][0]['geometry']['coordinates'][0]
+
+        for coordinate in coordinates_list:
+            all_lng.append(coordinate[0])
+            all_lat.append(coordinate[1])
+        # all_route_ids_in_collection.append()
+
+    min_x = min(all_lng)
+    min_y = min(all_lat)
+    max_x = max(all_lng)
+    max_y = max(all_lat)
+
+
+    fitBoundsArray = [[min_x, min_y] , [max_x, max_y]];
+
+    return jsonify({"fitBoundsArray" : fitBoundsArray})
 
 @app.route('/collections/get_collection_data/<collection_id>/all_routes.json') # make into queue job, some job_id
 @login_required

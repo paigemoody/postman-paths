@@ -43,7 +43,7 @@ function showAllRoutes(evt, collectionId) {
                 map.removeSource(source);
             }
 
-        })
+        });
 
         const routeIds = collectionJson['route_ids'];
 
@@ -155,31 +155,26 @@ function showAllRoutes(evt, collectionId) {
                     }
             });    
 
-            // BBOX to use for centering map 
-            // add all bbox coordinates to allCoords array
-
-            // bboxSource = `collections/get_route_data/${id}/bbox_geometry.json`
-
-            // $.get(bboxSource, function (featureCollection) {
-
-            //     bboxCoordsArray = featureCollection.features[0].geometry.coordinates;
-
-            //     bboxCoordsArray.forEach(coord => {
-            //         console.log("coord:",coord);
-            //         allBboxCoords.push(coord);
-
-            //         console.log("allBboxCoords",allBboxCoords)
-            //     });
-            // });
+            
 
         });
 
-        // use array of all bbox coords to zoom to extent of coolection
-        console.log("allBboxCoords len:", allBboxCoords.length)
-        const bboxLineString = turf.lineString(allBboxCoords);
+        // BBOX to use for centering map 
+            // add all bbox coordinates to allCoords array
 
-        console.log(bboxLineString);
+        bboxSource = `/collections/get_collection_data/${collectionId}/all_bbox_coordinates.json`
 
-        
+        $.get(bboxSource, function (fitBoundsJson) {
+
+            fitBoundsArray = fitBoundsJson["fitBoundsArray"];
+
+            map.fitBounds(fitBoundsArray, {padding: {
+                                    top: 80, 
+                                    bottom:100, 
+                                    left: 60, 
+                                    right: 60}
+                    });
+        });
+    
     });   
 };
