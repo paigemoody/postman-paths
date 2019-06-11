@@ -7,7 +7,8 @@
   <link rel = "stylesheet" href = "static/style/base.css" />
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
   <link href='https://fonts.googleapis.com/css?family=Didact Gothic' rel='stylesheet'>
-  <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+  <link rel="shortcut icon" href="{{ url_for('static', filename='nav.png') }}">
+
   <title> WƎave </title>
 
   {% block head_content %}
@@ -41,7 +42,7 @@
 
             {% if current_user.is_authenticated %}
               <li class="nav-item">
-                <a class="nav-link" href="/collections"> <i class="fas fa-tasks"></i>  Routes</a> 
+                <a class="nav-link" href="/collections"> <i class="fas fa-tasks"></i>  Collections</a> 
                 <!-- Routes -->
               </li>
               <li class="nav-item">
@@ -68,7 +69,7 @@
                 
                 {% for message in messages %}
                   
-                  <div class="alert alert-warning" role="alert" id="success-alert">
+                  <div class="alert alert-dark" role="alert" id="success-alert">
                     <strong>{{message}}</strong>
                   </div>
 
