@@ -38,11 +38,8 @@ what the user clicks -->
 </div>   -->
 
 <div class="main-content">
-  
-
-
   <div id="login-options">
-    <div>
+    <div class = "login">
       <h2>LOG IN</h2>
         <form method="POST" action="/login_submission">
           <ul>
@@ -76,9 +73,9 @@ what the user clicks -->
 
     var map = new mapboxgl.Map({
       container: 'map',
-      style: 'mapbox://styles/paigeemoody/cjwjzqywq2orj1dqqvdvwchhm',
+      style: 'mapbox://styles/paigeemoody/cjwrd9yfe1mt41cp2cvaafrmq',
       center: [-122.400932, 37.758250],
-      zoom: 13,
+      zoom: 11,
       pitch: 45
     });
      
@@ -92,43 +89,19 @@ what the user clicks -->
      
      
     map.on('load', function () {
-      // Start the animation.
+    //   // Start the animation.
       rotateCamera(0);
        
-      // Add 3d buildings and remove label layers to enhance the map
-      var layers = map.getStyle().layers;
-      for (var i = 0; i < layers.length; i++) {
-        if (layers[i].type === 'symbol' && layers[i].layout['text-field']) {
-        // remove text labels
-          map.removeLayer(layers[i].id);
-          }
-      }
-       
-      map.addLayer({
-      'id': '3d-buildings',
-      'source': 'composite',
-      'source-layer': 'building',
-      'filter': ['==', 'extrude', 'true'],
-      'type': 'fill-extrusion',
-      'minzoom': 15,
-      'paint': {
-      'fill-extrusion-color': '#aaa',
-       
-      // use an 'interpolate' expression to add a smooth transition effect to the
-      // buildings as the user zooms in
-      'fill-extrusion-height': [
-      "interpolate", ["linear"], ["zoom"],
-      15, 0,
-      15.05, ["get", "height"]
-      ],
-      'fill-extrusion-base': [
-      "interpolate", ["linear"], ["zoom"],
-      15, 0,
-      15.05, ["get", "min_height"]
-      ],
-      'fill-extrusion-opacity': .6
-      }
-      });
+    //   // Add 3d buildings and remove label layers to enhance the map
+    //   // var layers = map.getStyle().layers;
+
+    //   // for (var i = 0; i < layers.length; i++) {
+    //   //   if (layers[i].type === 'symbol' && layers[i].layout['text-field']) {
+    //   //   // remove text labels
+    //   //     map.removeLayer(layers[i].id);
+    //   //     }
+    //   // }
+
       });
     </script>
 
