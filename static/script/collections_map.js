@@ -18,8 +18,6 @@ collectionButtons.forEach(collectionButton => {
 
         console.log(collectionId)
         // get the id of the collection
-
-        // call your awesome function here
         showAllRoutes(this, collectionId); // 'this' refers to the current button on for loop
    
     }, false);
@@ -52,7 +50,7 @@ function showAllRoutes(evt, collectionId) {
         routeIds.forEach(route_id => {
 
             const id = route_id;
-            // POINT FOR ANIMATION
+            // // POINT FOR ANIMATION 
             animationId = `point${id}`
             animationSource = `/collections/get_route_data/${id}/animate_point_geometry.json`
 
@@ -191,13 +189,114 @@ routeButtons.forEach(routeButton => {
         // prevent browser's default action
         event.preventDefault();
 
-        routeId = this.id
+        let routeId = this.id
 
-        console.log("\n\n\nrouteId:",routeId)
+        bboxSource = `/collections/get_route_data/${routeId}/route_bounds_geometry.json`
 
+        $.get(bboxSource, function (fitBoundsJson) {
 
-        // // call your awesome function here
-        // showAllRoutes(this, collectionId); // 'this' refers to the current button on for loop
-   
+            fitBoundsArray = fitBoundsJson["fitBoundsArray"];
+
+            map.fitBounds(fitBoundsArray, {padding: {
+                                    top: 40, 
+                                    bottom:50, 
+                                    left: 30, 
+                                    right: 30}
+                    });
+        });
+
+        $.getJSON(`/collections/get_route_data/${routeId}/route_geometry.json`, function(routeJson) {
+            
+            const route = routeJson;
+
+            const startCoordinate = route.features[0].geometry.coordinates[0];
+
+            console.log("route coords:", startCoordinate)
+
+            // A single point that animates along the route.
+            // Coordinates are initially set to the first coordinate 
+            // in the route
+            let point  = {
+                "type": "FeatureCollection",
+                "features": [{
+                "type": "Feature",
+                "properties": {},
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": startCoordinate
+                    }
+                }]
+            }
+
+            let lineDistance = route.features[0]["properties"]["route_length_km"];
+
+            console.log('lineDistance', lineDistance);
+            // initialize an path list, segments along the route will be added to the path
+            // each item in path will be one coordinatate
+            let path = [];
+            // Number of steps to use in the path and animation, more steps means
+            // a smoother path and animation, but too many steps will result in a
+            // low frame rate
+            const steps = 500; // lower steps = faster movement along route 
+            // make small route line segments to animate
+            // add the coordinates of each segment to the path list 
+            for (var i = 0; i < lineDistance; i += lineDistance / steps) {
+
+                // i is the distance you've traveled along the route
+                let input_line = route.features[0];
+
+                const distance_along_line = i; 
+
+                // turf.along takes a LineString and 
+                // returns a Point at a specified distance along the line.
+                let options = {units: 'kilometers'};
+
+                let segment = turf.along(input_line, distance_along_line, options);
+
+                console.log(segment)
+
+                path.push(segment.geometry.coordinates);
+                //  bug with not totally returning the original point
+                // need to add something that forces the return
+            }
+
+            // Update the route with calculated path coordinates
+            // route.features[0].geometry.coordinates = path;
+            route.features[0].geometry.coordinates = path;
+
+            // Used to increment the value of the point measurement against the route.
+            let counter = 0
+
+            function animate() {
+                // Update point geometry to a new position based on counter denoting
+                // the index to access the path.
+                // what makes the icon move
+                // need to control for the end of the route where you don't want
+                // to index outside of the coordinates array
+                if (counter < (route.features[0].geometry.coordinates).length) {
+                    point.features[0].geometry.coordinates = route.features[0].geometry.coordinates[counter];
+                } else {
+                    point.features[0].geometry.coordinates = route.features[0].geometry.coordinates[counter-1];
+                }; 
+                
+                point.features[0].properties.bearing = 0;
+
+                // Update the animation point with the new data.
+
+                let sourceId = `point${routeId}`
+
+                map.getSource(sourceId).setData(point);
+
+                // Request the next frame of animation so long the end has not been reached.
+                if (counter < steps) {
+                    requestAnimationFrame(animate);
+                }
+
+                counter = counter + 1;
+            }
+            animate(counter);
+        });
+
+        
     }, false);
 })

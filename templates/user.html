@@ -97,7 +97,7 @@ body {
 }
 
 
-.tabcontent p {
+.tabcontent li {
     font-size: 12px;
 }
 
@@ -120,7 +120,11 @@ body {
                 <!-- make a button for each route name -->
                 <div class="tab"  class="row">
                     {% for collection in current_user.collections %}
-                        <button id="{{collection.collection_id}}" class="tablinks" onclick="openCollection(event, '{{collection.collection_name}}')">{{collection.collection_name}}
+                        <button 
+                          id="{{collection.collection_id}}" 
+                          class="tablinks" 
+                          onclick="openCollection(event, '{{collection.collection_name}}')"> 
+                          {{collection.collection_name}}
                         </button>
                     {% endfor %}
                 </div>  
@@ -133,14 +137,27 @@ body {
                           <!-- <h3>{{collection.collection_name}}</h3> -->
                           <ul>
                               {% for route in collection.routes %}
-                                <button id="{{route.route_id}}" class="animate"><i class="fa fa-play fa-sm" aria-hidden="true"></i>   {{(route.route_name)}}</button><br>
+                                <button 
+                                id="{{route.route_id}}" 
+                                class="animate">
+                                <i class="fa fa-play fa-sm" aria-hidden="true">
+                                  
+                                </i>   
+                                  {{(route.route_name)}}
+                                </button>
+
+                                <br>
                                 <!-- <div id="desc-{{route.route_id}}" class="route-details" style='display:none ;'> -->
 
                                 <div id="desc-{{route.route_id}}" class="route-details">
                                     {% if route.route_geom.route_length != None %}
+                                    <ul>
+                                      <li id="length">Length: {{ (route.route_geom.route_length / 1.609) | round(2) }} mi</li>
+                                      <li id="walking time">Duration: {{ (route.route_geom.route_length * 15) | round(0)}} min </li>
+                                      
 
-                                    <p id="length">Length: {{ (route.route_geom.route_length / 1.609) | round(2) }} mi</p>
-
+                                    </ul>
+                                    
                                     {% endif %}
                                 </div>
 
@@ -152,7 +169,7 @@ body {
                         
                         {% endfor %}
                         <script>
-                        function openCollection(evt, cityName) {
+                        function openCollection(evt, collectionName) {
 
                               var i, tabcontent, tablinks;
                               tabcontent = document.getElementsByClassName("tabcontent");
@@ -170,7 +187,7 @@ body {
 
                               }
 
-                              document.getElementById(cityName).style.display = "block";
+                              document.getElementById(collectionName).style.display = "block";
                         
                               evt.currentTarget.className += " active";
                         }

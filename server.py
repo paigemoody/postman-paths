@@ -231,7 +231,7 @@ def get_animate_point_data(route_id):
 
 @app.route('/collections/get_collection_data/<collection_id>/all_bbox_coordinates.json')
 @login_required
-def get_all_bbox_coordinates_for_collection(collection_id):
+def get_bounds_array_for_collection(collection_id):
     """Given route id, return edges geometry json"""
 
     # goal output -> return let fitBoundsArray = [[minX, minY] , [maxX, maxY]]
@@ -254,6 +254,41 @@ def get_all_bbox_coordinates_for_collection(collection_id):
         for coordinate in coordinates_list:
             all_lng.append(coordinate[0])
             all_lat.append(coordinate[1])
+        # all_route_ids_in_collection.append()
+
+    min_x = min(all_lng)
+    min_y = min(all_lat)
+    max_x = max(all_lng)
+    max_y = max(all_lat)
+
+
+    fitBoundsArray = [[min_x, min_y] , [max_x, max_y]];
+
+    return jsonify({"fitBoundsArray" : fitBoundsArray})
+
+@app.route('/collections/get_route_data/<route_id>/route_bounds_geometry.json')
+@login_required
+def get_bounds_array_for_route(route_id):
+    """Given route id, return bounds array json"""
+
+    print(route_id)
+
+    fitBoundsArray = []
+
+    # get all routes for collection:
+
+    route = Route.query.filter(Route.route_id == route_id).first()
+
+    all_lng = [] #x
+    all_lat = [] #y
+    
+    bbox_geometry = route.bbox.bbox_geometry
+
+    coordinates_list = bbox_geometry['features'][0]['geometry']['coordinates'][0]
+
+    for coordinate in coordinates_list:
+        all_lng.append(coordinate[0])
+        all_lat.append(coordinate[1])
         # all_route_ids_in_collection.append()
 
     min_x = min(all_lng)

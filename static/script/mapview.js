@@ -80,12 +80,12 @@ function animateRoute(evt){
 
     // initialize an path list, segments along the route will be added to the path
     // each item in path will be one coordinatate
-    var path = [];
+    let path = [];
 
     // Number of steps to use in the path and animation, more steps means
     // a smoother path and animation, but too many steps will result in a
     // low frame rate
-    var steps = 500; // lower steps = faster movement along route 
+    const steps = 500; // lower steps = faster movement along route 
 
     // make small route line segments to animate
     // add the coordinates of each segment to the path list 
@@ -176,14 +176,18 @@ function handleSaveRoute(evt) {
     const edgesData = map.getSource('edges')._data;
     const routeLineData = map.getSource('route')._data;
 
-    // get route length 
-    let routeLength = 0;
-    // get edges coordinates 
-    const edgesFeatures = edgesData.features;
-    edgesFeatures.forEach(edge => {
-        let edgeLength = edge.properties.length;
-        routeLength += edgeLength;
-    })
+    const routeLength = routeLineData.features[0].properties.route_length_km
+
+    console.log(routeLength)
+
+    // // get route length 
+    // let routeLength = 0;
+    // // get edges coordinates 
+    // const edgesFeatures = edgesData.features;
+    // edgesFeatures.forEach(edge => {
+    //     let edgeLength = edge.properties.length;
+    //     routeLength += edgeLength;
+    // })
         
 
     // if there is no route name given - name NoRouteName

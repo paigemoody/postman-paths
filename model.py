@@ -166,7 +166,7 @@ class RouteGeometry(db.Model):
     route_geom_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     route_id = db.Column(db.Integer, db.ForeignKey('routes.route_id'))
     route_geometry = db.Column(db.JSON, nullable=False)
-    route_length = db.Column(db.Integer, nullable=True)
+    route_length = db.Column(db.Float, nullable=True)
 
 ##############################################################################
 # Helper functions

@@ -176,13 +176,16 @@ def load_routes_geoms():
         
         row = row.rstrip()
 
-        route_geom_id, route_id, route_geometry = row.split("|")
+        route_geom_id, route_id, route_length ,route_geometry = row.split("|") # add length 
+
+        print(route_length)
 
         route_geometry = json.loads(route_geometry)
 
         route_geom = RouteGeometry( route_geom_id=route_geom_id,
                                     route_id=route_id,
-                                    route_geometry=route_geometry)
+                                    route_geometry=route_geometry,
+                                    route_length=route_length) # add length 
         # add to the session 
         db.session.add(route_geom)
 
