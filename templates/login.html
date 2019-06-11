@@ -1,5 +1,32 @@
 {% extends 'base.html' %}
 
+{% block head_content%}
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.54.0/mapbox-gl.js'></script>
+
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.0.0/mapbox-gl.js'></script>
+
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.0.0/mapbox-gl.css' rel='stylesheet' />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+    <link rel='stylesheet' href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.54.0/mapbox-gl.css' />
+
+    <script src='https://api.tiles.mapbox.com/mapbox.js/plugins/turf/v3.0.11/turf.min.js'></script>
+    <script src='https://api.tiles.mapbox.com/mapbox.js/plugins/turf/v2.0.0/turf.min.js' charset='utf-8'></script>
+    <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.9/mapbox-gl-draw.js'></script>
+
+    <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.9/mapbox-gl-draw.css' type='text/css'/>
+
+    <link rel = "stylesheet" href = "static/style/login.css" />
+
+
+{% endblock %}
+
+
 {% block content %}
 
 <!-- add functionality that shows login or register forms depending on
@@ -10,28 +37,101 @@ what the user clicks -->
   <button>Register</button>
 </div>   -->
 
-<div>
-  <h2>LOG IN</h2>
-    <form method="POST" action="/login_submission">
-      <ul>
-        Username: <input type="text" name="username" value="happypanda1"required/> <br>
-        Password: <input type="password" name="password" value="something1"required/> <br>
-        <input type="submit" value="Log in" />
-      </ul>
-    </form>
+<div class="main-content">
+  
+
+
+  <div id="login-options">
+    <div>
+      <h2>LOG IN</h2>
+        <form method="POST" action="/login_submission">
+          <ul>
+            Username: <input type="text" name="username" value="happypanda1"required/> <br>
+            Password: <input type="password" name="password" value="something1"required/> <br>
+            <input type="submit" value="Log in" />
+          </ul>
+        </form>
+    </div>
+
+    <div class = "register">
+      <h2>Register</h2>
+        <form method="POST" action="/register">
+          <ul>
+            Username: <input type="text" name="username" value="test_user" required/> <br>
+            Email: <input type="text" name="email" value="test_user2@aol.fake"required/><br>
+            Password: <input type="password" name="password" value="1234" required/> <br>
+            <input type="submit" value="Register"/>
+
+          </ul>
+        </form>
+    </div> 
+
+  </div>
+
+  <div id="map">
+    <script>
+
+    mapboxgl.accessToken = 'pk.eyJ1IjoicGFpZ2VlbW9vZHkiLCJhIjoiY2owbDcyejhvMDJwNzJ5cDR0YXE1aG10MCJ9.a-JLnrmMPSJNwOGQdloTDA';
+
+
+    var map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/paigeemoody/cjwjzqywq2orj1dqqvdvwchhm',
+      center: [-122.400932, 37.758250],
+      zoom: 13,
+      pitch: 45
+    });
+     
+    function rotateCamera(timestamp) {
+      // clamp the rotation between 0 -360 degrees
+      // Divide timestamp by 100 to slow rotation to ~10 degrees / sec
+      map.rotateTo((timestamp / 100) % 360, {duration: 0});
+      // Request the next frame of the animation.
+      requestAnimationFrame(rotateCamera);
+    }
+     
+     
+    map.on('load', function () {
+      // Start the animation.
+      rotateCamera(0);
+       
+      // Add 3d buildings and remove label layers to enhance the map
+      var layers = map.getStyle().layers;
+      for (var i = 0; i < layers.length; i++) {
+        if (layers[i].type === 'symbol' && layers[i].layout['text-field']) {
+        // remove text labels
+          map.removeLayer(layers[i].id);
+          }
+      }
+       
+      map.addLayer({
+      'id': '3d-buildings',
+      'source': 'composite',
+      'source-layer': 'building',
+      'filter': ['==', 'extrude', 'true'],
+      'type': 'fill-extrusion',
+      'minzoom': 15,
+      'paint': {
+      'fill-extrusion-color': '#aaa',
+       
+      // use an 'interpolate' expression to add a smooth transition effect to the
+      // buildings as the user zooms in
+      'fill-extrusion-height': [
+      "interpolate", ["linear"], ["zoom"],
+      15, 0,
+      15.05, ["get", "height"]
+      ],
+      'fill-extrusion-base': [
+      "interpolate", ["linear"], ["zoom"],
+      15, 0,
+      15.05, ["get", "min_height"]
+      ],
+      'fill-extrusion-opacity': .6
+      }
+      });
+      });
+    </script>
+
+  </div>
 </div>
-
-<div class = "register">
-  <h2>Register</h2>
-    <form method="POST" action="/register">
-      <ul>
-        Username: <input type="text" name="username" value="test_user" required/> <br>
-        Email: <input type="text" name="email" value="test_user2@aol.fake"required/><br>
-        Password: <input type="password" name="password" value="1234" required/> <br>
-        <input type="submit" value="Register"/>
-
-      </ul>
-    </form>
-</div> 
-
 {% endblock %}
