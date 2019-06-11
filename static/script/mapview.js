@@ -176,59 +176,75 @@ function handleSaveRoute(evt) {
     const edgesData = map.getSource('edges')._data;
     const routeLineData = map.getSource('route')._data;
 
+    // get route length 
+    let routeLength = 0;
+    // get edges coordinates 
+    const edgesFeatures = edgesData.features;
+    edgesFeatures.forEach(edge => {
+        let edgeLength = edge.properties.length;
+        routeLength += edgeLength;
+    })
+        
+
     // if there is no route name given - name NoRouteName
     let  destinationRouteName = $('#route_name').val();
-    if (destinationRouteName == "") {
-        destinationRouteName = "NoRouteName";
+
+    const newCollectionName = $('#new-collection-name').val(); 
+    const existingCollectionName = $('#existing-collection-name').val();
+
+    let destinationCollection = "";
+
+    if (destinationRouteName.length < 1) {
+        // destinationRouteName = "NoName";
+        alert('Route name required.')
     }
-
-
-    let destinationCollection = ""; 
-
-    // check whether adding to existing or new collection 
-    let existingCollectionName = $('#existing-collection-name').val();
-    let newCollectionName = $('#new-collection-name').val();
-
-
-    // if there is a value in new-collection-name - use that name
-
-    if (newCollectionName != "") {
-        destinationCollection = newCollectionName;
-    }
-
-    // if not new collection name, user existing collection
-    else if (destinationCollection != "") {
-        destinationCollection = existingCollectionName;
-    }
-
-    // if not collection name is given add to "NoCollectionName" collection
 
     else {
-        destinationCollection = "NoCollectionName";
+
+        ;
+        // if user selected new collection in the drop down
+        // and entered something in the text box 
+        // set the destination collection name to 
+        if ((existingCollectionName == "New collection") && (newCollectionName.length>0))  {
+            alert(`New collection ${newCollectionName} approved!`);
+            destinationCollection = newCollectionName;
+        } 
+
+        // if user selected something in collection Name other than new ollection and blank
+        else if ((existingCollectionName != "New collection") && (existingCollectionName.length > 0)){
+            alert(`Existing collection ${existingCollectionName} approved!`);
+            destinationCollection = existingCollectionName;
+        }
+
+        else {
+            alert('Collection name required.');
+        }
+
     }
     
-        
-    console.log("destinationCollection",destinationCollection);
-    console.log("destinationRouteName",destinationRouteName);
+    // if a destination collection has been approved - send data to server for 
+    // saving in db
+    if (destinationCollection.length > 0) {
+        console.log("SEND STUFF");
+        console.log("routeLength:", routeLength);
+        const formInputs = {
+            'user_id' : userId,
+            'nodes_data' : JSON.stringify(nodesData),
+            'bbox_data' : JSON.stringify(bboxData),
+            'edges_data' : JSON.stringify(edgesData),
+            'route_line_data': JSON.stringify(routeLineData),
+            'destination_collection_name' : JSON.stringify(destinationCollection),
+            'new_route_name' : JSON.stringify(destinationRouteName),
+            'route_length' : routeLength
+          };
 
 
+        console.log("formInputs",formInputs);
+        // the outout of the get request (what is returned from the url route)
+        // is sent as the parameter to addBboxAndRoute
+        $.post('/save_route.json', formInputs, confirmSavedRoute);
 
-    console.log("SEND STUFF")
-    const formInputs = {
-        'user_id' : userId,
-        'nodes_data' : JSON.stringify(nodesData),
-        'bbox_data' : JSON.stringify(bboxData),
-        'edges_data' : JSON.stringify(edgesData),
-        'route_line_data': JSON.stringify(routeLineData),
-        'destination_collection_name' : JSON.stringify(destinationCollection),
-        'new_route_name' : JSON.stringify(destinationRouteName)
-      };
-
-
-    console.log("formInputs",formInputs);
-    // the outout of the get request (what is returned from the url route)
-    // is sent as the parameter to addBboxAndRoute
-    $.post('/save_route.json', formInputs, confirmSavedRoute);
+    }
 }
 
 function confirmSavedRoute(confirmationMessage){

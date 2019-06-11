@@ -69,17 +69,18 @@
                                 <option value="{{collection.collection_name}}">{{collection.collection_name}}</option>
 
                             {% endfor %}
-                            <option value="new-collection-dropdown">New collection</option>
+                            <!-- <option value="new-collection-dropdown">New collection</option> -->
+                            <option>New collection</option>
                         </select>
                         <button type='button' id='new-collection-btn' class='new-collection-btn'> 
                         New Collection
                         </button>
 
-                        <input type="text" id='new-collection-name' class='new-collection-name' name="new-collection-name">
+                        <input type="text" id='new-collection-name'> 
                     <br>
                     <br>                        
                     Route Name<br>
-                    <input type="text" name="route_name" id="route_name">
+                    <input type="text" name="route_name" id="route_name" required="">
                     <br>
 
 

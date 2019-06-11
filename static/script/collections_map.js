@@ -25,8 +25,6 @@ collectionButtons.forEach(collectionButton => {
     }, false);
 })
 
-
-
 // map.on("load", function() {
 function showAllRoutes(evt, collectionId) {
 
@@ -68,6 +66,7 @@ function showAllRoutes(evt, collectionId) {
                 "source": animationId,
                 "type": "symbol",
                 "layout": {
+                    'visibility': 'visible',
                     "icon-image": "police-15", // change later
                     // "icon-rotate": ["get", "bearing"],
                     // "icon-rotation-alignment": "map",
@@ -92,6 +91,7 @@ function showAllRoutes(evt, collectionId) {
                 "type" : "symbol",
                 "source" : nodesId,
                 "layout": {
+                    'visibility': 'none', //hide nodes layer at first 
                     "text-field": "{visit_order}",
                     "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
                     "text-offset": [0, 0.6],
@@ -117,6 +117,7 @@ function showAllRoutes(evt, collectionId) {
                 "id": edgesId,
                 "type": "line",
                 "source": edgesId, 
+                "layout": {'visibility': 'visible'},
                 "paint": {
                     // set line color based on number of traversals, to highlight which streets to 
                     // traverse twice
@@ -150,6 +151,7 @@ function showAllRoutes(evt, collectionId) {
                 "id": routeId, // rename?
                 "type": "line",
                 "source": routeId, 
+                "layout" : {'visibility': 'visible'},
                 "paint": {
                     "line-color" : 'rgba(0,0,205,0)',
                     }
@@ -178,3 +180,24 @@ function showAllRoutes(evt, collectionId) {
     
     });   
 };
+
+// handle route button click - show details of route 
+
+const routeButtons = document.querySelectorAll('.animate');
+
+routeButtons.forEach(routeButton => {
+
+    routeButton.addEventListener('click', function (event) {  
+        // prevent browser's default action
+        event.preventDefault();
+
+        routeId = this.id
+
+        console.log("\n\n\nrouteId:",routeId)
+
+
+        // // call your awesome function here
+        // showAllRoutes(this, collectionId); // 'this' refers to the current button on for loop
+   
+    }, false);
+})

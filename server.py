@@ -295,10 +295,15 @@ def save_route():
     edges_data = json.loads(request.form['edges_data'])
 
     route_line_data = json.loads(request.form['route_line_data'])
-    route_length = route_line_data['features'][0]['properties']['route_length_km']
+
+    # route_length = route_line_data['features'][0]['properties']['route_length_km']
+
+    route_length = json.loads(request.form['route_length'])
 
     new_route_name = json.loads(request.form['new_route_name'])
     desination_collection_name = json.loads(request.form['destination_collection_name'])
+
+    print("\n\n\ndesination collection name:", desination_collection_name)
 
     print(f"\n\n\n\n\nadding {new_route_name} to {desination_collection_name}")
 
@@ -314,14 +319,14 @@ def save_route():
 
     # check if user has collection with collection name 
         # if it's a new coll collection_check will be None
-    collection = Collection.query.filter((Collection.collection_name == desination_collection_name) & (Collection.user_id == user.user_id)).first()
+    collection = Collection.query.filter((Collection.collection_name == desination_collection_name) & (Collection.user_id == user_id)).first()
 
     # if the collection is new
     if collection == None:
 
         # make collection
         new_collection = Collection(
-                    user_id = user.user_id,
+                    user_id = user_id,
                     collection_name = desination_collection_name,
                     description = "" # need to add 
                     )
@@ -372,7 +377,8 @@ def save_route():
             db.session.commit()
 
             # update route_id to be that of the added route
-            added_route = Route.query.filter((Route.route_name == new_route_name) & (Route.collection.user_id == user.user_id))
+            # added_route = Route.query.filter((Route.route_name == new_route_name) & (Route.collection.user_id == user_id))
+            added_route = Route.query.filter(Route.route_name == new_route_name).first()
             route_id = added_route.route_id
                     
     # add geometries based on route id
@@ -387,7 +393,8 @@ def save_route():
 
     # get route id for the route that was just added 
     new_route_geom = RouteGeometry(route_id=route_id,
-                                   route_geometry=route_line_data)
+                                   route_geometry=route_line_data,
+                                   route_length=route_length)
     
     # add to the session and commit 
     db.session.add(new_route_geom)

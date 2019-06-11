@@ -35,6 +35,7 @@ body {
         width:100%;
     }
 
+
 /* Style the tab */
 .tab {
   overflow: hidden;
@@ -95,6 +96,11 @@ body {
 
 }
 
+
+.tabcontent p {
+    font-size: 12px;
+}
+
 </style>
 
 {% endblock %}
@@ -127,8 +133,16 @@ body {
                           <!-- <h3>{{collection.collection_name}}</h3> -->
                           <ul>
                               {% for route in collection.routes %}
+                                <button id="{{route.route_id}}" class="animate"><i class="fa fa-play fa-sm" aria-hidden="true"></i>   {{(route.route_name)}}</button><br>
+                                <!-- <div id="desc-{{route.route_id}}" class="route-details" style='display:none ;'> -->
 
-                                <button id="{{route.route_id}}" class="animate"><i class="fa fa-play fa-sm" aria-hidden="true"></i>    {{(route.route_name)}}</button><br>
+                                <div id="desc-{{route.route_id}}" class="route-details">
+                                    {% if route.route_geom.route_length != None %}
+
+                                    <p id="length">Length: {{ (route.route_geom.route_length / 1.609) | round(2) }} mi</p>
+
+                                    {% endif %}
+                                </div>
 
                               {% endfor %}
 
@@ -171,17 +185,6 @@ body {
             </div>
 
         </div>
-        <!-- <div id='map' class="row">
-          <script>
-            mapboxgl.accessToken = 'pk.eyJ1IjoicGFpZ2VlbW9vZHkiLCJhIjoiY2owbDcyejhvMDJwNzJ5cDR0YXE1aG10MCJ9.a-JLnrmMPSJNwOGQdloTDA';
-            var map = new mapboxgl.Map({
-                container: 'map', // container id
-                style: 'mapbox://styles/mapbox/streets-v11', // stylesheet location
-                center: [-74.50, 40], // starting position [lng, lat]
-                zoom: 9 // starting zoom
-            });
-          </script>
-        </div> -->
 </div>
 
 
