@@ -16,6 +16,8 @@ from model import User, Collection, Route, BboxGeometry,EdgesGeometry,NodesGeome
 
 from flask_login import LoginManager, login_user, logout_user, login_required
 
+from werkzeug.security import generate_password_hash, check_password_hash
+
 
 app = Flask(__name__)
 
@@ -66,7 +68,9 @@ def login_sub():
 
     print("\n\n\nuser:",user)
 
-    if user.password == password:
+    if check_password_hash(user.password, password):
+
+    # if user.password == password:
 
         user.is_authenticated = True 
 
@@ -86,7 +90,7 @@ def logout():
 
     logout_user()
 
-    return redirect('/')
+    return redirect('/login')
 
 @app.route("/register", methods=["POST"])
 def register_process():

@@ -6,6 +6,7 @@ import datetime
 from model import connect_to_db, db
 from server import app
 import json
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
 def load_users():
@@ -23,9 +24,9 @@ def load_users():
         user = User(user_id=user_id,
                     username=username,
                     email=email,
-                    password=password)
+                    password=generate_password_hash(password))
 
-        # add to the session 
+        # add to the session
         db.session.add(user)
 
     # commit data

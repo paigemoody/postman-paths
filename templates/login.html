@@ -32,35 +32,27 @@
 <!-- add functionality that shows login or register forms depending on
 what the user clicks -->
 
-<!-- <div>
-  <button>Login</button>
-  <button>Register</button>
-</div>   -->
-
 <div class="main-content">
   <div id="login-options">
 
     <div class = "login">
-      <h2>Log in</h2>
-        <form method="POST" action="/login_submission">
-          <ul>
-            Username: <input type="text" name="username" value="happypanda1"required/> <br>
-            Password: <input type="password" name="password" value="something1"required/> <br>
-            <input type="submit" value="Log in" />
-          </ul>
+        <form method="POST" action="/login_submission" class="form-style-1">
+          Username<br> <input type="text" name="username" required/><br>
+          Password<br><input type="password" name="password" required/><br>
+          <input id="submit" type="submit" value="Log in" />
         </form>
     </div>
 
-    <div class = "register">
-      <h2>Register</h2>
-        <form method="POST" action="/register">
-          <ul>
-            Username: <input type="text" name="username" value="test_user" required/> <br>
-            Email: <input type="text" name="email" value="test_user2@aol.fake"required/><br>
-            Password: <input type="password" name="password" value="1234" required/> <br>
-            <input type="submit" value="Register"/>
+    <br>
 
-          </ul>
+    <div class = "register">
+        <form method="POST" action="/register" class="form-style-1">
+          
+          Username<br><input type="text" name="username" required/><br>
+          Email<br><input type="text" name="email" required/><br>
+          Password<br><input type="password" name="password"required/> <br>
+          <input id="submit" type="submit" value="Register"/>
+
         </form>
     </div> 
 
@@ -74,7 +66,7 @@ what the user clicks -->
 
     var map = new mapboxgl.Map({
       container: 'map',
-      style: 'mapbox://styles/paigeemoody/cjwrd9yfe1mt41cp2cvaafrmq',
+      style: 'mapbox://styles/paigeemoody/cjwrd9yfe1mt41cp2cvaafrmq?optimize=true',
       center: [-122.400932, 37.758250],
       zoom: 11,
       pitch: 45
@@ -83,27 +75,16 @@ what the user clicks -->
     function rotateCamera(timestamp) {
       // clamp the rotation between 0 -360 degrees
       // Divide timestamp by 100 to slow rotation to ~10 degrees / sec
-      map.rotateTo((timestamp / 100) % 360, {duration: 0});
+      map.rotateTo((timestamp / 300) % 360, {duration: 0});
       // Request the next frame of the animation.
       requestAnimationFrame(rotateCamera);
     }
      
-     
     map.on('load', function () {
-    //   // Start the animation.
+    // Start animation.
       rotateCamera(0);
-       
-    //   // Add 3d buildings and remove label layers to enhance the map
-    //   // var layers = map.getStyle().layers;
 
-    //   // for (var i = 0; i < layers.length; i++) {
-    //   //   if (layers[i].type === 'symbol' && layers[i].layout['text-field']) {
-    //   //   // remove text labels
-    //   //     map.removeLayer(layers[i].id);
-    //   //     }
-    //   // }
-
-      });
+    });
     </script>
 
   </div>
