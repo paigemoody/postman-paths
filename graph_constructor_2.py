@@ -51,7 +51,8 @@ def get_list_of_all_pairs_lists(input_lst):
     """
     Takes in a list of items and returns a list of 
     lists, each containing tuples that represent 
-    pairings of odd nodes.   
+    pairings of list items. Each item can appear only
+    once in a list of pairs.  
 
     >>> alpha_list = ['A','B','C','D']
     >>> get_list_of_all_pairs_lists(alpha_list)
@@ -76,6 +77,7 @@ def get_list_of_all_pairs_lists(input_lst):
             other_items_list = input_lst[1:i] + input_lst[i+1:]
             
             for rest in get_list_of_all_pairs_lists(other_items_list):
+                
                 combos.append([pair] + rest)
                 
     return combos

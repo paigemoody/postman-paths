@@ -150,7 +150,7 @@ function animateRoute(evt){
 
         counter = counter + 1;
 
-        console.log("bearing:", point.features[0].properties.bearing);
+        // console.log("bearing:", point.features[0].properties.bearing);
     }
 
     animate(counter);

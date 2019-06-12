@@ -3,7 +3,7 @@
     background-color: rgba(255, 255, 255, .4);
     width: fit-content; 
     position: relative;
-    top: 15%;
+    top: 20%;
     margin: auto;
     padding: 20px;
     font-size: 14px;
@@ -36,15 +36,19 @@
   height: 100vh
 }
 
-#submit {
+.form-button {
     background-color: rgba(255, 255, 255, .9); 
     z-index: 2; 
     padding: 5px;
+    border: none;
+    outline: none;
 }
 
-#submit:hover {
-    background-color: #FFE400; 
-    color: black;
+.form-button:hover {
+    background-color: #cad2d3; 
+    color: white;
+    outline: none;
 }
+
 
 

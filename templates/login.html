@@ -34,27 +34,53 @@ what the user clicks -->
 
 <div class="main-content">
   <div id="login-options">
+    <!-- show options and determine which form to show -->
+    <div id="initial-options" >
+      <button class="form-button" id="login-choice">Log in</button> 
+      <br> or <br>
+      <button class="form-button" id="register-choice">Register</button>
+    </div>
 
-    <div class = "login">
+    <div class="login" style="display:none;" id="login-form">
         <form method="POST" action="/login_submission" class="form-style-1">
           Username<br> <input type="text" name="username" required/><br>
           Password<br><input type="password" name="password" required/><br>
-          <input id="submit" type="submit" value="Log in" />
+          <input class="form-button" type="submit" value="Log in"/>
         </form>
     </div>
 
     <br>
 
-    <div class = "register">
+    <div class="register" id="register-form" style="display:none;">
         <form method="POST" action="/register" class="form-style-1">
           
           Username<br><input type="text" name="username" required/><br>
           Email<br><input type="text" name="email" required/><br>
           Password<br><input type="password" name="password"required/> <br>
-          <input id="submit" type="submit" value="Register"/>
+          <input class="form-button" type="submit" value="Register"/>
 
         </form>
     </div> 
+
+    <script type="text/javascript">
+      
+      $('#login-choice').on('click', activateLoginForm);
+
+      function activateLoginForm(){
+        $('#initial-options').attr('style','display:none ;');
+        $('#login-form').removeAttr('style');
+      }
+
+      $('#register-choice').on('click', activateRegisterForm);
+
+      function activateRegisterForm(){
+        $('#initial-options').attr('style','display:none ;');
+        $('#register-form').removeAttr('style');
+      }
+
+
+
+    </script>
 
   </div>
 
