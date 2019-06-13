@@ -36,27 +36,35 @@ what the user clicks -->
   <div id="login-options">
     <!-- show options and determine which form to show -->
     <div id="initial-options" >
-      <button class="form-button" id="login-choice">Log in</button> 
-      <br> or <br>
-      <button class="form-button" id="register-choice">Register</button>
+      <button class="form-button" id="login-choice">Sign in</button> 
+      <br><br><br>
+      <button class="form-button" id="register-choice">Sign up</button><br><br> 
+      <button class="form-button" id="guest-choice">Continue as guest </button>
+
+
+      <!-- add guest button link to route generator -->
+
+      <!-- <a href="https://www.w3schools.com" class="w3-button w3-black">Link Button</a> --> 
+
     </div>
 
     <div class="login" style="display:none;" id="login-form">
         <form method="POST" action="/login_submission" class="form-style-1">
-          Username<br> <input type="text" name="username" required/><br>
-          Password<br><input type="password" name="password" required/><br>
-          <input class="form-button" type="submit" value="Log in"/>
-        </form>
+          <br> <input type="text" name="username" placeholder="username" required/><br>
+          <br><input type="password" name="password" placeholder="password" required/><br>
+          <input class="form-button" type="submit" value="Sign in"/>
+        </form><br><button class="form-button" id="back-to-login1"> Back </button>
     </div>
     <div class="register" id="register-form" style="display:none;">
         <form method="POST" action="/register" class="form-style-1">
-          Username<br><input type="text" name="username" required/><br>
-          Email<br><input type="text" name="email" required/><br>
-          Password<br><input type="password" name="password"required/> <br>
-          <input class="form-button" type="submit" value="Register"/>
-
-        </form>
+          <br><input type="text" name="username" placeholder="username"required/><br>
+          <br><input type="email" name="email" placeholder="email" required/><br>
+          <br><input type="password" name="password"required placeholder="password"/><br>
+          <input class="form-button" type="submit" value="Sign up"/>
+        </form><br><button class="form-button" id="back-to-login2"> Back </button>
     </div> 
+
+
 
     <script type="text/javascript">
       
@@ -72,6 +80,23 @@ what the user clicks -->
       function activateRegisterForm(){
         $('#initial-options').attr('style','display:none ;');
         $('#register-form').removeAttr('style');
+      }
+
+      $('#guest-choice').on('click', sendToRouteGen);
+      
+      function sendToRouteGen() {
+        window.location.href = "/mapview";
+      }
+
+      $('#back-to-login1').on('click', backToLogin);
+      $('#back-to-login2').on('click', backToLogin);
+
+      function backToLogin() {
+
+        $('#initial-options').removeAttr('style');
+        $('#login-form').attr('style','display:none ;');
+        $('#register-form').attr('style','display:none ;');
+
       }
 
     </script>

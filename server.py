@@ -43,7 +43,7 @@ def load_user(user_id):
 @app.route('/')
 def index():
     """Homepage."""
-    return render_template("homepage.html")
+    return redirect('/login')
 
 @app.route('/login')
 def get_login():
@@ -68,18 +68,20 @@ def login_sub():
 
     print("\n\n\nuser:",user)
 
-    if check_password_hash(user.password, password):
+    if user:
 
-    # if user.password == password:
+        if check_password_hash(user.password, password):
 
-        user.is_authenticated = True 
+        # if user.password == password:
 
-        login_user(user)
+            user.is_authenticated = True 
 
-        flash(f'Welcome {user.username}!') 
+            login_user(user)
 
-        # return redirect(f"/user/{user.user_id}") 
-        return redirect(f"/collections") 
+            flash(f'Welcome {user.username}!') 
+
+            # return redirect(f"/user/{user.user_id}") 
+            return redirect(f"/collections") 
 
     alert('Wrong username and/or password')
     return redirect('/login')
@@ -123,7 +125,12 @@ def register_process():
 
             flash(f'Welcome {new_user.username}!')
 
-    return redirect('/')
+            return redirect('/mapview')
+
+        else: 
+            flash(f'Bummer .... {username} already taken!')
+
+    return redirect('/login')
 
 
 # @app.route("/user/<user_id>")

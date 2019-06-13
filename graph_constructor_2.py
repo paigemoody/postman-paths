@@ -74,6 +74,7 @@ def get_list_of_all_pairs_lists(input_lst):
         for i in range(1,len(input_lst)):
             
             pair = (first_item,input_lst[i])
+            
             other_items_list = input_lst[1:i] + input_lst[i+1:]
             
             for rest in get_list_of_all_pairs_lists(other_items_list):

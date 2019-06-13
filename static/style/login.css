@@ -7,9 +7,29 @@
     margin: auto;
     padding: 20px;
     font-size: 14px;
+    text-align: center;
+    border-radius: 10px;
+    height: 300px;
 }
 
-.form-style-1 input[type="text"],input[type="password"]{ 
+#login-choice {
+    font-size: 26px;
+    padding: 35px;
+}
+
+#register-choice {
+    font-size: 16px;
+}
+
+#guest-choice {
+    font-size: 16px;
+}
+
+#back-to-login2, #back-to-login2 {
+    font-size: 12px;
+}
+
+.form-style-1 input[type="text"],input[type="password"], input[type="email"]{ 
     box-sizing: border-box;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -19,9 +39,16 @@
     border: none;
     height: 15px;
     line-height: 15px;
-    font-size: 14px;
-    padding: 10px;
+    font-size: 16px;
+    padding: 14px;
+    text-align: center;
+    border-radius: 10px;
  }
+
+ input:focus {
+
+    color: black;
+}
 
 #map { 
         position:absolute; 
@@ -42,6 +69,7 @@
     padding: 5px;
     border: none;
     outline: none;
+    border-radius: 10px;
 }
 
 .form-button:hover {
