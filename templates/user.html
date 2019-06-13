@@ -19,9 +19,9 @@
 <style>
 
   body { 
-        margin:0; 
-        padding:0; 
-        font-family: 'Didact Gothic';
+    margin:0; 
+    padding:0; 
+    font-family: 'Didact Gothic';
   }
 
  #main-content {
@@ -31,19 +31,25 @@
   }
 
   #map { 
-          position:absolute; 
-          top:0; 
-          bottom:0; 
-          width:100%;
-          height: 85%;
-          border-radius: 10px 10px 10px 10px;
-      }
+    position:relative; 
+    top:0; 
+    bottom:0; 
+    width:100%;
+    height: 85%;
+    border-radius: 10px 10px 10px 10px;
+  }
+
+  .tablinks {
+    margin-bottom: 10px;
+    display: block; 
+    width: inherit;
+  }
 
   #all-content-row { 
     height: 100vh;
    }
 
-  #animate {
+  .animate {
     background-color: black:
     color: white; 
   }
@@ -57,26 +63,25 @@
       border: 10px;
   }
 
-  .container-2.custom-container {
-      padding: 0 20px;
-    }
-
   .route-info {
     background: #f2f2f2;
     /*border: 1px solid;*/
-    margin: 10px;
     padding: 8px;
     border-radius: 4px;
+    width: -webkit-fill-available;
+    margin: 10px; 
   }
 
   .route-info:hover {
     background-color: #ccd1d1;
     color: black;
+    width: -webkit-fill-available;
   }
 
   .tab {
-    overflow: hidden;
-    border-bottom: 10px;
+    /*overflow: hidden;*/
+    /*border-bottom: 10px;*/
+    height: fit-content;
   }
 
   .tab button { /* buttons inside the tab */
@@ -90,6 +95,7 @@
     font-size: 14px;
     color: #ccc;
     border-radius: 4px;
+    width: -webkit-fill-available;
   }
 
   .tab button:hover { /* Change background color of buttons on hover */
@@ -107,7 +113,7 @@
   
   .tabcontent { /* tab content */
     display: none;
-    padding: 6px 12px;
+    /*padding: 6px 12px;*/
   }
 
   .tabcontent button {
@@ -115,15 +121,23 @@
     font-size: 12px;
     color: black;
     border-radius: 10px;
+    float: right;
   }
-
-/*  .tabcontent button:hover {
-    background-color: white;
-    
-  }*/
 
   .tabcontent li {
       font-size: 12px;
+  }
+
+  #padding-row {
+    height: 5vh;
+  }
+
+  #map-col {
+    height: 75vh;
+  }
+
+  #h4 {
+    font-size: 20px;
   }
 
 </style>
@@ -132,32 +146,41 @@
 
 {% block content %}
 
-<div id="main-content" class="custom-container container">
+<!-- <div id="main-content" class="custom-container container"> -->
+
+<div id="main-content" class="container">
+
+  <div class="row" id="padding-row"></div>
 
   <div id="all-content-row" class="row">
 
-    <div class="col-2 order-md-1">
+    <div class="col-2 offset-1 order-md-1">
+      <div id="h4" >Collections</div>
+      <div class="tab">
 
-      <div class="tab"  class="row">
-        <h3>Collections</h3>
-            {% for collection in current_user.collections %}
-                <br>
+          {% for collection in current_user.collections %}
+          <div class="button-div">
                 <button 
                   id="{{collection.collection_id}}" 
                   class="tablinks" 
                   onclick="openCollection(event,'{{collection.collection_name}}')"> 
                   {{collection.collection_name}}
                 </button>
-                <br>
-            {% endfor %}
+          </div>
+          <br>
+          {% endfor %}
+          
+
       </div>  <!-- "tab" end --> 
     </div>
 
-    <div class="col-4 order-md-2">
-      <h3>   Routes</h3>
+    <div class="col-3 order-md-2">
+      <div id="h4">Routes </div>
+
       <div id="collection-cards" > <!-- removed class="container" -->
               
            <div  id="top-content">
+                  
                   <div class="tabcontent-parent">
 
                           {% for collection in current_user.collections %}
@@ -251,30 +274,21 @@
                               // wait until map is loaded to click the buttons
                               map.on('load', function (){
 
-                                const allCollectionButtons = document.getElementsByClassName("tablinks");
+                                  const allCollectionButtons = document.getElementsByClassName("tablinks");
 
-                                const firstCollectionButton = allCollectionButtons[0];
+                                  const firstCollectionButton = allCollectionButtons[0];
 
-                                firstCollectionButton.click();
+                                  firstCollectionButton.click();
 
-                                const allRouteDivs = document.getElementsByClassName("route-info");
+                                  const allRouteDivs = document.getElementsByClassName("route-info");
 
-                                console.log("allRouteDivs", allRouteDivs)
+                                  const firstRouteDiv= allRouteDivs[0];
 
-                                const firstRouteDiv= allRouteDivs[0];
+                                  firstRouteDiv.click();
 
-                                firstRouteDiv.click();
-
-                                });
+                                  });
 
                               });
-
-
-                            
-                              
-
-                             
-
 
                           </script>
 
@@ -287,6 +301,8 @@
     </div> <!-- "col-6 order-md-1" end--> 
 
     <div class="col-6 order-md-3">
+
+        <div id="padding-row"></div>
 
        <div id='map' class="row">
           <script type="text/javascript" src="static/script/collections_map.js"></script>

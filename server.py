@@ -14,7 +14,7 @@ from random import choice
 
 from model import User, Collection, Route, BboxGeometry,EdgesGeometry,NodesGeometry, RouteGeometry, connect_to_db, db
 
-from flask_login import LoginManager, login_user, logout_user, login_required
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -49,7 +49,21 @@ def index():
 def get_login():
     """Display login page."""
 
-    return render_template("login.html")
+    # if logged in, send to routes
+    if current_user.is_authenticated: 
+        print("\n\n\n\nLOGGED IN")
+        print(current_user.username)
+        return redirect('/collections')
+
+    # if not logged in show login
+    else: 
+        print("\n\n\n\nNOT LOGGED IN")
+        print(current_user)
+        return render_template("login.html")
+
+    
+
+        
 
 @app.route('/login_submission', methods=['POST'])
 def login_sub():

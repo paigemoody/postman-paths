@@ -463,25 +463,27 @@ function addBboxAndRoute(displayGeojsons) {
         });
 
     map.addLayer({
-        "id": "edges-geometry", // rename?
+        "id": "edges-geometry",
         "type": "line",
         "source": "edges", 
         "paint": {
             // set line color based on number of traversals, to highlight which streets to 
             // traverse twice
-            "line-color" : [
-                'match',
-                ['get', 'num_traversals'],
-                1, 'rgba(0,0,205,0.3)', 
-                // 1, '#e55e5e', // pink
-                // 2, '#fbb03b', // orange
-                2, 'rgba(0,0,205,0.6)',
-                // 3, '#00FF00', // green
-                3, 'rgba(0,0,205,0.9)',
-                'rgba(0,0,205,1)',
-                // '#123c69' // blue
-            ],
-            "line-width": 8,
+            // "line-color" : [
+            //     'match',
+            //     ['get', 'num_traversals'],
+            //     1, 'rgba(0,0,205,0.3)', 
+            //     // 1, '#e55e5e', // pink
+            //     // 2, '#fbb03b', // orange
+            //     2, 'rgba(0,0,205,0.6)',
+            //     // 3, '#00FF00', // green
+            //     3, 'rgba(0,0,205,0.9)',
+            //     'rgba(0,0,205,1)',
+            //     // '#123c69' // blue
+            // ],
+            "line-color" : 'rgba(0,0,205,0.3)',
+            "line-width": 3,
+            // "line-width": 8,
             "line-opacity": 1
         }
     }, "nodes-geometry"); // second agument determines which layer should be direcly above the bbox layer

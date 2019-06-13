@@ -1,11 +1,30 @@
 
 #map { 
         position:absolute; 
+        position:inherit;
         top:0; 
         bottom:0; 
         width:100%;
-    }
+        height: 90vh;
+        padding: 0px;
+        border-radius: 10px 10px 10px 10px;
+}
 
+/*.row {
+  height: 120px;
+}*/
+
+#page-row { 
+    height: 85vh;
+   }
+
+#padding-row {
+  height: 5vh;
+}
+
+.row map-btns {
+  padding: 2px;
+}
 
 .map-btns {
   -webkit-animation: fadein 2s; /* Safari, Chrome and Opera > 12.1 */
@@ -56,10 +75,10 @@
     color: black;
 }
 
-.main-content {
+/*.main-content {
   position: relative;
   height: 100vh
-}
+}*/
 
 .save-route-form {
     z-index: 2;
