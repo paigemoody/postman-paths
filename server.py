@@ -83,7 +83,7 @@ def login_sub():
             # return redirect(f"/user/{user.user_id}") 
             return redirect(f"/collections") 
 
-    alert('Wrong username and/or password')
+    flash('Wrong username and/or password')
     return redirect('/login')
 
 @app.route("/logout")
@@ -109,10 +109,18 @@ def register_process():
     old_user_username = User.query.filter(User.username == username).first()
 
     # try to get user associated with email from database
-    if not old_user_email:
 
-        if not old_user_username:
-            # if no user returned: make a new user object with email, username and pw
+    # if username is taken, tell user and send them back to the login page
+    if old_user_username:
+
+        flash(f'Bummer .... {username} already taken!')
+
+    else:
+        
+        if not old_user_email:
+        # if email isn't already taken by an existing account
+
+            # make a new user object with email, username and pw
 
             new_user = User(email=email,username=username,password=password)
 
@@ -127,9 +135,7 @@ def register_process():
 
             return redirect('/mapview')
 
-        else: 
-            flash(f'Bummer .... {username} already taken!')
-
+    
     return redirect('/login')
 
 

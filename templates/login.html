@@ -37,9 +37,13 @@ what the user clicks -->
     <!-- show options and determine which form to show -->
     <div id="initial-options" >
       <button class="form-button" id="login-choice">Sign in</button> 
-      <br><br><br>
-      <button class="form-button" id="register-choice">Sign up</button><br><br> 
+      <br><br>
       <button class="form-button" id="guest-choice">Continue as guest </button>
+      <br><br>
+      <i id="login-icon" class="fas fa-location-arrow fa-5x"></i>
+      <br><br>
+      <div id="sign-up-prompt">Don't have an account?</div>
+      <button class="form-button" id="register-choice">Sign up</button><br><br> 
 
 
       <!-- add guest button link to route generator -->
@@ -53,7 +57,10 @@ what the user clicks -->
           <br> <input type="text" name="username" placeholder="username" required/><br>
           <br><input type="password" name="password" placeholder="password" required/><br>
           <input class="form-button" type="submit" value="Sign in"/>
-        </form><br><button class="form-button" id="back-to-login1"> Back </button>
+        </form>
+        <br><br><br><br><br>
+        <button class="form-button" id="back-to-login1">Back </button><br>
+        <i id="decorator-icon" class="fas fa-location-arrow"></i>
     </div>
     <div class="register" id="register-form" style="display:none;">
         <form method="POST" action="/register" class="form-style-1">
@@ -61,7 +68,8 @@ what the user clicks -->
           <br><input type="email" name="email" placeholder="email" required/><br>
           <br><input type="password" name="password"required placeholder="password"/><br>
           <input class="form-button" type="submit" value="Sign up"/>
-        </form><br><button class="form-button" id="back-to-login2"> Back </button>
+        </form><br><br><button class="form-button"> Back </button><br>
+        <i id="decorator-icon" class="fas fa-location-arrow"></i>
     </div> 
 
 

@@ -9,7 +9,7 @@
     font-size: 14px;
     text-align: center;
     border-radius: 10px;
-    height: 300px;
+    height: 360px;
 }
 
 #login-choice {
@@ -17,13 +17,27 @@
     padding: 35px;
 }
 
-#register-choice {
-    font-size: 16px;
+#guest-choice {
+    font-size: 14px;
 }
 
-#guest-choice {
-    font-size: 16px;
+#register-choice {
+    font-size: 11px;
+    padding: 8px;
 }
+
+#sign-up-prompt {
+    font-size: 11px;
+}
+
+#login-icon {
+    color: rgba(255, 255, 255,.8);
+}
+
+#decorator-icon {
+    color: rgba(255, 255, 255);
+}
+
 
 #back-to-login2, #back-to-login2 {
     font-size: 12px;
