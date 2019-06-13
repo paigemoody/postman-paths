@@ -36,7 +36,6 @@
           bottom:0; 
           width:100%;
           height: 85%;
-          /*padding: inherit;*/
           border-radius: 10px 10px 10px 10px;
       }
 
@@ -62,14 +61,6 @@
       padding: 0 20px;
     }
 
-/*  .col-2.custom-column{
-    padding-right: 0px;
-  }
-
-  .col-4.custom-column{
-    padding-left: 0px;
-  }*/
-
   .route-info {
     background: #f2f2f2;
     /*border: 1px solid;*/
@@ -79,24 +70,19 @@
   }
 
   .route-info:hover {
-    /*background: #cad2d3;;*/
     background-color: #ccd1d1;
     color: black;
   }
-  /* Style the tab */
+
   .tab {
     overflow: hidden;
-    /*border: 1px solid #ccc;*/
-    /*background-color: #f1f1f1;*/
     border-bottom: 10px;
   }
 
-  /* Style the buttons inside the tab */
-  .tab button {
+  .tab button { /* buttons inside the tab */
     background-color: #f2f2f2;
     float: left;
     border: none;
-    /*border-radius: 10px 10px 0 0;*/
     outline: none;
     cursor: pointer;
     padding: 6px 8px;
@@ -104,38 +90,28 @@
     font-size: 14px;
     color: #ccc;
     border-radius: 4px;
-/*    width: 100%;*/
   }
 
-  /* Change background color of buttons on hover */
-  .tab button:hover {
-    /*background-color: #ddd;*/
+  .tab button:hover { /* Change background color of buttons on hover */
     background-color: #ccd1d1;
     color: black;
 
   }
 
-  /* Create an active/current tablink class */
-  .tab button.active {
-    /*border-bottom: 10px;*/
+  .tab button.active { /* Create an active/current tablink class */
+
     z-index: 2;
     color: black;
     background-color: #ccd1d1;
   }
-
-  /* Style the tab content */
-  .tabcontent {
+  
+  .tabcontent { /* tab content */
     display: none;
     padding: 6px 12px;
-    /*border: 1px solid #ccc;*/
-    /*border-top: none;*/
-    /*border-radius: 0 10px 0 0;*/
-    /*width: 40%;*/
   }
 
   .tabcontent button {
     border: none;
-    /*transition: 0.3s;*/
     font-size: 12px;
     color: black;
     border-radius: 10px;
@@ -149,10 +125,6 @@
   .tabcontent li {
       font-size: 12px;
   }
-
-/*  .collection-cards {
-    width: 40%;
-  }*/
 
 </style>
 
@@ -174,7 +146,7 @@
                 <button 
                   id="{{collection.collection_id}}" 
                   class="tablinks" 
-                  onclick="openCollection(event, '{{collection.collection_name}}')"> 
+                  onclick="openCollection(event,'{{collection.collection_name}}')"> 
                   {{collection.collection_name}}
                 </button>
                 <br>
@@ -187,27 +159,14 @@
     <div class="col-4 order-md-2">
       Routes
 
-      <div id="collection-cards"> <!-- removed class="container" -->
+      <div id="collection-cards" > <!-- removed class="container" -->
               
            <div  id="top-content">
-                  <!-- make a button for each route name -->
-                  <!-- <div class="tab"  class="row">
-                      {% for collection in current_user.collections %}
-                          <button 
-                            id="{{collection.collection_id}}" 
-                            class="tablinks" 
-                            onclick="openCollection(event, '{{collection.collection_name}}')"> 
-                            {{collection.collection_name}}
-                          </button>
-                      {% endfor %}
-                  </div>  "tab" end --> 
                   <div class="tabcontent-parent">
 
                           {% for collection in current_user.collections %}
 
                           <div id="{{collection.collection_name}}" class="tabcontent">
-
-                              
 
                                 {% for route in collection.routes %}
                                 <div class="route-info" id="{{route.route_name}}" onclick="highLightRoute(event, '{{route.route_name}}')"
@@ -237,11 +196,8 @@
                                   </div> <!-- "route-info" end -->
                                 {% endfor %}
 
-                              
-
                           </div> <!-- collection.collection_name end -->
 
-                          
                           {% endfor %}
                           
                           <script>
@@ -290,13 +246,29 @@
                                     routecontent[i].style.color = '#ccc';
                                   }
 
-                              // document.getElementById(routeName).style.display = "block";
-
-                              // evt.currentTarget.className += " active";
-
                               evt.currentTarget.style[`background-color`] = '#ccd1d1';
                               evt.currentTarget.style[`color`] = 'black';
                             }
+
+                            // when document loads, have the browser click the first collection name button, then the first play button in that collection 
+
+                            $(document).ready(function () {
+                              const allCollectionButtons = document.getElementsByClassName("tablinks");
+
+                              const firstCollectionButton = allCollectionButtons[0];
+
+                              firstCollectionButton.click();
+
+                              // const allRouteButtons = document.getElementsByClassName("animate");
+
+                              // const firstRouteButton = allRouteButtons[0];
+
+                              // firstRouteButton.click();
+
+                            });
+
+                             
+
 
                           </script>
 

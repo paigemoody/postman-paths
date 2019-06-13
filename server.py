@@ -464,9 +464,6 @@ def save_route():
     db.session.add(new_edges_geom)
     db.session.commit()
 
-    print("\n\n\ndone?")
-
-
     return jsonify({ 
         "route_name" : new_route_name,
         "success" : "true"

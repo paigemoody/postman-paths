@@ -46,12 +46,12 @@
                 <!-- Routes -->
               </li>
               <li class="nav-item">
-                <a id="logout" class="nav-link" href="/logout"> <i class="fas fa-door-open"></i>  Logout</a> 
+                <a id="logout" class="nav-link" href="/logout"> <i class="fas fa-door-open"></i>  Sign out</a> 
                 <!-- logout -->
               </li>
             {% else %}
               <li class="nav-item">
-                <a id="login" class="nav-link" href="/login"> <i class="fas fa-door-closed"></i>  Login</a>
+                <a id="login" class="nav-link" href="/login"> <i class="fas fa-door-closed"></i>  Sign in</a>
                 <!-- login -->
               </li>
             {% endif %}
@@ -74,10 +74,11 @@
                   </div>
 
                   <script type="text/javascript">
+                    
                   $("#success-alert").fadeTo(2000, 500).slideUp(500, function(){
                       $("#success-alert").slideUp(500);
                   });
-                </script>
+                 </script>
 
                 {% endfor %}
 
