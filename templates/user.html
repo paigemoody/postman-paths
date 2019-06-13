@@ -97,8 +97,8 @@
     color: black;
 
   }
-
-  .tab button.active { /* Create an active/current tablink class */
+/* Create an active/current tablink class */
+  .tab button.active { 
 
     z-index: 2;
     color: black;
@@ -117,10 +117,10 @@
     border-radius: 10px;
   }
 
-  .tabcontent button:hover {
+/*  .tabcontent button:hover {
     background-color: white;
     
-  }
+  }*/
 
   .tabcontent li {
       font-size: 12px;
@@ -139,8 +139,7 @@
     <div class="col-2 order-md-1">
 
       <div class="tab"  class="row">
-
-        Collections<br>
+        <h3>Collections</h3>
             {% for collection in current_user.collections %}
                 <br>
                 <button 
@@ -152,13 +151,10 @@
                 <br>
             {% endfor %}
       </div>  <!-- "tab" end --> 
-
-
     </div>
 
     <div class="col-4 order-md-2">
-      Routes
-
+      <h3>   Routes</h3>
       <div id="collection-cards" > <!-- removed class="container" -->
               
            <div  id="top-content">
@@ -230,8 +226,6 @@
 
                             function highLightRoute(evt, routeName) {
 
-                              console.log(routeId);
-
                               //  get all tabcontent items 
 
                               routecontent = document.getElementsByClassName("route-info");
@@ -253,19 +247,31 @@
                             // when document loads, have the browser click the first collection name button, then the first play button in that collection 
 
                             $(document).ready(function () {
-                              const allCollectionButtons = document.getElementsByClassName("tablinks");
 
-                              const firstCollectionButton = allCollectionButtons[0];
+                              // wait until map is loaded to click the buttons
+                              map.on('load', function (){
 
-                              firstCollectionButton.click();
+                                const allCollectionButtons = document.getElementsByClassName("tablinks");
 
-                              // const allRouteButtons = document.getElementsByClassName("animate");
+                                const firstCollectionButton = allCollectionButtons[0];
 
-                              // const firstRouteButton = allRouteButtons[0];
+                                firstCollectionButton.click();
 
-                              // firstRouteButton.click();
+                                const allRouteDivs = document.getElementsByClassName("route-info");
 
-                            });
+                                console.log("allRouteDivs", allRouteDivs)
+
+                                const firstRouteDiv= allRouteDivs[0];
+
+                                firstRouteDiv.click();
+
+                                });
+
+                              });
+
+
+                            
+                              
 
                              
 
