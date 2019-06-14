@@ -9,8 +9,10 @@ var map = new mapboxgl.Map({
     // style: 'mapbox://styles/paigeemoody/cjwjzqywq2orj1dqqvdvwchhm',
 
     style: 'mapbox://styles/paigeemoody/cjwjzqywq2orj1dqqvdvwchhm',
-    center: [-122.400932, 37.758250], // starting position is balloonicorn example route centr
-    zoom: 15 // starting zoom
+    // center: [-122.400932, 37.758250], // starting position is balloonicorn example route centr
+    
+    center: [-122.480543, 37.769302],
+    zoom: 13 // starting zoom
 });
 
 
@@ -26,6 +28,11 @@ var draw = new MapboxDraw({
     }
 
 }); 
+
+map.on('load', function() {
+    alert("Use the polygon tool to draw a bounding box!")
+
+})
 
 // handle drop down form in save route action
 let inputBox = document.getElementById('existing-collection-name');
@@ -178,16 +185,6 @@ function handleSaveRoute(evt) {
 
     const routeLength = routeLineData.features[0].properties.route_length_km
 
-    console.log(routeLength)
-
-    // // get route length 
-    // let routeLength = 0;
-    // // get edges coordinates 
-    // const edgesFeatures = edgesData.features;
-    // edgesFeatures.forEach(edge => {
-    //     let edgeLength = edge.properties.length;
-    //     routeLength += edgeLength;
-    // })
         
 
     // if there is no route name given - name NoRouteName
@@ -229,8 +226,6 @@ function handleSaveRoute(evt) {
     // if a destination collection has been approved - send data to server for 
     // saving in db
     if (destinationCollection.length > 0) {
-        console.log("SEND STUFF");
-        console.log("routeLength:", routeLength);
         const formInputs = {
             'user_id' : userId,
             'nodes_data' : JSON.stringify(nodesData),
@@ -242,10 +237,9 @@ function handleSaveRoute(evt) {
             'route_length' : routeLength
           };
 
-
-        console.log("formInputs",formInputs);
         // the outout of the get request (what is returned from the url route)
         // is sent as the parameter to addBboxAndRoute
+        $('#save-route-form-btn').attr('style','display:none ;')
         $.post('/save_route.json', formInputs, confirmSavedRoute);
 
     }
@@ -254,14 +248,11 @@ function handleSaveRoute(evt) {
 function confirmSavedRoute(confirmationMessage){
 
     $('#save-form').attr('style','display:none ;');  
+
     const savedRouteName = confirmationMessage['route_name'];
     const savedRouteSuccess = confirmationMessage['success'];
 
-    if (savedRouteSuccess == 'true'){
-        alert( savedRouteName + ' saved!')
-    }
-        
-    else if (savedRouteSuccess == 'false'){
+    if (savedRouteSuccess == 'false'){
         alert( savedRouteName + ' could not be saved. Try again.')
     } 
         
