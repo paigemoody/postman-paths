@@ -72,8 +72,12 @@
     border-radius: 4px;
     padding: 6px 8px;
     width: -webkit-fill-available;
-    margin: 40px;
+    margin: 30px;
     margin-top: 10px;
+}
+
+select#dropdown, input#new-collection-name,input#route_name {
+  width: inherit;
 }
 
 .dropbtn {
@@ -83,6 +87,7 @@
   font-size: 14px;
   border: none;
   cursor: pointer;
+  width: inherit;
 }
 
 .dropbtn:hover, .dropbtn:focus {
