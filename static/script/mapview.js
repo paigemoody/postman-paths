@@ -8,7 +8,7 @@ var map = new mapboxgl.Map({
     // style: 'mapbox://styles/mapbox/satellite-v9', //hosted style id
     // style: 'mapbox://styles/paigeemoody/cjwjzqywq2orj1dqqvdvwchhm',
 
-    style: 'mapbox://styles/paigeemoody/cjwrd9yfe1mt41cp2cvaafrmq',
+    style: 'mapbox://styles/paigeemoody/cjwjzqywq2orj1dqqvdvwchhm',
     center: [-122.400932, 37.758250], // starting position is balloonicorn example route centr
     zoom: 15 // starting zoom
 });
