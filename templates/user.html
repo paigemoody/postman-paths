@@ -2,19 +2,20 @@
 
 
 {% block head_content %}
-<link href='https://fonts.googleapis.com/css?family=Didact Gothic' rel='stylesheet'>
+<!-- <link href='https://fonts.googleapis.com/css?family=Didact Gothic' rel='stylesheet'> -->
 <script src="https://cdn.jsdelivr.net/npm/@turf/turf@5/turf.min.js"></script>
 
 <!-- Map stuff -->
 
-<meta charset='utf-8' />
-<title>Display a map</title>
+<!-- <meta charset='utf-8' /> -->
 <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
 <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.0.0/mapbox-gl.js'></script>
 <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.0.0/mapbox-gl.css' rel='stylesheet' />
 <!-- end map stuff -->
 
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
 <style>
 
@@ -208,7 +209,7 @@
                                     <div id="desc-{{route.route_id}}" class="route-details">
                                         {% if route.route_geom.route_length != None %}
                                         <!-- <ul> -->
-                                          Length: {{ (route.route_geom.route_length / 1.609) | round(2) }} mi
+                                          Distance: {{ (route.route_geom.route_length / 1.609) | round(2) }} mi
                                           <br>
                                           Duration: {{ ( route.route_geom.route_length * 15) | round | int}} min 
                                           

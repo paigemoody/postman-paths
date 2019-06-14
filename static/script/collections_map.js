@@ -238,7 +238,11 @@ routeButtons.forEach(routeButton => {
             // Number of steps to use in the path and animation, more steps means
             // a smoother path and animation, but too many steps will result in a
             // low frame rate
-            const steps = 500; // lower steps = faster movement along route 
+            
+            // const steps = 500; // lower steps = faster movement along route 
+
+            const steps = 2000
+            // const steps = 5000
             // make small route line segments to animate
             // add the coordinates of each segment to the path list 
             for (var i = 0; i < lineDistance; i += lineDistance / steps) {
