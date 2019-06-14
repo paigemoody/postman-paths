@@ -76,8 +76,25 @@
     margin-top: 10px;
 }
 
+select{
+    text-align-last:center;
+    padding-right: 29px;
+    direction: ltr;
+}
+
 select#dropdown, input#new-collection-name,input#route_name {
   width: inherit;
+  text-align: center;
+}
+
+select option:checked:after {
+    content: attr(title);
+    background: #666;
+    color: #fff;
+    position: absolute;
+    width: 100%;
+    left: 0;
+    border: none;
 }
 
 .dropbtn {

@@ -52,35 +52,36 @@
                 <div id="map-btns" class="row">
                
                     <!-- <div id='calc-route'>  -->
-                        <!-- <button type='button' id='calcuate-route-btn' class='calc-route-btn' style="display:none;" >  -->
-                        <button type='button' id='calcuate-route-btn' class='calc-route-btn'>
+                        <button type='button' id='calcuate-route-btn' class='calc-route-btn' style="display:none;" > 
+                        <!-- <button type='button' id='calcuate-route-btn' class='calc-route-btn'> -->
                         Calculate Route  
                         </button>
                     <!-- </div>   -->
 
                     <!-- <div id='animate-route'>  -->
-                        <!-- <button type='button' id='animate-route-btn' class='animate-route-btn' style="display:none;">  -->
-                        <button type='button' id='animate-route-btn' class='animate-route-btn'> 
+                        <button type='button' id='animate-route-btn' class='animate-route-btn' style="display:none;"> 
+                        <!-- <button type='button' id='animate-route-btn' class='animate-route-btn'>  -->
                             Animate Route  
                         </button>
                     <!-- </div> -->
 
                     <!-- <div id='save-route'> -->
                         {% if current_user.is_authenticated %}
-                            <!-- <button type='button' id='save-route-btn' class='save-route-btn' style="display:none;">  -->
-                            <button type='button' id='save-route-btn' class='save-route-btn'> 
+                            <button type='button' id='save-route-btn' class='save-route-btn' style="display:none;"> 
+                            <!-- <button type='button' id='save-route-btn' class='save-route-btn'>  -->
                                 Save Route 
                             </button>
                         {% endif %}
                         <script type="text/javascript"></script>
                      <!-- </div> -->
                 
-                    <!-- <div id='save-form' class="row" style="display:none;" > -->
+                <!-- <div id='save-form' class="row" style="display:none;" > -->
+
                 </div>
 
                 <br><br>
                 
-                <div id='save-form' class="row">
+                <div id='save-form' class="row" style="display: none;">
 
                     <div class="save-route-form" id="save-route-form"> 
                         
@@ -88,18 +89,38 @@
 
                         <textarea id="existing-collection-name" name="existing-collection-name" hidden="true"></textarea>
 
-                        <select id="dropdown">
+                        <select id="dropdown" onchange="myFunction()">
+
                             <option value="" disabled selected hidden>...</option>
+
                             {% for collection in current_user.collections %}
-                                <option value="{{collection.collection_name}}">{{collection.collection_name}}</option>
+                            <option value="{{collection.collection_name}}">{{collection.collection_name}}</option>
                             {% endfor %}
-                            <option>New collection</option>
+                            <option value = "New collection"> New collection</option>
+
                         </select>
+
+                        <script type="text/javascript">
+                            // display new collection name text field if user selects new collection 
+                            // dropdown option
+                             $("#dropdown").change(function() {
+                                if ($("#dropdown").val() == "New collection") {
+                                    $('#new-collection-name').removeAttr('style');
+                                }
+
+                                else {
+                                    $('#new-collection-name').attr('style','display:none ;');
+                                }
+                            });
+
+                        </script>
+
+                       
                         
-                        <br><input type="text" id='new-collection-name'><br><br>     
+                        <br><input type="text" id='new-collection-name' style="display:none;" placeholder="New collection name"><br>     
 
                         Route Name<br>
-                        <input type="text" name="route_name" id="route_name" required=""><br>
+                        <input type="text" name="route_name" id="route_name" placeholder="New route name" required=""><br>
                         
                         
                         <input type="text" id="current-user-id" value="{{current_user.user_id}}" style="display:none;">
@@ -110,8 +131,7 @@
                 <!-- save form row-->
 
                 <div>
-                   <!--  <button type='button' id='save-route-form-btn' class='save-route-form-btn' style="display:none;">  -->
-                    <button type='button' id='save-route-form-btn' class='save-route-form-btn'> 
+                    <button type='button' id='save-route-form-btn' class='save-route-form-btn' style="display:none;"> 
                     Save Route! 
                     </button>
                 </div>

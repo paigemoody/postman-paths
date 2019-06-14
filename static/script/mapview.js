@@ -506,6 +506,7 @@ function addBboxAndRoute(displayGeojsons) {
 
 }
 
+
 // when the calculate route button is clicked, send bbox geometry to 
 
 
