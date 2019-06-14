@@ -10,9 +10,9 @@
         border-radius: 10px 10px 10px 10px;
 }
 
-/*.row {
-  height: 120px;
-}*/
+.row map-btns {
+  padding: 2px;
+}
 
 #page-row { 
     height: 85vh;
@@ -22,74 +22,65 @@
   height: 5vh;
 }
 
-.row map-btns {
-  padding: 2px;
-}
+#map-btns { 
 
-.map-btns {
-  -webkit-animation: fadein 2s; /* Safari, Chrome and Opera > 12.1 */
-}
-.save-route-btn {
+  background-color: white;
 
-    background-color: rgba(255, 255, 255, .9);
-/*    position: absolute;*/
-    height: 75px;
-    width: 150px;  
-    z-index: 2; 
 
 }
 
-.save-route-btn:hover {
-    background-color: #FFE400; 
+#save-route-form-btn { 
+    background-color: #f2f2f2;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 6px 8px;
+    transition: 0.3s;
+    font-size: 14px;
     color: black;
+    border-radius: 4px;
+    width: -webkit-fill-available;
+    margin-top: 10px;
+    -webkit-animation: fadein 2s;
 }
 
-.animate-route-btn:hover {
-    background-color: #FFE400; 
+#map-btns button { /* buttons inside the tab */
+    background-color: #f2f2f2;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 6px 8px;
+    transition: 0.3s;
+    font-size: 14px;
     color: black;
+    border-radius: 4px;
+    width: -webkit-fill-available;
+    margin-top: 10px;
+    -webkit-animation: fadein 2s;
 }
 
-.calc-route-btn {
-    background-color: rgba(255, 255, 255, .9);
-    /*position: absolute;*/
-    height: 75px;
-    width: 150px;  
-    z-index: 2; 
-} 
-
-.calc-route-btn:hover {
-    background-color: #FFE400; 
-    color: black;
+#map-btns button:hover, #save-route-form-btn:hover {
+  background-color: #ccd1d1;
+  color: black;
 }
-
-.animate-route-btn{
-    background-color: rgba(255, 255, 255, .9);
-    /*position: absolute;*/
-    height: 75px;
-    width: 150px;   
-    z-index: 2; 
-} 
-
-.animate-route-btn:hover {
-    background-color: #FFE400; 
-    color: black;
-}
-
-/*.main-content {
-  position: relative;
-  height: 100vh
-}*/
 
 .save-route-form {
-    z-index: 2;
     background-color: gainsboro; 
+    text-align: center;
+    border-radius: 4px;
+    padding: 6px 8px;
+    width: -webkit-fill-available;
+    margin: 40px;
+    margin-top: 10px;
 }
 
 .dropbtn {
   background-color: #3498DB;
   color: white;
   padding: 16px;
-  font-size: 16px;
+  font-size: 14px;
   border: none;
   cursor: pointer;
 }
@@ -120,6 +111,11 @@
   display: block;
 }
 
+#dropdown{
+  color: black;
+  background-color: white;
+}
+
 .dropdown a:hover {
     background-color: #ddd;
 }
@@ -140,29 +136,3 @@
   z-index: 5;
   position: relative;
 }
-/*
-.change-style-b{
-    position: fixed;
-    bottom: 0;
-    right: 0;
-    height: 75px;
-    width: 150px;
-}
-
-.change-style-b:hover {
-    background-color: #fd5e79;
-    color: white;
-}
-
-.change-style-s{
-    position: fixed;
-    bottom: 0;
-    right: -5;
-    height: 75px;
-    width: 150px;
-}
-
-.change-style-s:hover {
-    background-color: black;
-    color: white;
-}*/
