@@ -60,13 +60,6 @@ dropdownList.onchange = function(){
      inputBox.innerHTML = this.value;
 }
 
-
-
-
-
-
-
-
 //GET ROUTE CALCULATION
 $('#calcuate-route-btn').on('click', handleBboxSend);
 
@@ -87,9 +80,12 @@ function handleBboxSend(evt) {
         "id": "bbox-geometry",
         "type": "fill",
         "source": "bbox", 
+        "layout" :{
+            'visibility': 'none',
+        },
         "paint": {
             'fill-color': '#FFE400',
-            'fill-opacity': 0.3,
+            'fill-opacity': 0.4,
         }
     }); 
 
@@ -173,7 +169,8 @@ function addBboxAndRoute(displayGeojsons) {
         "source": "point",
         "type": "symbol",
         "layout": {
-            "icon-image": "person", // CHANGE
+            'visibility': 'visible',
+            "icon-image": "person", 
             "icon-allow-overlap": true,
             "icon-ignore-placement": true,
             "icon-size": 1.25,
@@ -192,10 +189,11 @@ function addBboxAndRoute(displayGeojsons) {
         "type" : "symbol",
         "source" : "nodes",
         "layout": {
+            'visibility': 'none',
             "text-field": "{visit_order}",
             "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
             "text-offset": [0, 0.6],
-            "text-anchor": "top"
+            "text-anchor": "bottom"
             },
         paint: {
             "text-color": "#000000",
@@ -214,7 +212,7 @@ function addBboxAndRoute(displayGeojsons) {
         "type": "line",
         "source": "edges", 
         "paint": {
-            "line-color" : 'rgba(0,0,205,0.3)',
+            "line-color" : 'rgba(230,201,71,0.6)',
             "line-width": 3,
             "line-opacity": 1
         }
