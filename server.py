@@ -60,7 +60,7 @@ def get_login():
     if current_user.is_authenticated: 
         print("\n\n\n\nLOGGED IN")
         print(current_user.username)
-        return redirect('/collections')
+        return redirect('/mapview')
 
     # if not logged in show login
     else: 

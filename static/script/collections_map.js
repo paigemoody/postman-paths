@@ -1,7 +1,7 @@
 mapboxgl.accessToken = 'pk.eyJ1IjoicGFpZ2VlbW9vZHkiLCJhIjoiY2owbDcyejhvMDJwNzJ5cDR0YXE1aG10MCJ9.a-JLnrmMPSJNwOGQdloTDA';
 var map = new mapboxgl.Map({
     container: 'map', // container id
-    style: 'mapbox://styles/paigeemoody/cjwybo7pp4ku71cmqx42blr79',
+    style: 'mapbox://styles/paigeemoody/cjwygdg6mkbna1co7unnuchl6',
     center: [-122.453554,37.762436], // starting position [lng, lat]
     zoom: 10 // starting zoom
 });
@@ -26,11 +26,11 @@ collectionButtons.forEach(collectionButton => {
 // add icon image source to map
 map.on("load", function() {
 
-    map.loadImage('/static/style/person_clipboard.png', function(error, image) {
+    map.loadImage('/static/style/person_clipboard_teal.png', function(error, image) {
 
         // if (error) throw error;
 
-        map.addImage('cat', image)
+        map.addImage('person', image)
 
     });
 });
@@ -83,30 +83,13 @@ function showAllRoutes(evt, collectionId) {
                 "type": "symbol",
                 "layout": {
                     'visibility': 'visible',
-                    "icon-image": "cat", 
+                    "icon-image": "person", 
                     "icon-allow-overlap": true,
                     "icon-ignore-placement": true,
-                    "icon-size": 1.25
+                    "icon-size": 1.25,
+                    "icon-anchor" : "bottom"
                 }
             });
-            // })
-
-            // ```````save old version``````````
-            // map.addLayer({
-            //     "id": animationId,
-            //     "source": animationId,
-            //     "type": "symbol",
-            //     "layout": {
-            //         'visibility': 'visible',
-            //         "icon-image": "police-15", // change later
-            //         // "icon-rotate": ["get", "bearing"],
-            //         // "icon-rotation-alignment": "map",
-            //         "icon-allow-overlap": true,
-            //         "icon-ignore-placement": true,
-            //         "icon-size": 2
-            //     }
-            // });
-            // ``````````````````````````````````
             
             //NODES
             nodesId = `nodes${id}`
@@ -165,7 +148,7 @@ function showAllRoutes(evt, collectionId) {
                     //     'rgba(0,0,205,1)',
                     //     // '#123c69' // blue
                     // ],
-                    "line-color" : 'rgba(0,0,205,0.3)',
+                    "line-color" : 'rgba(230,201,71,0.6)',
                     "line-width": 3,
                     "line-opacity": 1
                 }

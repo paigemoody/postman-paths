@@ -5,6 +5,7 @@ body {
       font-family: 'Didact Gothic';
 }
 
+
 #flash-message-wrapper { 
     z-index: 2;
 }
