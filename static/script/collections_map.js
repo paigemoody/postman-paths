@@ -1,4 +1,5 @@
 mapboxgl.accessToken = 'pk.eyJ1IjoicGFpZ2VlbW9vZHkiLCJhIjoiY2owbDcyejhvMDJwNzJ5cDR0YXE1aG10MCJ9.a-JLnrmMPSJNwOGQdloTDA';
+
 var map = new mapboxgl.Map({
     container: 'map', // container id
     style: 'mapbox://styles/paigeemoody/cjwygdg6mkbna1co7unnuchl6',
@@ -25,16 +26,10 @@ collectionButtons.forEach(collectionButton => {
 
 // add icon image source to map
 map.on("load", function() {
-
     map.loadImage('/static/style/person_clipboard_teal.png', function(error, image) {
-
-        // if (error) throw error;
-
         map.addImage('person', image)
-
     });
 });
-
 
 function showAllRoutes(evt, collectionId) {
 
@@ -50,33 +45,21 @@ function showAllRoutes(evt, collectionId) {
                 map.removeLayer(source);
                 map.removeSource(source);
             }
-
         });
 
         const routeIds = collectionJson['route_ids'];
-
         // get all routeCoords from all node geometries in collection
         // to be used to zoom map
         let allBboxCoords = []
-        
         routeIds.forEach(route_id => {
-
             const id = route_id;
             // // POINT FOR ANIMATION 
             animationId = `point${id}`
-
-            console.log("animationId",animationId)
-
             animationSource = `/collections/get_route_data/${id}/animate_point_geometry.json`
-
             map.addSource(animationId, {
                 "type": "geojson",
                 "data": animationSource
             });
-            // add point to be animated to graph 
-
-
-
             map.addLayer({
                 "id": animationId,
                 "source": animationId,
@@ -90,7 +73,7 @@ function showAllRoutes(evt, collectionId) {
                     "icon-anchor" : "bottom"
                 }
             });
-            
+
             //NODES
             nodesId = `nodes${id}`
             nodesSource = `collections/get_route_data/${id}/nodes_geometry.json`
@@ -122,32 +105,16 @@ function showAllRoutes(evt, collectionId) {
             // EDGES
             edgesId = `edges${id}`
             edgesSource = `collections/get_route_data/${id}/edges_geometry.json`
-
             map.addSource(edgesId, {
                 "type": "geojson",
                 "data": edgesSource
             });
-
             map.addLayer({
                 "id": edgesId,
                 "type": "line",
                 "source": edgesId, 
                 "layout": {'visibility': 'visible'},
                 "paint": {
-                    // set line color based on number of traversals, to highlight which streets to 
-                    // traverse twice
-                    // "line-color" : [
-                    //     'match',
-                    //     ['get', 'num_traversals'],
-                    //     1, 'rgba(0,0,205,0.3)', 
-                    //     // 1, '#e55e5e', // pink
-                    //     // 2, '#fbb03b', // orange
-                    //     2, 'rgba(0,0,205,0.6)',
-                    //     // 3, '#00FF00', // green
-                    //     3, 'rgba(0,0,205,0.9)',
-                    //     'rgba(0,0,205,1)',
-                    //     // '#123c69' // blue
-                    // ],
                     "line-color" : 'rgba(230,201,71,0.6)',
                     "line-width": 3,
                     "line-opacity": 1
@@ -157,12 +124,10 @@ function showAllRoutes(evt, collectionId) {
             // ROUTE GEOM FOR ANIMATION
             routeId = `route${id}`
             routeSource = `collections/get_route_data/${id}/route_geometry.json`
-
             map.addSource(routeId, {
                 "type": "geojson",
                 "data": routeSource
             });
-
             map.addLayer({
                 "id": routeId, // rename?
                 "type": "line",
@@ -172,20 +137,11 @@ function showAllRoutes(evt, collectionId) {
                     "line-color" : 'rgba(0,0,205,0)',
                     }
             });    
-
-            
-
         });
-
-        // BBOX to use for centering map 
-            // add all bbox coordinates to allCoords array
-
+        // BBOX to use for centering map -- add all bbox coordinates to allCoords array
         bboxSource = `/collections/get_collection_data/${collectionId}/all_bbox_coordinates.json`
-
         $.get(bboxSource, function (fitBoundsJson) {
-
             fitBoundsArray = fitBoundsJson["fitBoundsArray"];
-
             map.fitBounds(fitBoundsArray, {padding: {
                                     top: 80, 
                                     bottom:100, 
@@ -198,23 +154,16 @@ function showAllRoutes(evt, collectionId) {
 };
 
 // handle route button click - show details of route 
-
 const routeButtons = document.querySelectorAll('.animate');
-
 routeButtons.forEach(routeButton => {
 
     routeButton.addEventListener('click', function (event) {  
         // prevent browser's default action
         event.preventDefault();
-
         let routeId = this.id
-
         bboxSource = `/collections/get_route_data/${routeId}/route_bounds_geometry.json`
-
         $.get(bboxSource, function (fitBoundsJson) {
-
             fitBoundsArray = fitBoundsJson["fitBoundsArray"];
-
             map.fitBounds(fitBoundsArray, {padding: {
                                     top: 40, 
                                     bottom:50, 
@@ -223,14 +172,9 @@ routeButtons.forEach(routeButton => {
                     });
         });
 
-        $.getJSON(`/collections/get_route_data/${routeId}/route_geometry.json`, function(routeJson) {
-            
+        $.getJSON(`/collections/get_route_data/${routeId}/route_geometry.json`, function(routeJson) {  
             const route = routeJson;
-
             const startCoordinate = route.features[0].geometry.coordinates[0];
-
-            console.log("route coords:", startCoordinate)
-
             // A single point that animates along the route.
             // Coordinates are initially set to the first coordinate 
             // in the route
@@ -245,35 +189,15 @@ routeButtons.forEach(routeButton => {
                     }
                 }]
             }
-
             let lineDistance = route.features[0]["properties"]["route_length_km"];
-
-            // console.log('lineDistance', lineDistance);
             // initialize an path list, segments along the route will be added to the path
             // each item in path will be one coordinatate
             let path = [];
             // Number of steps to use in the path and animation, more steps means
             // a smoother path and animation, but too many steps will result in a
             // low frame rate
-            
-            // const steps = 500; // lower steps = faster movement along route 
-
-            // const steps = 2000
-
             const zoom = map.getZoom()
-
-            
-
-
-            // const steps = 2000
             const steps = (lineDistance/.004)*1.2
-            console.log("zoom:", zoom)
-            console.log("distance:", lineDistance)
-            console.log("steps:", steps)
-
-
-
-            // longer line should have fewer steps -> ie. move more per move
 
             // make small route line segments to animate
             // add the coordinates of each segment to the path list 
@@ -281,27 +205,20 @@ routeButtons.forEach(routeButton => {
 
                 // i is the distance you've traveled along the route
                 let input_line = route.features[0];
-
                 const distance_along_line = i; 
-
                 // turf.along takes a LineString and 
                 // returns a Point at a specified distance along the line.
                 let options = {units: 'kilometers'};
-
                 let segment = turf.along(input_line, distance_along_line, options);
-
                 path.push(segment.geometry.coordinates);
                 //  bug with not totally returning the original point
                 // need to add something that forces the return
             }
-
             // Update the route with calculated path coordinates
             // route.features[0].geometry.coordinates = path;
             route.features[0].geometry.coordinates = path;
-
             // Used to increment the value of the point measurement against the route.
             let counter = 0
-
             function animate() {
                 // Update point geometry to a new position based on counter denoting
                 // the index to access the path.
@@ -313,25 +230,17 @@ routeButtons.forEach(routeButton => {
                 } else {
                     point.features[0].geometry.coordinates = route.features[0].geometry.coordinates[counter-1];
                 }; 
-                
                 point.features[0].properties.bearing = 0;
-
                 // Update the animation point with the new data.
-
                 let sourceId = `point${routeId}`
-
                 map.getSource(sourceId).setData(point);
-
                 // Request the next frame of animation so long the end has not been reached.
                 if (counter < steps) {
                     requestAnimationFrame(animate);
                 }
-
                 counter = counter + 1;
             }
             animate(counter);
         });
-
-        
     }, false);
 })

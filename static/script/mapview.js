@@ -116,11 +116,11 @@ function addBboxAndRoute(displayGeojsons) {
     $('#save-route-btn').on('click', removeSaveRouteBtn);
     // get geometry feature collections back from get request and 
     // jsonify each
-
-    // let bboxGeometry = JSON.parse(displayGeojsons['bbox_geometry']);
     let edgesGeometry = JSON.parse(displayGeojsons['edges_geometry']);
     let nodesGeometry = JSON.parse(displayGeojsons['nodes_geometry']);
     let routeGeometry = JSON.parse(displayGeojsons['route_geometry']);
+
+    $('#animate-route-btn').click({routrgeometry : routeGeometry}, animateRoute);
 
     let bboxLineString = turf.lineString(routeGeometry.features[0].geometry.coordinates);
 
@@ -148,15 +148,11 @@ function addBboxAndRoute(displayGeojsons) {
                                     left: 60, 
                                     right: 60}
     });
-
-    $('#animate-route-btn').click({routrgeometry : routeGeometry}, animateRoute);
-
     // reduce bbox opacity
     map.setPaintProperty('bbox-geometry', 'fill-opacity', .1);
 
 
-    // POINT 
-    //  add point to be animated to graph 
+    // POINT -- add point to be animated to graph 
     let point  = {
         "type": "FeatureCollection",
         "features": [{
@@ -184,13 +180,11 @@ function addBboxAndRoute(displayGeojsons) {
             "icon-anchor" : "bottom"
         }
     });
-
     // NODES -- add nodes feature collection to map
     map.addSource('nodes', {
         "type": "geojson",
         "data" : nodesGeometry
     });
-    
     // add nodes layer as symbol type 
     map.addLayer({
         "id" : "nodes-geometry",
