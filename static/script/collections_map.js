@@ -1,7 +1,7 @@
 mapboxgl.accessToken = 'pk.eyJ1IjoicGFpZ2VlbW9vZHkiLCJhIjoiY2owbDcyejhvMDJwNzJ5cDR0YXE1aG10MCJ9.a-JLnrmMPSJNwOGQdloTDA';
 var map = new mapboxgl.Map({
     container: 'map', // container id
-    style: 'mapbox://styles/paigeemoody/cjwjzqywq2orj1dqqvdvwchhm',
+    style: 'mapbox://styles/paigeemoody/cjwybo7pp4ku71cmqx42blr79',
     center: [-122.453554,37.762436], // starting position [lng, lat]
     zoom: 10 // starting zoom
 });
@@ -23,7 +23,19 @@ collectionButtons.forEach(collectionButton => {
     }, false);
 })
 
-// map.on("load", function() {
+// add icon image source to map
+map.on("load", function() {
+
+    map.loadImage('/static/style/clown-icon.png', function(error, image) {
+
+        // if (error) throw error;
+
+        map.addImage('cat', image)
+
+    });
+});
+
+
 function showAllRoutes(evt, collectionId) {
 
     $.getJSON(`/collections/get_collection_data/${collectionId}/all_routes.json`, function(collectionJson) {
@@ -52,6 +64,9 @@ function showAllRoutes(evt, collectionId) {
             const id = route_id;
             // // POINT FOR ANIMATION 
             animationId = `point${id}`
+
+            console.log("animationId",animationId)
+
             animationSource = `/collections/get_route_data/${id}/animate_point_geometry.json`
 
             map.addSource(animationId, {
@@ -59,20 +74,39 @@ function showAllRoutes(evt, collectionId) {
                 "data": animationSource
             });
             // add point to be animated to graph 
+
+
+
             map.addLayer({
                 "id": animationId,
                 "source": animationId,
                 "type": "symbol",
                 "layout": {
                     'visibility': 'visible',
-                    "icon-image": "police-15", // change later
-                    // "icon-rotate": ["get", "bearing"],
-                    // "icon-rotation-alignment": "map",
+                    "icon-image": "cat", 
                     "icon-allow-overlap": true,
                     "icon-ignore-placement": true,
-                    "icon-size": 2
+                    "icon-size": .2
                 }
             });
+            // })
+
+            // ```````save old version``````````
+            // map.addLayer({
+            //     "id": animationId,
+            //     "source": animationId,
+            //     "type": "symbol",
+            //     "layout": {
+            //         'visibility': 'visible',
+            //         "icon-image": "police-15", // change later
+            //         // "icon-rotate": ["get", "bearing"],
+            //         // "icon-rotation-alignment": "map",
+            //         "icon-allow-overlap": true,
+            //         "icon-ignore-placement": true,
+            //         "icon-size": 2
+            //     }
+            // });
+            // ``````````````````````````````````
             
             //NODES
             nodesId = `nodes${id}`
@@ -242,6 +276,7 @@ routeButtons.forEach(routeButton => {
             // const steps = 500; // lower steps = faster movement along route 
 
             const steps = 2000
+            // const steps = 6000
             // const steps = 5000
             // make small route line segments to animate
             // add the coordinates of each segment to the path list 

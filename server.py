@@ -1,5 +1,5 @@
 from jinja2 import StrictUndefined
-from flask import Flask, render_template, redirect, request, flash, session, jsonify
+from flask import Flask, render_template, redirect, request, flash, session, jsonify, send_file
 from flask_debugtoolbar import DebugToolbarExtension
 
 import json
@@ -44,6 +44,13 @@ def load_user(user_id):
 def index():
     """Homepage."""
     return redirect('/login')
+
+# DELETE LATER
+@app.route('/test_map')
+def test_map():
+    """Test map."""
+    return render_template('test_map.html')
+# DELETE ^^^
 
 @app.route('/login')
 def get_login():
