@@ -265,7 +265,7 @@ routeButtons.forEach(routeButton => {
 
             let lineDistance = route.features[0]["properties"]["route_length_km"];
 
-            console.log('lineDistance', lineDistance);
+            // console.log('lineDistance', lineDistance);
             // initialize an path list, segments along the route will be added to the path
             // each item in path will be one coordinatate
             let path = [];
@@ -275,9 +275,23 @@ routeButtons.forEach(routeButton => {
             
             // const steps = 500; // lower steps = faster movement along route 
 
-            const steps = 2000
-            // const steps = 6000
-            // const steps = 5000
+            // const steps = 2000
+
+            const zoom = map.getZoom()
+
+            
+
+
+            // const steps = 2000
+            const steps = (lineDistance/.004)*1.2
+            console.log("zoom:", zoom)
+            console.log("distance:", lineDistance)
+            console.log("steps:", steps)
+
+
+
+            // longer line should have fewer steps -> ie. move more per move
+
             // make small route line segments to animate
             // add the coordinates of each segment to the path list 
             for (var i = 0; i < lineDistance; i += lineDistance / steps) {
@@ -292,8 +306,6 @@ routeButtons.forEach(routeButton => {
                 let options = {units: 'kilometers'};
 
                 let segment = turf.along(input_line, distance_along_line, options);
-
-                console.log(segment)
 
                 path.push(segment.geometry.coordinates);
                 //  bug with not totally returning the original point
