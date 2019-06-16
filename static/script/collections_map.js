@@ -26,7 +26,7 @@ collectionButtons.forEach(collectionButton => {
 // add icon image source to map
 map.on("load", function() {
 
-    map.loadImage('/static/style/clown-icon.png', function(error, image) {
+    map.loadImage('/static/style/person_clipboard.png', function(error, image) {
 
         // if (error) throw error;
 
@@ -86,7 +86,7 @@ function showAllRoutes(evt, collectionId) {
                     "icon-image": "cat", 
                     "icon-allow-overlap": true,
                     "icon-ignore-placement": true,
-                    "icon-size": .2
+                    "icon-size": 1.25
                 }
             });
             // })
