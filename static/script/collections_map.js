@@ -14,10 +14,7 @@ collectionButtons.forEach(collectionButton => {
     collectionButton.addEventListener('click', function (event) {  
         // prevent browser's default action
         event.preventDefault();
-
         collectionId = this.id
-
-        console.log(collectionId)
         // get the id of the collection
         showAllRoutes(this, collectionId); // 'this' refers to the current button on for loop
    
@@ -117,7 +114,7 @@ function showAllRoutes(evt, collectionId) {
                 "paint": {
                     "line-color" : 'rgba(230,201,71,0.6)',
                     "line-width": 3,
-                    "line-opacity": 1
+                    "line-opacity": .8
                 }
             }, nodesId);
   
@@ -134,7 +131,8 @@ function showAllRoutes(evt, collectionId) {
                 "source": routeId, 
                 "layout" : {'visibility': 'visible'},
                 "paint": {
-                    "line-color" : 'rgba(0,0,205,0)',
+                    // "line-color" : 'rgba(0,0,205,0)',
+                    "line-color" : 'black',
                     }
             });    
         });
@@ -196,9 +194,13 @@ routeButtons.forEach(routeButton => {
             // Number of steps to use in the path and animation, more steps means
             // a smoother path and animation, but too many steps will result in a
             // low frame rate
-            const zoom = map.getZoom()
-            const steps = (lineDistance/.004)*1.2
+            // const zoom = map.getZoom()
+            // const steps = (lineDistance/.004)*1.2
 
+            console.log("\n\nlineDistance", lineDistance)
+
+            steps= 5000 // need to keep constant because lower 
+            // number for steps make animation cut corners
             // make small route line segments to animate
             // add the coordinates of each segment to the path list 
             for (var i = 0; i < lineDistance; i += lineDistance / steps) {
@@ -230,13 +232,15 @@ routeButtons.forEach(routeButton => {
                 } else {
                     point.features[0].geometry.coordinates = route.features[0].geometry.coordinates[counter-1];
                 }; 
-                point.features[0].properties.bearing = 0;
+                // point.features[0].properties.bearing = 0;
                 // Update the animation point with the new data.
                 let sourceId = `point${routeId}`
                 map.getSource(sourceId).setData(point);
                 // Request the next frame of animation so long the end has not been reached.
                 if (counter < steps) {
-                    requestAnimationFrame(animate);
+                    // set animation speed by adding delay 
+                    const delay = 3;
+                    setTimeout(function(){requestAnimationFrame(animate);}, delay);
                 }
                 counter = counter + 1;
             }

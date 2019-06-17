@@ -341,7 +341,9 @@ function animateRoute(evt){
     // low frame rate
 
     // lower steps = faster movement along route
-    const steps = (lineDistance/.004)*1.2
+    // const steps = (lineDistance/.004)*1.2
+
+    steps = 5000
 
     // make small route line segments to animate
     // add the coordinates of each segment to the path list 
@@ -377,7 +379,9 @@ function animateRoute(evt){
         map.getSource('point').setData(point);
         // Request the next frame of animation so long the end has not been reached.
         if (counter < steps) {
-            requestAnimationFrame(animate);
+            // set animation speed by adding delay 
+            const delay = 3;
+            setTimeout(function(){requestAnimationFrame(animate);}, delay);
         }
         counter = counter + 1;
     }
