@@ -131,8 +131,7 @@ function showAllRoutes(evt, collectionId) {
                 "source": routeId, 
                 "layout" : {'visibility': 'visible'},
                 "paint": {
-                    // "line-color" : 'rgba(0,0,205,0)',
-                    "line-color" : 'black',
+                    "line-color" : 'rgba(0,0,205,0)',
                     }
             });    
         });

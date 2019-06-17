@@ -102,7 +102,7 @@ def login_sub():
             flash(f'Welcome {user.username}!') 
 
             # return redirect(f"/user/{user.user_id}") 
-            return redirect(f"/collections") 
+            return redirect(f"/mapview") 
 
     flash('Wrong username and/or password')
     return redirect('/login')

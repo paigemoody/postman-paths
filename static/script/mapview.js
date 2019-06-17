@@ -6,7 +6,7 @@ var map = new mapboxgl.Map({
     container: 'map', // container id
     style: 'mapbox://styles/paigeemoody/cjwygdg6mkbna1co7unnuchl6',
     center: [-122.41812145048675, 37.77818979943683],
-    zoom: 14
+    zoom: 11
 });
 
 // give instructions on load
@@ -42,6 +42,9 @@ map.on('draw.create', function(evt) {
     }
 })
 
+// do automatic deletion whan trash is hit
+map.on('draw.delete', function(evt){});
+
 //------------ BUTTONS TOGGLES------------\\
 // Remove save route button, show form
 function removeSaveRouteBtn(evt) {
@@ -60,47 +63,68 @@ dropdownList.onchange = function(){
      inputBox.innerHTML = this.value;
 }
 
-//GET ROUTE CALCULATION
+//------------ GET ROUTE CALCULATION ------------\\
 $('#calcuate-route-btn').on('click', handleBboxSend);
 
 function handleBboxSend(evt) {
-    // start loading gif
-    $('.modal').modal('show');
-    // hide calculate route button as soon as clicked 
-    $('#calcuate-route-btn').attr('style','display:none ;');
-    
+
     let bbox = draw.getAll();
 
-    // add bbox to map 
-    map.addSource('bbox', {
-        "type": "geojson",
-        "data": bbox
-        });
-    map.addLayer({
-        "id": "bbox-geometry",
-        "type": "fill",
-        "source": "bbox", 
-        "layout" :{
-            'visibility': 'none',
-        },
-        "paint": {
-            'fill-color': '#FFE400',
-            'fill-opacity': 0.4,
-        }
-    }); 
+    // FIRST make sure there is just one bbox
+    // SECOND, check size of bbox - if too large that it will
+    // take a lifetime to calculate, show alert 
+   
+    const areaThreshold = 2800000;
+    // get bbox area 
+    let area = turf.area(bbox);
 
-    //remove ability to draw polygon after the bbox polygon is added 
-    map.removeControl(draw);
+    if (bbox.features.length > 1) {
+        alert("Too many bboxes - calculate one area at a time.")
+    }
+    else if (area >= areaThreshold){
+        alert("Area too large - try a smaller box!");
+    } else {
 
-    bbox = JSON.stringify(bbox);
+        // BBOX is ok size 
 
-    const formInputs = {
-        'bbox_geometry' : bbox
-    };
-    // send bbox geometry to backend to generate route data 
-    // the outout of the get request (route information)
-    // is sent as the parameter to addBboxAndRoute
-    $.get('/generate_route_data.json', formInputs, addBboxAndRoute);    
+        // start loading gif
+        $('.modal').modal('show');
+        // hide calculate route button as soon as clicked 
+        $('#calcuate-route-btn').attr('style','display:none ;');
+        
+        
+
+        // add bbox to map 
+        map.addSource('bbox', {
+            "type": "geojson",
+            "data": bbox
+            });
+        map.addLayer({
+            "id": "bbox-geometry",
+            "type": "fill",
+            "source": "bbox", 
+            "layout" :{
+                'visibility': 'none',
+            },
+            "paint": {
+                'fill-color': '#FFE400',
+                'fill-opacity': 0.4,
+            }
+        }); 
+
+        //remove ability to draw polygon after the bbox polygon is added 
+        map.removeControl(draw);
+
+        bbox = JSON.stringify(bbox);
+
+        const formInputs = {
+            'bbox_geometry' : bbox
+        };
+        // send bbox geometry to backend to generate route data 
+        // the outout of the get request (route information)
+        // is sent as the parameter to addBboxAndRoute
+        $.get('/generate_route_data.json', formInputs, addBboxAndRoute);
+    }     
 }
 
 function addBboxAndRoute(displayGeojsons) {
