@@ -18,11 +18,12 @@ from flask_login import LoginManager, login_user, logout_user, login_required, c
 
 from werkzeug.security import generate_password_hash, check_password_hash
 
+import os
 
 app = Flask(__name__)
 
 # Required to use Flask sessions and the debug toolbar
-app.secret_key = "ABC"
+app.secret_key = os.environ['flask_session_key']
 
 
 ####################################
