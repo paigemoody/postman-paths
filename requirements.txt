@@ -28,7 +28,6 @@ networkx==2.3
 numpy==1.16.3
 osmnx==0.10
 pandas==0.24.2
-pkg-resources==0.0.0
 pluggy==0.11.0
 postgis==1.0.4
 psycopg2==2.8.2
