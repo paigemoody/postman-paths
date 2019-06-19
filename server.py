@@ -144,7 +144,7 @@ def register_process():
 
             # make a new user object with email, username and pw
 
-            new_user = User(email=email,username=username,password=password)
+            new_user = User(email=email,username=username,password=generate_password_hash(password))
 
             # new_user = User(email="hi@gmail",username="name",password="1234")
 
