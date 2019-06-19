@@ -1,4 +1,4 @@
-<center>![](static/style/person_clipboard.png)<br>**weave**<br> helps community organizers improve canvassing outreach by generating optimized walking routes, guaranteed to take volunteers down every street, past every door, in an area. </center>
+<center>![](person_clipboard.png)<br>**weave**<br> helps community organizers improve canvassing outreach by generating optimized walking routes, guaranteed to take volunteers down every street, past every door, in an area. </center>
 
 ![](homepage.gif)
 
