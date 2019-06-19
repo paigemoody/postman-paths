@@ -1,15 +1,20 @@
-<center>![](person_clipboard.png)<br>**weave**<br> helps community organizers improve canvassing outreach by generating optimized walking routes, guaranteed to take volunteers down every street, past every door, in an area. </center>
+![person_clipboard](https://user-images.githubusercontent.com/25571355/59734595-eae75900-9206-11e9-8eca-4f89355e1058.png)
+
+<h3><center>weave</center></h3>
+<center> helps community organizers improve canvassing outreach by generating optimized walking routes, guaranteed to take volunteers down every street, past every door, in an area. </center>
 
 ![](homepage.gif)
 
 First draw a polygon around the map area you'd like to cover. Weave then uses the [Chinese Postman graph traversal algorithm](https://en.wikipedia.org/wiki/Route_inspection_problem) to generate the shortest walking route that covers alls roads within the given bounds. Then watch an animated walker traverse the calculated path for you and save the route for later use by actual humans.
 
 
-<center>**Route Generator** gets the shortest route to walk all roads in a drawn bbox.</center>
+<center><h4>Route Generator</h4></center>
+gets the shortest route to walk all roads in a drawn bbox.
 
 ![](route_creation.gif)
 
-<center>**Collections** organizes saved routes.</center>
+<center><h4>Collections</h4></center>
+<center>organizes saved routes.</center>
 
 ![](collections.gif)
 
@@ -31,11 +36,8 @@ postgresql
 
 ### Install dependencies 
 
-```
-$ pip3 install -r requirements.txt
+`$ pip3 install -r requirements.txt`
 
-$ python3 seed.py
-```
 
 ### Run locally
 
