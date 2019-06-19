@@ -1,6 +1,4 @@
-![person_clipboard](https://user-images.githubusercontent.com/25571355/59734595-eae75900-9206-11e9-8eca-4f89355e1058.png)
-
-<h3><center>weave</center></h3>
+![person_clipboard](https://user-images.githubusercontent.com/25571355/59734595-eae75900-9206-11e9-8eca-4f89355e1058.png)<h3>weave</h3>
 <center> helps community organizers improve canvassing outreach by generating optimized walking routes, guaranteed to take volunteers down every street, past every door, in an area. </center>
 
 ![](homepage.gif)
