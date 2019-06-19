@@ -20,13 +20,10 @@ python3.7
 postgresql
 ```
 
-### Installing
-
-After installing 
+### Install dependencies 
 
 ```
 pip3 install -r requirements.txt
-
 ```
 
 ## Running the tests
