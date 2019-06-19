@@ -38,4 +38,4 @@ Currently testing for the app is focused on unit tests for the backend graph con
 
 ## Acknowledgments
 
-Shoutout to all the awesome people of [Hackbright](https://hackbrightacademy.com/) for their gsupport and guidance on this project!
+Shoutout to all the awesome people of [Hackbright](https://hackbrightacademy.com/) for their support and guidance on this project!
