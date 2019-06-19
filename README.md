@@ -33,7 +33,7 @@ Currently testing for the app is focused on unit tests for the backend graph con
 
 ## Authors
 
-* **[Paige Moody](https://www.linkedin.com/in/paige-moody)** 
+**[Paige Moody](https://www.linkedin.com/in/paige-moody)** 
 
 
 ## Acknowledgments
