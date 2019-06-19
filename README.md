@@ -4,7 +4,7 @@ Weave helps community organizers improve canvassing outreach by generating optim
 
 First draw a polygon around the map area you'd like to cover. Weave then uses the [Chinese Postman graph traversal algorithm](https://en.wikipedia.org/wiki/Route_inspection_problem) to generate the shortest walking route that covers alls roads within the given bounds. You can then watch an animated walker traverse the calculated path for you and you can save the route for later use by actual humans.
 
-<video src="readme.mp4" width="500" height="300" controls preload></video>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/u1m2kKUy4L0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ## Tech Stack
 Python, NetworkX, OSMnx, Shapely, PostgreSQL, SQLAlchemy, Flask, JavaScript (AJAX, JSON), JQuery, Turf.jgs, Mapbox GL JS, Jinja, CSS
