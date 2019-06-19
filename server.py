@@ -383,9 +383,9 @@ def save_route():
     new_route_name = json.loads(request.form['new_route_name'])
     desination_collection_name = json.loads(request.form['destination_collection_name'])
 
-    print("\n\n\ndesination collection name:", desination_collection_name)
+    # print("\n\n\ndesination collection name:", desination_collection_name)
 
-    print(f"\n\n\n\n\nadding {new_route_name} to {desination_collection_name}")
+    # print(f"\n\n\n\n\nadding {new_route_name} to {desination_collection_name}")
 
 
     # get user object 
