@@ -153,7 +153,13 @@ def register_process():
             # commit db changes 
             db.session.commit()
 
-            flash(f'Welcome {new_user.username}!')
+            user = User.query.filter(User.username == username).first()
+
+            user.is_authenticated = True 
+
+            login_user(user)
+
+            flash(f'Welcome {user.username}!')
 
             return redirect('/mapview')
 
