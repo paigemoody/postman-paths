@@ -1,10 +1,19 @@
-# weave
+<center>![](static/style/person_clipboard.png)<br>**weave**<br> helps community organizers improve canvassing outreach by generating optimized walking routes, guaranteed to take volunteers down every street, past every door, in an area. </center>
 
-Weave helps community organizers improve canvassing outreach by generating optimized walking routes, guaranteed to take volunteers down every street, past every door, in an area. 
+![](homepage.gif)
 
-First draw a polygon around the map area you'd like to cover. Weave then uses the [Chinese Postman graph traversal algorithm](https://en.wikipedia.org/wiki/Route_inspection_problem) to generate the shortest walking route that covers alls roads within the given bounds. You can then watch an animated walker traverse the calculated path for you and you can save the route for later use by actual humans.
+First draw a polygon around the map area you'd like to cover. Weave then uses the [Chinese Postman graph traversal algorithm](https://en.wikipedia.org/wiki/Route_inspection_problem) to generate the shortest walking route that covers alls roads within the given bounds. Then watch an animated walker traverse the calculated path for you and save the route for later use by actual humans.
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/u1m2kKUy4L0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+<center>**Route Generator** gets the shortest route to walk all roads in a drawn bbox.</center>
+
+![](route_creation.gif)
+
+<center>**Collections** organizes saved routes.</center>
+
+![](collections.gif)
+
+*(check out a full demo [here](https://www.youtube.com/watch?v=u1m2kKUy4L0))*
 
 ## Tech Stack
 Python, NetworkX, OSMnx, Shapely, PostgreSQL, SQLAlchemy, Flask, JavaScript (AJAX, JSON), JQuery, Turf.jgs, Mapbox GL JS, Jinja, CSS
@@ -23,8 +32,29 @@ postgresql
 ### Install dependencies 
 
 ```
-pip3 install -r requirements.txt
+$ pip3 install -r requirements.txt
+
+$ python3 seed.py
 ```
+
+### Run locally
+
+**1.** (optional) Seed database with sample data.
+
+	$ python3 seed.py
+
+**2.** Create `sercrets.sh` file in root directory. 
+
+**3.** Add `export flask_session_key="<some secret key>"` to `secrets.sh` *Note: this is required to run the Flask server.*
+
+**4.** Connect `secrets.sh`. 
+
+	$ source secrets.sh
+
+	
+**5.** Run server.
+
+	$ python3 server.py
 
 ## Running the tests
 
