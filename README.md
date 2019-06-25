@@ -29,7 +29,7 @@ _Draw a polygon around the map area you'd like to cover. Weave then uses the [Ch
 *(check out a full demo [here](https://www.youtube.com/watch?v=u1m2kKUy4L0))*
 
 ## Tech Stack
-Python, NetworkX, OSMnx, Shapely, PostgreSQL, SQLAlchemy, Flask, JavaScript (AJAX, JSON), JQuery, Turf.js, Mapbox GL JS, Jinja, CSS
+Python, NetworkX, OSMnx, Shapely, PostgreSQL, SQLAlchemy, Flask, JavaScript (AJAX, JSON), JQuery, Turf.js, Mapbox GL JS, Jinja, HTML, CSS
 
 ## Getting Started
 
