@@ -46,13 +46,6 @@ def index():
     """Homepage."""
     return redirect('/login')
 
-# DELETE LATER
-@app.route('/test_map')
-def test_map():
-    """Test map."""
-    return render_template('test_map.html')
-# DELETE ^^^
-
 @app.route('/login')
 def get_login():
     """Display login page."""
@@ -183,9 +176,6 @@ def register_process():
 @login_required
 def collections_info():
     """Show user info."""
-    
-    # sqlalchemy database calls for user and user ratings
-    # user = User.query.filter(User.user_id == user_id).one()
 
     return render_template('user.html')
 
@@ -376,17 +366,10 @@ def save_route():
 
     route_line_data = json.loads(request.form['route_line_data'])
 
-    # route_length = route_line_data['features'][0]['properties']['route_length_km']
-
     route_length = json.loads(request.form['route_length'])
 
     new_route_name = json.loads(request.form['new_route_name'])
     desination_collection_name = json.loads(request.form['destination_collection_name'])
-
-    # print("\n\n\ndesination collection name:", desination_collection_name)
-
-    # print(f"\n\n\n\n\nadding {new_route_name} to {desination_collection_name}")
-
 
     # get user object 
     user = User.query.filter(User.user_id == user_id).one()
