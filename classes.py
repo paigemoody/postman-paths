@@ -3,10 +3,10 @@ from osmnx import graph_from_bbox, graph_to_gdfs
 import networkx as nx
 
 # sample bbox constraints
-# NORTH = 37.7599 # max lat 
+# NORTH = 37.7599 # max lat
 # SOUTH = 37.7569 # min lat
 # EAST = -122.3997 # max lng
-# WEST = -122.4023 # min lng 
+# WEST = -122.4023 # min lng
 
 
 class OSMGraph:
@@ -24,7 +24,7 @@ class OSMGraph:
 
         north, south, east, west = bbox
 
-        self.ox_graph = graph_from_bbox(north, south, east, west, network_type='walk')
+        self.ox_graph = graph_from_bbox(north, south, east, west, network_type="walk")
 
         # set self.nodes_df and self.edges_df
         self.get_dataframes()
@@ -32,10 +32,10 @@ class OSMGraph:
         # set self.nodes list
         self.get_nodes_list()
 
-        #  set self.edges list 
+        #  set self.edges list
         self.get_unique_edges_list()
 
-        # set self.edges_dict 
+        # set self.edges_dict
         self.make_edges_dict()
 
         # print("\n\nCLASS -- edges_dict:", self.edges_dict)
@@ -45,8 +45,8 @@ class OSMGraph:
 
         # print("\n\nCLASS -- nodes_dict:", self.nodes_dict)
 
-        # instantiate an attribute for node visit order and 
-        # edge visit order -- will be updated once calculated 
+        # instantiate an attribute for node visit order and
+        # edge visit order -- will be updated once calculated
         self.node_visit_order = []
 
         self.edge_visit_order = []
@@ -57,7 +57,7 @@ class OSMGraph:
 
     def get_nodes_list(self):
 
-        ox_graph = (self.ox_graph)
+        ox_graph = self.ox_graph
 
         self.nodes = list(ox_graph.nodes)
 
@@ -65,14 +65,14 @@ class OSMGraph:
         """From uni-directional ox graph, make list of unique edges"""
 
         # make list of edges without default weight parameter
-        all_edges = [] 
+        all_edges = []
 
         ox_graph = self.ox_graph
 
         edge_count = 0
 
         for edge in list(ox_graph.edges):
-            edge_count += 1 
+            edge_count += 1
 
             all_edges.append(edge[0:2])
 
@@ -84,7 +84,7 @@ class OSMGraph:
 
         for edge in all_edges:
 
-            # testing what happens when edges that have the 
+            # testing what happens when edges that have the
             # same start and end node are ignored
 
             if edge[0] == edge[1]:
@@ -93,8 +93,8 @@ class OSMGraph:
             else:
                 rev_edge = edge[::-1]
 
-                # make sure that both versions of the edge are not 
-                # already accounted for 
+                # make sure that both versions of the edge are not
+                # already accounted for
 
                 if edge not in unique_edges:
 
@@ -105,7 +105,6 @@ class OSMGraph:
             print("unique_edges:", len(unique_edges))
 
             self.edges = unique_edges
-
 
     def make_edges_dict(self):
         """Given graph instance make dict of edges and edge attribuets"""
@@ -120,49 +119,46 @@ class OSMGraph:
         for edge in self.edges:
 
             edge_attrs = {}
-            
+
             start_node, end_node = edge
 
             print(type(edges_df))
             print(edges_df)
 
             edge_df_row = edges_df.loc[
-                (edges_df['u'] == start_node) 
-                & 
-                (edges_df['v'] == end_node)
+                (edges_df["u"] == start_node) & (edges_df["v"] == end_node)
             ]
 
-            edge_length = edge_df_row['length'].values[0]
+            edge_length = edge_df_row["length"].values[0]
 
             # print("\n\n\nedge_length:", edge_length)
 
-            edge_hwy_type = edge_df_row['highway'].values[0]
+            edge_hwy_type = edge_df_row["highway"].values[0]
 
-            # handle edges that don't have a name - 
+            # handle edges that don't have a name -
             # check for nan by looking for names with class 'float'
-            edge_name = edge_df_row['name'].values[0]
+            edge_name = edge_df_row["name"].values[0]
 
-            if type(edge_name) is float: 
+            if type(edge_name) is float:
 
                 edge_name = "None"
 
+            edge_osmid = edge_df_row["osmid"].values[0]
+            edge_geometry = edge_df_row["geometry"].values[0]
 
-            edge_osmid = edge_df_row['osmid'].values[0]
-            edge_geometry = edge_df_row['geometry'].values[0]
+            # length is in meters
+            edge_attrs["length"] = edge_length
+            edge_attrs["hwy_type"] = edge_hwy_type
+            edge_attrs["name"] = edge_name
+            edge_attrs["osmid"] = edge_osmid
+            edge_attrs["geometry"] = edge_geometry
 
-            # length is in meters 
-            edge_attrs['length'] = edge_length
-            edge_attrs['hwy_type'] = edge_hwy_type
-            edge_attrs['name'] = edge_name
-            edge_attrs['osmid'] = edge_osmid
-            edge_attrs['geometry'] = edge_geometry
-
-            # elif self.source == "DIY": 
+            # elif self.source == "DIY":
             #     # default edge length for DIY graphs to 1
             #     # useful for testing
             #     edge_attrs['length'] = 1
 
-            edge_attrs['num_traversals'] = 1
+            edge_attrs["num_traversals"] = 1
 
             # the values of the edges dict for the edge is a dict of attributes
             edges_dict[edge] = edge_attrs
@@ -180,19 +176,19 @@ class OSMGraph:
 
         for node in self.nodes:
 
-            node_attrs = {} 
+            node_attrs = {}
 
-            # if self.source == "OSM": 
+            # if self.source == "OSM":
 
-            node_df_row = nodes_df.loc[(nodes_df['osmid'] == node)]
+            node_df_row = nodes_df.loc[(nodes_df["osmid"] == node)]
 
-            node_x = node_df_row['x'].values[0]
-            node_y = node_df_row['y'].values[0]
-            node_geometry = node_df_row['geometry'].values[0]
+            node_x = node_df_row["x"].values[0]
+            node_y = node_df_row["y"].values[0]
+            node_geometry = node_df_row["geometry"].values[0]
 
-            node_attrs['x'] = node_x
-            node_attrs['y'] = node_y
-            node_attrs['geometry'] = node_geometry
+            node_attrs["x"] = node_x
+            node_attrs["y"] = node_y
+            node_attrs["geometry"] = node_geometry
 
             connected_edges = []
 
@@ -200,16 +196,15 @@ class OSMGraph:
                 if node in edge:
                     connected_edges.append(edge)
 
-
-            # checking claculation of odd nodes 
+            # checking claculation of odd nodes
             is_odd_mine = False
             # if there are an odd number of edges that contain the node
-            # mark node as odd 
+            # mark node as odd
             # print("\n\nnode:", node)
             # print("\n\nconnected_edges:", connected_edges)
 
             if (len(connected_edges) != 0) and (len(connected_edges) % 2 != 0):
-                print(node, ":",len(connected_edges) )
+                print(node, ":", len(connected_edges))
                 is_odd_mine = True
 
             # # use nx's odd node calcu
@@ -221,10 +216,10 @@ class OSMGraph:
             # if deg % 2 != 0:
             #     is_odd_nx = True
 
-            node_attrs['connected_edges'] = connected_edges
+            node_attrs["connected_edges"] = connected_edges
             # node_attrs['is_odd_mine'] = is_odd_mine
 
-            node_attrs['is_odd'] = is_odd_mine
+            node_attrs["is_odd"] = is_odd_mine
 
             # if deg != len(connected_edges):
             #     print("\n\n\nnode:",node)
@@ -243,18 +238,15 @@ class OSMGraph:
 
         return f"<bbox={self.bbox}\nsource={self.source}\ntotal nodes={len(self.nodes)}\ntotal edges={len(self.edges)}>"
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
 
     from graph_constructor_2 import get_bbox_from_geojson
 
-    bbox = get_bbox_from_geojson('test_bbox_input.geojson')
+    bbox = get_bbox_from_geojson("test_bbox_input.geojson")
 
     source = "OSM"
 
     example_graph_instance = OSMGraph(bbox, source)
 
     print("example_graph_instance:\n", example_graph_instance)
-
-
-
-

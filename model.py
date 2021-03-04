@@ -1,11 +1,7 @@
 from flask import Flask
-
 from flask_sqlalchemy import SQLAlchemy
-
 from werkzeug.security import generate_password_hash, check_password_hash
-
-
-import datetime 
+import datetime
 
 # from geoalchemy2 import Geometry
 
@@ -15,22 +11,20 @@ import datetime
 
 db = SQLAlchemy()
 
-##############################################################################
 # Model definitions
-
 class User(db.Model):
     """User of app."""
 
-    def __repr__(self): 
+    def __repr__(self):
         """provide helpful represeation."""
 
         return f"<User user_id={self.user_id} email={self.email}>"
 
     __tablename__ = "users"
 
-    user_id  = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    username = db.Column(db.String(100), nullable=False)    
-    email    = db.Column(db.String(100), nullable=True)
+    user_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    username = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(100), nullable=True)
     password = db.Column(db.String(128), nullable=False)
 
     # # hashed pw methods
@@ -45,7 +39,7 @@ class User(db.Model):
     def is_authenticated(self):
         return True
 
-    def is_active(self): # line 37
+    def is_active(self):  # line 37
         return True
 
     def is_anonymous(self):
@@ -54,10 +48,11 @@ class User(db.Model):
     def get_id(self):
         return self.user_id
 
+
 class Collection(db.Model):
     """Collection of routes."""
 
-    def __repr__(self): 
+    def __repr__(self):
         """provide helpful represeation."""
 
         return f"<Collection collection_id={self.collection_id} user_id={self.user_id}>"
@@ -66,15 +61,18 @@ class Collection(db.Model):
 
     collection_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
 
-    user_id       = db.Column(db.Integer, db.ForeignKey('users.user_id'))
+    user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"))
     collection_name = db.Column(db.String(100))
     description = db.Column(db.String(200), nullable=False)
-    created_date = db.Column(db.DateTime, nullable=True, default=datetime.datetime.utcnow)
-    
-    # define relationship with user table 
-    user = db.relationship("User",
-                           backref=db.backref("collections", 
-                                              order_by=collection_id))
+    created_date = db.Column(
+        db.DateTime, nullable=True, default=datetime.datetime.utcnow
+    )
+
+    # define relationship with user table
+    user = db.relationship(
+        "User", backref=db.backref("collections", order_by=collection_id)
+    )
+
 
 class Route(db.Model):
     """Individual Route."""
@@ -88,34 +86,38 @@ class Route(db.Model):
 
     route_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     route_name = db.Column(db.String(100))
-    collection_id = db.Column(db.Integer, db.ForeignKey('collections.collection_id'))
-    created_date = db.Column(db.DateTime, nullable=True, default=datetime.datetime.utcnow)
+    collection_id = db.Column(db.Integer, db.ForeignKey("collections.collection_id"))
+    created_date = db.Column(
+        db.DateTime, nullable=True, default=datetime.datetime.utcnow
+    )
     route_complete = db.Column(db.Boolean, nullable=False, default=False)
     tasked_to = db.Column(db.String(100), nullable=True)
 
-    # add route_complete boolean 
+    # add route_complete boolean
     # add tasked to - for tasking a route in a collection
 
     # define relationship with collections table
-    collection = db.relationship("Collection",
-                                        backref=db.backref("routes"),
-                                                            order_by=route_id)
+    collection = db.relationship(
+        "Collection", backref=db.backref("routes"), order_by=route_id
+    )
 
     # define relationship with bboxes table
-    bbox = db.relationship("BboxGeometry", 
-                            backref=db.backref("routes"), uselist = False)
+    bbox = db.relationship("BboxGeometry", backref=db.backref("routes"), uselist=False)
 
     # define relationship with edges geometries table
-    edges_geom = db.relationship("EdgesGeometry", 
-                            backref=db.backref("routes"), uselist = False)
+    edges_geom = db.relationship(
+        "EdgesGeometry", backref=db.backref("routes"), uselist=False
+    )
 
     # define relationship with nodes geometries table
-    nodes_geom = db.relationship("NodesGeometry", 
-                            backref=db.backref("routes"),uselist = False)
+    nodes_geom = db.relationship(
+        "NodesGeometry", backref=db.backref("routes"), uselist=False
+    )
 
     # define relationship with route geometries table
-    route_geom = db.relationship("RouteGeometry", 
-                            backref=db.backref("routes"), uselist = False)
+    route_geom = db.relationship(
+        "RouteGeometry", backref=db.backref("routes"), uselist=False
+    )
 
 
 class BboxGeometry(db.Model):
@@ -130,8 +132,9 @@ class BboxGeometry(db.Model):
 
     bbox_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
 
-    route_id = db.Column(db.Integer, db.ForeignKey('routes.route_id'))
-    bbox_geometry = db.Column(db.JSON, nullable = False)
+    route_id = db.Column(db.Integer, db.ForeignKey("routes.route_id"))
+    bbox_geometry = db.Column(db.JSON, nullable=False)
+
 
 class EdgesGeometry(db.Model):
     """Geometry of an edges feature collection"""
@@ -139,14 +142,17 @@ class EdgesGeometry(db.Model):
     def __repr__(self):
         """provide helpful represeation."""
 
-        return f"<Edges Geometry edges_geom_idd={self.bbox_id} route_id={self.route_id}>"
+        return (
+            f"<Edges Geometry edges_geom_idd={self.bbox_id} route_id={self.route_id}>"
+        )
 
     __tablename__ = "edges_geoms"
 
     edges_geom_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
 
-    route_id = db.Column(db.Integer, db.ForeignKey('routes.route_id'))
+    route_id = db.Column(db.Integer, db.ForeignKey("routes.route_id"))
     edges_geometry = db.Column(db.JSON, nullable=False)
+
 
 class NodesGeometry(db.Model):
     """Geometry of a nodes feature collection"""
@@ -154,12 +160,14 @@ class NodesGeometry(db.Model):
     def __repr__(self):
         """provide helpful represeation."""
 
-        return f"<Nodes Geometry nodes_geom_idd={self.bbox_id} route_id={self.route_id}>"
+        return (
+            f"<Nodes Geometry nodes_geom_idd={self.bbox_id} route_id={self.route_id}>"
+        )
 
     __tablename__ = "nodes_geoms"
 
     nodes_geom_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    route_id = db.Column(db.Integer, db.ForeignKey('routes.route_id'))
+    route_id = db.Column(db.Integer, db.ForeignKey("routes.route_id"))
     nodes_geometry = db.Column(db.JSON, nullable=False)
 
 
@@ -173,23 +181,20 @@ class RouteGeometry(db.Model):
 
     __tablename__ = "route_geoms"
 
-
     route_geom_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    route_id = db.Column(db.Integer, db.ForeignKey('routes.route_id'))
+    route_id = db.Column(db.Integer, db.ForeignKey("routes.route_id"))
     route_geometry = db.Column(db.JSON, nullable=False)
     route_length = db.Column(db.Float, nullable=True)
 
-##############################################################################
+
 # Helper functions
-
-
 def connect_to_db(app):
     """Connect the database to our Flask app."""
 
     # Configure to use our PstgreSQL database
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///postman_paths'
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.config['SQLALCHEMY_ECHO'] = True
+    app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql:///postman_paths"
+    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+    app.config["SQLALCHEMY_ECHO"] = True
     db.app = app
     db.init_app(app)
 
@@ -199,13 +204,6 @@ if __name__ == "__main__":
     # you in a state of being able to work with the database directly.
 
     from server import app
+
     connect_to_db(app)
     print("Connected to DB.")
-
-
-
-
-
-
-
-
