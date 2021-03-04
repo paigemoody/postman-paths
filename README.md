@@ -11,7 +11,7 @@ helps community organizers improve canvassing outreach by generating optimized w
 
 
 
-![](homepage.gif)
+![](img/homepage.gif)
 
 
 
@@ -20,11 +20,11 @@ helps community organizers improve canvassing outreach by generating optimized w
 
 _Draw a polygon around the map area you'd like to cover. Weave then uses the [Chinese Postman graph traversal algorithm](https://en.wikipedia.org/wiki/Route_inspection_problem) to generate the shortest walking route that covers all roads within the given bounds. Then watch an animated walker traverse the calculated and save the route for later use by actual humans._
 
-![](route_creation.gif)
+![](img/route_creation.gif)
 
 **Collections** organize saved routes.
 
-![](collections.gif)
+![](img/collections.gif)
 
 *(check out a full demo [here](https://www.youtube.com/watch?v=u1m2kKUy4L0))*
 
