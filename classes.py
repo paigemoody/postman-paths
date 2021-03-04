@@ -38,12 +38,7 @@ class OSMGraph:
         # set self.edges_dict
         self.make_edges_dict()
 
-        # print("\n\nCLASS -- edges_dict:", self.edges_dict)
-
-        # set self.nodes_dict
         self.make_nodes_dict()
-
-        # print("\n\nCLASS -- nodes_dict:", self.nodes_dict)
 
         # instantiate an attribute for node visit order and
         # edge visit order -- will be updated once calculated
