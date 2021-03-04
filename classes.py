@@ -120,12 +120,17 @@ class OSMGraph:
         for edge in self.edges:
 
             edge_attrs = {}
-
-            # if self.source == "OSM": 
             
             start_node, end_node = edge
 
-            edge_df_row = edges_df.loc[(edges_df['u'] == start_node) & (edges_df['v'] == end_node)]
+            print(type(edges_df))
+            print(edges_df)
+
+            edge_df_row = edges_df.loc[
+                (edges_df['u'] == start_node) 
+                & 
+                (edges_df['v'] == end_node)
+            ]
 
             edge_length = edge_df_row['length'].values[0]
 
